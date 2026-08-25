@@ -1,0 +1,11 @@
+robot:
+  id: rov
+  name: ROV
+  type: underwater
+
+capabilities:
+  - drive
+  - depth
+  - heading
+  - camera
+  - lights
