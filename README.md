@@ -1,19 +1,18 @@
 # robot-CuttleOS
 
+Part of the SquidLink, CuttleOS, and NautiPi set
 
-part of the 
+2. CuttleOS
 
-SquidLink
+The operating system, this name combines “Cuttlefish” (a clever cephalopod) with “OS” (operating system), giving it a futuristic yet natural feel.
+
+
+1. SquidLink
 
 (For your main control software or Raspberry Pi)
 
     A sleek, techy name that implies connectivity and agility—perfect for a robotics control system.
 
-2. CuttleOS
-
-(For your PCB or operating system)
-
-    Combines “Cuttlefish” (a clever cephalopod) with “OS” (operating system), giving it a futuristic yet natural feel.
 
 3. NautiPi
 
