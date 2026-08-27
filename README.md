@@ -26,11 +26,17 @@ Why These Work Together:
     Clear Roles: Each name suggests a different component (software, PCB/OS, and device).
     Memorable: They’re short, catchy, and easy to remember.
 
+
+
+
+
+
+
 # How to put the codebase back together
 
 https://chatgpt.com/share/6a8d481a-08bc-83eb-b14a-adfcd44393be?ogimg=plain
 
-> For simplicity sake after trying the multiple parts of the ROV script in diffrent repos. I think changing the got seperaratio. To just be everything on a pi in one repo. And the HIL has its own?
+> For simplicity sake after trying the multiple parts of the ROV script in different repos. I think changing the got seperaratio. To just be everything on a pi in one repo. And the HIL has its own?
 
 Yes. I think that is a better architecture for your project at this stage, particularly after the friction you've encountered with multiple repositories.
 
