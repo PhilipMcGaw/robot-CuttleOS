@@ -47,7 +47,11 @@
 		"files.trimTrailingWhitespace": true,
 		"python.testing.pytestEnabled": true,
 		"python.testing.pytestArgs": ["tests"],
-		"editor.wordWrap": "on"
+		"editor.wordWrap": "on",
+		"chat.tools.terminal.autoApprove": {
+			"mkdir": true,
+			"cp": true
+		}
 	},
 	"launch": {
 		"version": "0.2.0",

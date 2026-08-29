@@ -1,0 +1,16 @@
+# Shared ROV dependencies for Control and Cockpit.
+adafruit-circuitpython-ads7830>=1.0.6
+adafruit-circuitpython-motor>=3.4.18
+adafruit-circuitpython-pca9685>=3.4.20
+fastapi>=0.115.0
+gpiozero>=2.0.1
+ifaddr>=0.2.0
+jinja2>=3.1.0
+nats-py>=2.10,<3
+psutil>=7.1.0
+pyopenssl>=25.3.0
+pyserial>=3.5
+python-dotenv>=1.2.1
+serial>=0.0.97
+uvicorn[standard]>=0.30.0
+rpi-gpio>=0.7.1; sys_platform == 'linux'
