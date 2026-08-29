@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "profile_id": "k9",
+  "display_name": "K9",
+  "identity_icon": "fa-bone",
+  "profile_status": "functional-example",
+  "namespace": "k9",
+  "transport": { "nats_subject_prefix": "k9." },
+  "time_synchronisation": {
+    "enabled": true,
+    "command_subject": "k9.cockpit.command.system.time-sync",
+    "status_subject": "k9.control.status.system.time-sync",
+    "interval_seconds": 60,
+    "minimum_adjustment_seconds": 0.5
+  },
+  "capabilities": {
+    "battery": true,
+    "heading": false,
+    "attitude": false,
+    "depth": false,
+    "soundboard": true,
+    "camera_pitch": false,
+    "drive_control": true,
+    "animatronics": true
+  },
+  "instruments": [
+    { "id": "battery", "enabled": true, "position": "top-bar" },
+    { "id": "network-status", "enabled": true, "position": "top-bar" },
+    { "id": "soundboard", "enabled": true, "position": "right-drawer" }
+  ],
+  "telemetry": {
+    "battery_percentage": { "subject": "k9.telemetry.power.battery.percentage", "unit": "%", "scale": 1, "precision": 0 },
+    "battery_voltage": { "subject": "k9.telemetry.power.battery.voltage", "unit": "V", "scale": 1, "precision": 2 },
+    "network_status": { "subject": "k9.telemetry.system.network.status", "unit": "", "scale": 1, "precision": 0 }
+  },
+  "commands": {
+    "drive.throttle": { "subject": "k9.command.drive.throttle", "unit": "%", "minimum": -100, "maximum": 100 },
+    "drive.steering": { "subject": "k9.command.drive.steering", "unit": "%", "minimum": -100, "maximum": 100 },
+    "head.pan": { "subject": "k9.command.animatronics.head.pan", "unit": "°", "minimum": -90, "maximum": 90 },
+    "head.tilt": { "subject": "k9.command.animatronics.head.tilt", "unit": "°", "minimum": -45, "maximum": 45 },
+    "sound.play": { "subject": "k9.command.sound.play", "unit": "", "minimum": 0, "maximum": 1 }
+  },
+  "hardware": {
+    "adapters": [
+      {
+        "id": "main-hat",
+        "driver": "adeept-robot-hat-adm133",
+        "model": "ADM133",
+        "validation_status": "planned-unverified",
+        "bindings": {
+          "dc-motor-drive": { "commands": ["drive.throttle", "drive.steering"] },
+          "pca9685-servos": { "commands": ["head.pan", "head.tilt"] },
+          "adc-battery": { "telemetry": ["battery_percentage", "battery_voltage"] }
+        },
+        "actuators": {
+          "head-pan": { "port_alias": "servo-00", "pca9685_channel": 0, "command": "head.pan" },
+          "head-tilt": { "port_alias": "servo-01", "pca9685_channel": 1, "command": "head.tilt" }
+        }
+      }
+    ]
+  },
+  "cameras": {
+    "default": "main",
+    "devices": [{ "id": "main", "label": "Main camera", "enabled": true, "stream_path": "/cam1" }]
+  },
+  "soundboard": {
+    "directory": "sounds/k9",
+    "sounds": [
+      { "id": "affirmative", "label": "Affirmative", "file": "affirmative.wav" },
+      { "id": "negative", "label": "Negative", "file": "negative.wav" },
+      { "id": "alert", "label": "Alert", "file": "alert.wav" }
+    ]
+  },
+  "input_mappings": {
+    "throttle": { "source": "gamepad.axis.1", "command": "drive.throttle", "dead_zone": 0.12, "invert": true },
+    "steering": { "source": "gamepad.axis.0", "command": "drive.steering", "dead_zone": 0.12 },
+    "sound_affirmative": { "source": "gamepad.button.0", "command": "sound.play", "value": "affirmative" }
+  }
+}

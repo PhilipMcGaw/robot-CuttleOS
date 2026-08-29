@@ -1,0 +1,254 @@
+{% extends "base.jinja" %}
+{% block title %}home — {{ active_robot_profile.display_name }}{% endblock %}
+{% block body_class %}rov-live-page{% if active_robot_profile.profile_id != "rov" %} rov-live-page--profile-minimal{% endif %}{% endblock %}
+{% block content %}
+<!-- Main area -->
+
+    <!-- Main Camera feed! -->
+
+    <div class="bg-image">
+        <img id="mainCamera" src="/cam1" alt="Main ROV camera" />
+    </div>
+
+    <aside class="rov-diagnostic-tray" aria-label="Live-view diagnostics">
+        <section class="rov-diagnostic-tray__panel" id="live-diagnostics" hidden>
+            <header class="rov-diagnostic-tray__header">
+                <h2><i class="fa-solid fa-stethoscope" aria-hidden="true"></i> Diagnostics</h2>
+                <button class="rov-diagnostic-tray__close" type="button" data-diagnostic-close aria-label="Close diagnostics"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </header>
+            <dl class="rov-diagnostic-tray__metrics" aria-label="Estimated browser network rate" title="Estimated HTTP traffic between this browser and the Cockpit server">
+                <div>
+                    <dt><i class="fa-solid fa-arrow-down" aria-hidden="true"></i> Download</dt>
+                    <dd><output id="downloadRate">--</output> kB/s</dd>
+                </div>
+                <div>
+                    <dt><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Upload</dt>
+                    <dd><output id="uploadRate">--</output> kB/s</dd>
+                </div>
+            </dl>
+        </section>
+        <button class="rov-diagnostic-tray__toggle" type="button" data-diagnostic-toggle aria-expanded="false" aria-controls="live-diagnostics" title="Open diagnostics">
+            <i class="fa-solid fa-stethoscope" aria-hidden="true"></i>
+        </button>
+    </aside>
+
+    {% if soundboard %}
+    <aside class="rov-soundboard-drawer" aria-label="{{ active_robot_profile.display_name }} soundboard">
+        <section class="rov-soundboard-drawer__panel" id="soundboard-drawer" hidden>
+            <header class="rov-soundboard-drawer__header">
+                <h2><i class="fa-solid fa-volume-high" aria-hidden="true"></i> {{ active_robot_profile.display_name }} sounds</h2>
+                <button class="rov-soundboard-drawer__close" type="button" data-soundboard-close aria-label="Close soundboard"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </header>
+            <p class="rov-soundboard-drawer__hint" data-soundboard-hint>Sign in as a driver or administrator to play a sound.</p>
+            <div class="rov-soundboard-drawer__sounds" aria-label="Available sounds">
+                {% for sound in soundboard.sounds %}
+                <button type="button" class="rov-soundboard-drawer__sound" data-sound-id="{{ sound.id }}" disabled>
+                    <i class="fa-solid fa-play" aria-hidden="true"></i><span>{{ sound.label }}</span>
+                </button>
+                {% endfor %}
+            </div>
+            <p class="rov-soundboard-drawer__status" data-soundboard-status role="status" aria-live="polite"></p>
+        </section>
+        <button class="rov-soundboard-drawer__toggle" type="button" data-soundboard-toggle aria-expanded="false" aria-controls="soundboard-drawer" title="Open soundboard">
+            <i class="fa-solid fa-volume-high" aria-hidden="true"></i><span class="visually-hidden">Open soundboard</span>
+        </button>
+    </aside>
+    {% endif %}
+
+    <!-- The TypeScript build emits ES modules; map Vue to the committed runtime vendor asset. -->
+    
+    
+    
+
+    
+
+    
+
+<!--
+    <div  class="bg-image vh-100"
+        style="margin-top: -60px;
+        background-image: url('/static/background.jpg');">
+    </div>
+-->
+
+    {% if active_robot_profile.profile_id == "rov" %}
+    <rov-hud id="rov-hud" aria-label="ROV navigation HUD"></rov-hud>
+    <rov-instrument-style-editor target="rov-hud" profile="rov"></rov-instrument-style-editor>
+    <div data-vue-instrument="live-dock"></div>
+    {% endif %}
+
+    <!-- End your project here-->
+
+        <!-- Custom scripts -->
+
+        
+{% endblock %}
+{% block scripts %}
+<script type="module" src="/static/dist/components/rov-depth.js"></script>
+<script>
+        (() => {
+            const toggle = document.querySelector('[data-diagnostic-toggle]');
+            const close = document.querySelector('[data-diagnostic-close]');
+            const panel = document.getElementById('live-diagnostics');
+            const setDiagnosticsOpen = open => {
+                if (!toggle || !panel) return;
+                panel.hidden = !open;
+                toggle.setAttribute('aria-expanded', String(open));
+            };
+            toggle?.addEventListener('click', () => setDiagnosticsOpen(panel?.hidden));
+            close?.addEventListener('click', () => setDiagnosticsOpen(false));
+
+            const download = document.getElementById('downloadRate');
+            const upload = document.getElementById('uploadRate');
+            let previous = performance.now();
+            let downBytes = 0;
+            let upBytes = 0;
+
+            const update = () => {
+                const now = performance.now();
+                const elapsed = Math.max((now - previous) / 1000, 0.1);
+                download.textContent = (downBytes / elapsed / 1024).toFixed(1);
+                upload.textContent = (upBytes / elapsed / 1024).toFixed(1);
+                downBytes = 0;
+                upBytes = 0;
+                previous = now;
+            };
+
+            const measure = async () => {
+                const requestBytes = 64;
+                const response = await fetch(`/api/network-ping?ts=${Date.now()}`, {cache: 'no-store'});
+                const body = await response.arrayBuffer();
+                upBytes += requestBytes;
+                downBytes += Number(response.headers.get('content-length')) || body.byteLength;
+            };
+
+            setInterval(() => { measure().catch(() => {}); }, 2000);
+            setInterval(update, 1000);
+            measure().catch(() => {});
+        })();
+    </script>
+{% if soundboard %}
+<script>
+        (() => {
+            const toggle = document.querySelector('[data-soundboard-toggle]');
+            const close = document.querySelector('[data-soundboard-close]');
+            const panel = document.getElementById('soundboard-drawer');
+            const buttons = [...document.querySelectorAll('[data-sound-id]')];
+            const hint = document.querySelector('[data-soundboard-hint]');
+            const status = document.querySelector('[data-soundboard-status]');
+            const setOpen = open => {
+                if (!toggle || !panel) return;
+                panel.hidden = !open;
+                toggle.setAttribute('aria-expanded', String(open));
+            };
+            const setStatus = message => { if (status) status.textContent = message; };
+            toggle?.addEventListener('click', () => setOpen(panel?.hidden));
+            close?.addEventListener('click', () => setOpen(false));
+
+            fetch('/api/session', {cache: 'no-store', credentials: 'same-origin'}).then(response => response.json()).then(session => {
+                const permitted = session.authenticated && ['driver', 'admin'].includes(session.role);
+                buttons.forEach(button => { button.disabled = !permitted; });
+                if (hint) hint.hidden = permitted;
+            }).catch(() => setStatus('Soundboard availability could not be checked.'));
+
+            buttons.forEach(button => button.addEventListener('click', async () => {
+                const soundId = button.dataset.soundId;
+                if (!soundId) return;
+                buttons.forEach(item => { item.disabled = true; });
+                setStatus('Sending sound command…');
+                try {
+                    const response = await fetch('/api/soundboard/play', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        credentials: 'same-origin',
+                        body: JSON.stringify({sound_id: soundId}),
+                    });
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(result.detail || 'Sound command was rejected.');
+                    setStatus(`${result.label} requested.`);
+                } catch (error) {
+                    setStatus(error instanceof Error ? error.message : 'Sound command failed.');
+                } finally {
+                    fetch('/api/session', {cache: 'no-store', credentials: 'same-origin'}).then(response => response.json()).then(session => {
+                        const permitted = session.authenticated && ['driver', 'admin'].includes(session.role);
+                        buttons.forEach(item => { item.disabled = !permitted; });
+                    }).catch(() => {});
+                }
+            }));
+        })();
+    </script>
+{% endif %}
+<script>
+        (() => {
+            const camera = document.getElementById('mainCamera');
+            const liveSource = '/cam1';
+            const fallbackSource = '/static/background.jpg';
+            const retryDelayMs = 5000;
+            let showingFallback = false;
+
+            function useFallback() {
+                if (!showingFallback) {
+                    showingFallback = true;
+                    camera.src = fallbackSource;
+                }
+                window.setTimeout(checkCamera, retryDelayMs);
+            }
+
+            function checkCamera() {
+                const probe = new Image();
+                probe.onload = () => {
+                    showingFallback = false;
+                    camera.src = liveSource + '?retry=' + Date.now();
+                };
+                probe.onerror = () => window.setTimeout(checkCamera, retryDelayMs);
+                probe.src = liveSource + '?probe=' + Date.now();
+            }
+
+            camera.onerror = useFallback;
+            window.setTimeout(checkCamera, retryDelayMs);
+        })();
+    </script>
+<script type="text/javascript">
+            const uptimeElement = document.getElementById("upTime");        // Uptime
+            const tempElement = document.getElementById("temperature");     // Water Temperature
+            const depthElement = document.getElementById("depth");          // Depth (this is a positive number…)
+
+            function router(topic, message) {
+                if (topic === "system/uptime") {
+                    if (uptimeElement) {
+                        uptimeElement.innerHTML = "<i class=\"fa-solid fa-hourglass-half\"></i> " + message.toString();
+                    }
+                }
+
+                if (topic === "sensor/ahrs/imu/roll") {
+                    // Roll and pitch are rendered by the combined ROV HUD.
+                }
+
+                if (topic === "sensor/water/temperature") {
+                    if (tempElement) {
+                        tempElement.innerHTML = "<i class=\"fa-solid fa-temperature-half\"></i>&nbsp;" + message.toString()  + " &deg;C";
+                    }
+                }
+            }
+
+            let telemetrySocket;
+            let reconnectTimer;
+
+            function connectTelemetry() {
+                const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+                telemetrySocket = new WebSocket(`${protocol}//${location.host}/ws/telemetry`);
+                telemetrySocket.onopen = () => console.log("Connected to Cockpit telemetry");
+                telemetrySocket.onmessage = (event) => {
+                    const update = JSON.parse(event.data);
+                    router(update.topic, update.value);
+                };
+                telemetrySocket.onclose = () => {
+                    clearTimeout(reconnectTimer);
+                    reconnectTimer = setTimeout(connectTelemetry, 2000);
+                };
+                telemetrySocket.onerror = () => telemetrySocket.close();
+            }
+
+            connectTelemetry();
+        </script>
+{% endblock %}

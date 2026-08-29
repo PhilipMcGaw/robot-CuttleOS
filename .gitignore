@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+node-runtime/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.env
+!*.env.example
+runtime/
+node-runtime/
+_bootstrap_node/
+data/csv/*
+!data/csv/.gitkeep
+media/stills/*
+!media/stills/.gitkeep
+media/videos/*
+!media/videos/.gitkeep
+*.log

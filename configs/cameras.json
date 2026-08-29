@@ -1,0 +1,24 @@
+{
+  "cameras": [
+    {
+      "id": "cam1",
+      "name": "USB camera",
+      "device": "/dev/video0",
+      "enabled": true,
+      "width": 640,
+      "height": 480,
+      "framerate": 30,
+      "stream_port": 8001
+    },
+    {
+      "id": "cam2",
+      "name": "Pi camera",
+      "device": "/dev/video2",
+      "enabled": true,
+      "width": 640,
+      "height": 480,
+      "framerate": 30,
+      "stream_port": 8002
+    }
+  ]
+}

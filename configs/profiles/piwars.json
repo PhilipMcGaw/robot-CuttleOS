@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "profile_id": "piwars",
+  "display_name": "PiWars Robot",
+  "identity_icon": "fa-robot",
+  "profile_status": "functional-example",
+  "namespace": "piwars",
+  "transport": { "nats_subject_prefix": "piwars." },
+  "time_synchronisation": {
+    "enabled": true,
+    "command_subject": "piwars.cockpit.command.system.time-sync",
+    "status_subject": "piwars.control.status.system.time-sync",
+    "interval_seconds": 60,
+    "minimum_adjustment_seconds": 0.5
+  },
+  "capabilities": {
+    "battery": true,
+    "heading": false,
+    "attitude": false,
+    "depth": false,
+    "distance_sensors": true,
+    "line_sensors": true,
+    "soundboard": false,
+    "drive_control": true,
+    "challenge_controls": true
+  },
+  "instruments": [
+    { "id": "battery", "enabled": true, "position": "top-bar" },
+    { "id": "network-status", "enabled": true, "position": "top-bar" }
+  ],
+  "telemetry": {
+    "battery_percentage": { "subject": "piwars.telemetry.power.battery.percentage", "unit": "%", "scale": 1, "precision": 0 },
+    "battery_voltage": { "subject": "piwars.telemetry.power.battery.voltage", "unit": "V", "scale": 1, "precision": 2 },
+    "distance_front": { "subject": "piwars.telemetry.sensors.distance.front", "unit": "m", "scale": 1, "precision": 2 },
+    "distance_left": { "subject": "piwars.telemetry.sensors.distance.left", "unit": "m", "scale": 1, "precision": 2 },
+    "distance_right": { "subject": "piwars.telemetry.sensors.distance.right", "unit": "m", "scale": 1, "precision": 2 },
+    "line_left": { "subject": "piwars.telemetry.sensors.line.left", "unit": "", "scale": 1, "precision": 0 },
+    "line_centre": { "subject": "piwars.telemetry.sensors.line.centre", "unit": "", "scale": 1, "precision": 0 },
+    "line_right": { "subject": "piwars.telemetry.sensors.line.right", "unit": "", "scale": 1, "precision": 0 }
+  },
+  "commands": {
+    "drive.throttle": { "subject": "piwars.command.drive.throttle", "unit": "%", "minimum": -100, "maximum": 100 },
+    "drive.steering": { "subject": "piwars.command.drive.steering", "unit": "%", "minimum": -100, "maximum": 100 },
+    "challenge.start": { "subject": "piwars.command.challenge.start", "unit": "", "minimum": 0, "maximum": 1 },
+    "challenge.stop": { "subject": "piwars.command.challenge.stop", "unit": "", "minimum": 0, "maximum": 1 }
+  },
+  "hardware": {
+    "adapters": [
+      {
+        "id": "main-hat",
+        "driver": "adeept-robot-hat-adm133",
+        "model": "ADM133",
+        "validation_status": "planned-unverified",
+        "bindings": {
+          "dc-motor-drive": { "commands": ["drive.throttle", "drive.steering"] },
+          "adc-battery": { "telemetry": ["battery_percentage", "battery_voltage"] },
+          "line-tracking": { "telemetry": ["line_left", "line_centre", "line_right"] },
+          "ultrasonic-range": { "telemetry": ["distance_front"] }
+        }
+      }
+    ]
+  },
+  "cameras": {
+    "default": "main",
+    "devices": [{ "id": "main", "label": "Main camera", "enabled": true, "stream_path": "/cam1" }]
+  },
+  "input_mappings": {
+    "throttle": { "source": "gamepad.axis.1", "command": "drive.throttle", "dead_zone": 0.12, "invert": true },
+    "steering": { "source": "gamepad.axis.0", "command": "drive.steering", "dead_zone": 0.12 },
+    "challenge_start": { "source": "gamepad.button.0", "command": "challenge.start", "value": 1 },
+    "challenge_stop": { "source": "gamepad.button.1", "command": "challenge.stop", "value": 1 }
+  }
+}

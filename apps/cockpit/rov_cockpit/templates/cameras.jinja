@@ -1,0 +1,59 @@
+{% extends "base.jinja" %}
+{% block title %}cameras — ROV{% endblock %}
+{% block content %}
+
+
+<main class="container py-4">
+  <h1>Camera configuration</h1>
+  <p class="text-muted">This is the central camera inventory. Save changes, then restart Motion to apply them.</p>
+
+  <div id="message" class="alert d-none" role="alert"></div>
+  <div class="row g-4">
+    {% for camera in cameras %}
+    <div class="col-12 col-xl-6">
+      <form class="card bg-dark-subtle p-3 camera-form" data-camera-id="{{ camera.id }}">
+        <h2 class="h4">{{ camera.id }}</h2>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Name</label><input class="form-control" name="name" value="{{ camera.name }}" required></div>
+          <div class="col-md-6"><label class="form-label">Device</label><input class="form-control" name="device" value="{{ camera.device }}" required></div>
+          <div class="col-md-3"><label class="form-label">Width</label><input class="form-control" type="number" name="width" value="{{ camera.width }}" min="160" max="3840"></div>
+          <div class="col-md-3"><label class="form-label">Height</label><input class="form-control" type="number" name="height" value="{{ camera.height }}" min="120" max="2160"></div>
+          <div class="col-md-3"><label class="form-label">FPS</label><input class="form-control" type="number" name="framerate" value="{{ camera.framerate }}" min="1" max="120"></div>
+          <div class="col-md-3"><label class="form-label">Motion port</label><input class="form-control" type="number" name="stream_port" value="{{ camera.stream_port }}" min="1024" max="65535"></div>
+          <div class="col-12 form-check form-switch ms-2"><input class="form-check-input" type="checkbox" name="enabled" {% if camera.enabled %}checked{% endif %}><label class="form-check-label">Enabled</label></div>
+        </div>
+        <button class="btn btn-primary mt-3" type="submit">Save {{ camera.id }}</button>
+        <a class="btn btn-outline-secondary mt-3" href="/{{ camera.id }}" target="_blank">Open stream</a>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+  for (const form of document.querySelectorAll('.camera-form')) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const fields = new FormData(form);
+      const camera = {
+        id: form.dataset.cameraId,
+        name: fields.get('name'),
+        device: fields.get('device'),
+        width: Number(fields.get('width')),
+        height: Number(fields.get('height')),
+        framerate: Number(fields.get('framerate')),
+        stream_port: Number(fields.get('stream_port')),
+        enabled: fields.get('enabled') === 'on'
+      };
+      const response = await fetch(`/api/cameras/${camera.id}`, {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(camera)});
+      const message = document.getElementById('message');
+      message.className = `alert ${response.ok ? 'alert-success' : 'alert-danger'}`;
+      message.textContent = response.ok ? `${camera.id} saved. Restart Motion to apply it.` : `Could not save ${camera.id}.`;
+    });
+  }
+</script>
+{% endblock %}
+
+
+

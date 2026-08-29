@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="537.94183" height="539.90863" viewBox="0 0 538 540">
+  <circle cx="269" cy="270" r="214" fill="#262626" stroke="#555" stroke-width="8"/>
+  <circle cx="269" cy="270" r="188" fill="none" stroke="#888" stroke-width="3"/>
+  <path d="M80 270H458M269 80V460" stroke="#777" stroke-width="3" opacity=".65"/>
+  <path d="M112 190H168M370 190H426M112 350H168M370 350H426" stroke="#ddd" stroke-width="5" stroke-linecap="round"/>
+  <text x="269" y="125" text-anchor="middle" fill="#ddd" font-family="Arial, sans-serif" font-size="24" letter-spacing="3">ROV</text>
+  <text x="269" y="432" text-anchor="middle" fill="#aaa" font-family="Arial, sans-serif" font-size="14" letter-spacing="2">TURN</text>
+</svg>

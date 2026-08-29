@@ -1,0 +1,10 @@
+{
+  "driver": {
+    "password_hash": "replace-with-a-pbkdf2-password-hash",
+    "role": "driver"
+  },
+  "admin": {
+    "password_hash": "replace-with-a-pbkdf2-password-hash",
+    "role": "admin"
+  }
+}

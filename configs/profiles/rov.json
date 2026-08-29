@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "profile_id": "rov",
+  "display_name": "ROV",
+  "identity_icon": "fa-otter",
+  "profile_status": "physical-hardware-profile",
+  "namespace": "rov",
+  "transport": {
+    "nats_subject_prefix": "rov."
+  },
+  "time_synchronisation": {
+    "enabled": true,
+    "command_subject": "rov.cockpit.command.system.time-sync",
+    "status_subject": "rov.control.status.system.time-sync",
+    "interval_seconds": 60,
+    "minimum_adjustment_seconds": 0.5
+  },
+  "capabilities": {
+    "depth": true,
+    "heading": true,
+    "attitude": true,
+    "camera_pitch": true,
+    "lights": true,
+    "water_temperature": true,
+    "map": true,
+    "soundboard": false,
+    "drive_control": true
+  },
+  "instruments": [
+    { "id": "rov-hud", "enabled": true, "position": "navigation-overlay" },
+    { "id": "battery", "enabled": true, "position": "top-bar" },
+    { "id": "network-status", "enabled": true, "position": "top-bar" }
+  ],
+  "telemetry": {
+    "battery_percentage": { "subject": "rov.telemetry.power.battery.percentage", "unit": "%", "scale": 1, "precision": 0 },
+    "battery_voltage": { "subject": "rov.telemetry.power.battery.voltage", "unit": "V", "scale": 1, "precision": 2 },
+    "depth": { "subject": "rov.telemetry.navigation.depth", "unit": "m", "scale": 1, "precision": 2 },
+    "heading": { "subject": "rov.telemetry.navigation.heading", "unit": "°", "scale": 1, "precision": 1 },
+    "roll": { "subject": "rov.telemetry.navigation.attitude.roll", "unit": "°", "scale": 1, "precision": 1 },
+    "pitch": { "subject": "rov.telemetry.navigation.attitude.pitch", "unit": "°", "scale": 1, "precision": 1 },
+    "camera_pitch": { "subject": "rov.telemetry.camera.main.pitch", "unit": "°", "scale": 1, "precision": 1 },
+    "light_percentage": { "subject": "rov.telemetry.output.lights.left", "unit": "%", "scale": 1, "precision": 0 },
+    "water_temperature": { "subject": "rov.telemetry.water.temperature", "unit": "°C", "scale": 1, "precision": 1 }
+  },
+  "commands": {
+    "drive.throttle": { "subject": "rov.command.drive.throttle", "unit": "%", "minimum": -100, "maximum": 100 },
+    "drive.steering": { "subject": "rov.command.drive.steering", "unit": "%", "minimum": -100, "maximum": 100 },
+    "camera.pitch": { "subject": "rov.command.camera.main.pitch", "unit": "°", "minimum": -90, "maximum": 90 }
+  },
+  "cameras": {
+    "default": "main",
+    "devices": [{ "id": "main", "label": "Main camera", "enabled": true, "stream_path": "/cam1" }]
+  },
+  "input_mappings": {
+    "throttle": { "source": "gamepad.axis.1", "command": "drive.throttle", "dead_zone": 0.12, "invert": true },
+    "steering": { "source": "gamepad.axis.0", "command": "drive.steering", "dead_zone": 0.12 },
+    "camera_pitch": { "source": "gamepad.axis.3", "command": "camera.pitch", "dead_zone": 0.12 }
+  }
+}

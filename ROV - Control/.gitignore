@@ -1,0 +1,7 @@
+configs/network.env
+configs/network.secrets.env
+configs/nats.env
+__pycache__/
+*.py[cod]
+.venv/
+data/

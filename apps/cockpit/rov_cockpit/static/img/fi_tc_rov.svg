@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="537.94183" height="539.90863" viewBox="0 0 538 540" preserveAspectRatio="xMidYMid meet">
+  <!-- Compact ROV silhouette for the flight-indicator turn coordinator. -->
+  <g fill="none" stroke="#000000" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ROV frame and central pressure hull -->
+    <rect x="178" y="185" width="182" height="170" rx="22" fill="#ffffff" stroke="none"/>
+    <rect x="178" y="185" width="182" height="170" rx="22"/>
+    <path d="M178 220H135V320H178M360 220H403V320H360"/>
+    <path d="M205 185V150H333V185M205 355V390H333V355"/>
+    <!-- Four horizontal thruster pods -->
+    <circle cx="125" cy="195" r="34" fill="#ffffff"/>
+    <circle cx="413" cy="195" r="34" fill="#ffffff"/>
+    <circle cx="125" cy="345" r="34" fill="#ffffff"/>
+    <circle cx="413" cy="345" r="34" fill="#ffffff"/>
+    <path d="M125 161V229M91 195H159M413 161V229M379 195H447M125 311V379M91 345H159M413 311V379M379 345H447"/>
+    <!-- Camera dome and tether -->
+    <path d="M235 185C235 148 303 148 303 185"/>
+    <path d="M269 150V112"/>
+  </g>
+</svg>

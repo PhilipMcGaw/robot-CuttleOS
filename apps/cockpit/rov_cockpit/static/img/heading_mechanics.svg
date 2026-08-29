@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400.667" height="400.666" viewBox="0 0 401 401">
+  <!-- ROV heading mechanics: cardinal reference marks only. -->
+  <g fill="#ff2a00">
+    <polygon points="200.5,51 194,67 207,67"/>
+    <polygon points="350,200.5 334,194 334,207"/>
+    <polygon points="200.5,350 194,334 207,334"/>
+    <polygon points="51,200.5 67,194 67,207"/>
+  </g>
+  <g fill="#fff">
+    <polygon points="306,95 296,108 309,105"/>
+    <polygon points="95,95 105,108 92,105"/>
+    <polygon points="306,306 296,293 309,296"/>
+    <polygon points="95,306 105,293 92,296"/>
+  </g>
+</svg>

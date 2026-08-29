@@ -1,0 +1,17 @@
+[Unit]
+Description=Main Python Code loop
+After=network.target
+
+[Service]
+User=@ROBOT_USER@
+WorkingDirectory=@CONTROL_ROOT@
+EnvironmentFile=-/etc/robot/nats.env
+ExecStart="@CONTROL_ROOT@/.venv/bin/python" -m rov_control.main
+Restart=always
+CapabilityBoundingSet=CAP_SYS_TIME
+AmbientCapabilities=CAP_SYS_TIME
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
