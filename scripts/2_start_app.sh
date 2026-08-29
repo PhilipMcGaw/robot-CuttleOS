@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-COCKPIT_DIR="$PROJECT_ROOT/apps/cockpit"
+COCKPIT_DIR="$PROJECT_ROOT/cockpit/src"
 
 "$PROJECT_ROOT/scripts/build_frontend.sh"
 

@@ -50,7 +50,7 @@ robot-CuttleOS/
 
 ## Components
 
-### Cockpit (apps/cockpit)
+### Cockpit (cockpit/)
 FastAPI-based web application providing:
 - Browser-based operator interface
 - WebSocket telemetry streaming

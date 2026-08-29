@@ -3,7 +3,7 @@ setlocal EnableExtensions
 set "SCRIPT_DIR=%~dp0"
 for %%I in ("%SCRIPT_DIR%..") do set "PROJECT_ROOT=%%~fI"
 set "FRONTEND_DIR=%PROJECT_ROOT%\frontend\cockpit"
-set "STATIC_DIR=%PROJECT_ROOT%\apps\cockpit\rov_cockpit\static"
+set "STATIC_DIR=%PROJECT_ROOT%\cockpit\src\rov_cockpit\static"
 set "PATH=%PROJECT_ROOT%\node-runtime;%PATH%"
 echo [INFO] TypeScript frontend build
 if not exist "%FRONTEND_DIR%\package.json" (

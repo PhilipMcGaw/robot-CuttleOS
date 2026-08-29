@@ -50,7 +50,8 @@
 		"editor.wordWrap": "on",
 		"chat.tools.terminal.autoApprove": {
 			"mkdir": true,
-			"cp": true
+			"cp": true,
+			"true": true
 		}
 	},
 	"launch": {
@@ -62,7 +63,7 @@
 				"request": "launch",
 				"module": "uvicorn",
 				"args": ["rov_cockpit.app:app", "--reload", "--host", "0.0.0.0", "--port", "8080"],
-				"cwd": "${workspaceFolder}/apps/cockpit",
+				"cwd": "${workspaceFolder}/cockpit/src",
 				"console": "integratedTerminal"
 			},
 			{
@@ -70,7 +71,7 @@
 				"type": "python",
 				"request": "launch",
 				"module": "rov_control.main",
-				"cwd": "${workspaceFolder}/ROV - Control/src",
+				"cwd": "${workspaceFolder}/control/src",
 				"console": "integratedTerminal"
 			},
 			{
@@ -78,7 +79,7 @@
 				"type": "python",
 				"request": "launch",
 				"module": "rov_datalogger.main",
-				"cwd": "${workspaceFolder}/ROV - Datalogger/src",
+				"cwd": "${workspaceFolder}/datalogger/src",
 				"console": "integratedTerminal"
 			}
 		]

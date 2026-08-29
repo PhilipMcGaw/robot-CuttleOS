@@ -5,10 +5,10 @@ import shutil
 import subprocess
 
 
-COCKPIT_ROOT = Path(__file__).resolve().parents[2]
+COCKPIT_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = COCKPIT_ROOT
-CONTROL_ROOT = WORKSPACE_ROOT / "apps" / "control"
-DATALOGGER_ROOT = WORKSPACE_ROOT / "apps" / "datalogger"
+CONTROL_ROOT = WORKSPACE_ROOT / "control"
+DATALOGGER_ROOT = WORKSPACE_ROOT / "datalogger"
 
 
 def read(path: Path) -> str:
@@ -59,7 +59,7 @@ def test_service_templates_are_portable_and_use_the_restricted_nats_environment(
     cockpit_unit = read(COCKPIT_ROOT / "configs" / "cockpit.service")
 
     assert "@COCKPIT_ROOT@" in cockpit_unit
-    assert 'ExecStart=/bin/bash "@COCKPIT_ROOT@/apps/cockpit/run.sh"' in cockpit_unit
+    assert 'ExecStart=/bin/bash "@COCKPIT_ROOT@/cockpit/run.sh"' in cockpit_unit
     assert "EnvironmentFile=-/etc/robot/nats.env" in cockpit_unit
     assert "/home/pi/" not in cockpit_unit
 
@@ -80,7 +80,7 @@ def test_rendered_nginx_and_motion_configuration_do_not_assume_a_checkout_path()
     motion_template = read(COCKPIT_ROOT / "configs" / "motion.conf")
 
     assert "@COCKPIT_ROOT@" in nginx_template
-    assert 'alias "@COCKPIT_ROOT@/apps/cockpit/rov_cockpit/static/";' in nginx_template
+    assert 'alias "@COCKPIT_ROOT@/cockpit/src/rov_cockpit/static/";' in nginx_template
     assert "COCKPIT_ROOT_ESCAPED" in nginx_installer
     assert "@COCKPIT_ROOT@" in motion_template
 

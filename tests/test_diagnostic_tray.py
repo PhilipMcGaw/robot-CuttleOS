@@ -7,8 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_network_rate_is_in_the_collapsible_left_diagnostic_tray() -> None:
-    page = (ROOT / "src" / "rov_cockpit" / "templates" / "home.jinja").read_text(encoding="utf-8")
-    styles = (ROOT / "src" / "rov_cockpit" / "static" / "css" / "cockpit.css").read_text(encoding="utf-8")
+    page = (ROOT / "cockpit" / "src" / "rov_cockpit" / "templates" / "home.jinja").read_text(encoding="utf-8")
+    styles = (ROOT / "cockpit" / "src" / "rov_cockpit" / "static" / "css" / "cockpit.css").read_text(encoding="utf-8")
     assert "rov-diagnostic-tray" in page
     assert 'id="live-diagnostics" hidden' in page
     assert 'data-diagnostic-toggle' in page

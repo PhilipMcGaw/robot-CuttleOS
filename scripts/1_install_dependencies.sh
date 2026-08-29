@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VENV="$PROJECT_ROOT/.venv"
-COCKPIT_REQUIREMENTS="$PROJECT_ROOT/apps/cockpit/requirements.txt"
+COCKPIT_REQUIREMENTS="$PROJECT_ROOT/cockpit/requirements.txt"
 
 info() { echo "[INFO] $*"; }
 pass() { echo "[PASS] $*"; }

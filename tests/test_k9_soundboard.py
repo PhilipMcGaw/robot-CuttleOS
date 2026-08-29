@@ -83,8 +83,8 @@ def test_authorised_k9_soundboard_request_publishes_the_profile_command() -> Non
 
 
 def test_soundboard_drawer_and_endpoint_are_profile_gated() -> None:
-    page = (ROOT / "src" / "rov_cockpit" / "templates" / "home.jinja").read_text(encoding="utf-8")
-    app = (ROOT / "src" / "rov_cockpit" / "app.py").read_text(encoding="utf-8")
+    page = (ROOT / "cockpit" / "src" / "rov_cockpit" / "templates" / "home.jinja").read_text(encoding="utf-8")
+    app = (ROOT / "cockpit" / "src" / "rov_cockpit" / "app.py").read_text(encoding="utf-8")
 
     assert "{% if soundboard %}" in page
     assert 'id="soundboard-drawer" hidden' in page
@@ -92,7 +92,7 @@ def test_soundboard_drawer_and_endpoint_are_profile_gated() -> None:
     assert '@app.post("/api/soundboard/play")' in app
     assert 'user["role"] not in {"driver", "admin"}' in app
     assert 'await client.publish(sound_command.subject' in app
-    header = (ROOT / "src" / "rov_cockpit" / "templates" / "header.jinja").read_text(encoding="utf-8")
+    header = (ROOT / "cockpit" / "src" / "rov_cockpit" / "templates" / "header.jinja").read_text(encoding="utf-8")
     assert 'fa-solid {{ active_robot_profile.identity_icon }}' in header
 
 

@@ -4,14 +4,15 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ("MASTER_CONTEXT.md", "CONTRIBUTING.md", "docs/README.md", "docs/documentation-policy.md", "docs/status.md", "docs/testing.md", "docs/hardware.md")
+MONOREPO_ROOT = ROOT.parent
+REQUIRED = ("CONTRIBUTING.md", "docs/README.md", "docs/documentation-policy.md", "docs/status.md", "docs/testing.md", "docs/hardware.md")
 TERMS = ("Implemented", "Automated-test verification", "Bench-tested", "Production-validated", "Planned or unverified")
 ARTIFACTS = ("src/rov_control/main.py", "configs/python.service", "scripts/1_install_dependencies.bat", "scripts/2_start_app.bat")
 
 def main() -> int:
     missing = [item for item in REQUIRED if not (ROOT / item).is_file()]
     if missing: print("[FAIL] Missing documentation: " + ", ".join(missing), file=sys.stderr); return 1
-    files = [ROOT / "MASTER_CONTEXT.md", ROOT / "CONTRIBUTING.md", *sorted((ROOT / "docs").glob("*.md"))]
+    files = [MONOREPO_ROOT / "MASTER_CONTEXT.md", ROOT / "CONTRIBUTING.md", *sorted((ROOT / "docs").glob("*.md"))]
     text = "\n".join(p.read_text(encoding="utf-8") for p in files)
     missing_terms = [term for term in TERMS if term not in text]
     if missing_terms: print("[FAIL] Missing status terms: " + ", ".join(missing_terms), file=sys.stderr); return 1

@@ -3,7 +3,7 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
 FRONTEND_DIR="${PROJECT_ROOT}/frontend/cockpit"
-STATIC_DIR="${PROJECT_ROOT}/apps/cockpit/rov_cockpit/static"
+STATIC_DIR="${PROJECT_ROOT}/cockpit/src/rov_cockpit/static"
 printf '%s\n' '[INFO] TypeScript frontend build'
 NPM="${PROJECT_ROOT}/node-runtime/bin/npm"
 if [[ ! -x "$NPM" ]] && command -v npm >/dev/null 2>&1; then NPM="$(command -v npm)"; fi

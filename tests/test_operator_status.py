@@ -36,9 +36,9 @@ def test_system_status_reports_nats_and_simulation_state() -> None:
 
 
 def test_shared_alert_has_all_operator_states() -> None:
-    header = (ROOT / "src" / "rov_cockpit" / "templates" / "header.jinja").read_text(encoding="utf-8")
+    header = (ROOT / "cockpit" / "src" / "rov_cockpit" / "templates" / "header.jinja").read_text(encoding="utf-8")
     frontend = (ROOT / "frontend" / "src" / "main.ts").read_text(encoding="utf-8")
-    simulator = (ROOT / "src" / "rov_cockpit" / "templates" / "simulator.jinja").read_text(encoding="utf-8")
+    simulator = (ROOT / "cockpit" / "src" / "rov_cockpit" / "templates" / "simulator.jinja").read_text(encoding="utf-8")
 
     assert "data-cockpit-alert" in header
     assert 'fetch("/api/system/status"' in frontend

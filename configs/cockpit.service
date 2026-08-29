@@ -6,7 +6,7 @@ After=network.target
 User=@ROBOT_USER@
 WorkingDirectory=@COCKPIT_ROOT@
 EnvironmentFile=-/etc/robot/nats.env
-ExecStart=/bin/bash "@COCKPIT_ROOT@/apps/cockpit/run.sh"
+ExecStart=/bin/bash "@COCKPIT_ROOT@/cockpit/run.sh"
 Environment=MAP_TILE_PROXY=true
 Environment=CSV_ROOT=@COCKPIT_ROOT@/data/csv
 Restart=always

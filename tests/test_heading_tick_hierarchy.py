@@ -10,7 +10,7 @@ def test_north_is_the_only_largest_heading_tick():
     source = (ROOT / "frontend" / "src" / "components" / "instruments" / "rov-hud.ts").read_text(
         encoding="utf-8"
     )
-    styles = (ROOT / "src" / "rov_cockpit" / "static" / "css" / "cockpit.css").read_text(
+    styles = (ROOT / "cockpit" / "src" / "rov_cockpit" / "static" / "css" / "cockpit.css").read_text(
         encoding="utf-8"
     )
 

@@ -1,4 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-cd "$(dirname "$0")"
-PYTHONPATH=src .venv/bin/python -m rov_datalogger.main
+DATALOGGER_ROOT="$(cd "$(dirname "$0")" && pwd)"
+MONOREPO_ROOT="$(cd "$DATALOGGER_ROOT/.." && pwd)"
+cd "$DATALOGGER_ROOT"
+PYTHONPATH=src "$MONOREPO_ROOT/.venv/bin/python" -m rov_datalogger.main

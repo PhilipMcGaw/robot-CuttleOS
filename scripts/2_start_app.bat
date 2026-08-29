@@ -3,7 +3,7 @@ setlocal EnableExtensions
 set "SCRIPT_DIR=%~dp0"
 for %%I in ("%SCRIPT_DIR%..") do set "PROJECT_ROOT=%%~fI"
 set "PYTHON=%PROJECT_ROOT%\runtime\python.exe"
-set "COCKPIT_DIR=%PROJECT_ROOT%\apps\cockpit"
+set "COCKPIT_DIR=%PROJECT_ROOT%\cockpit\src"
 echo [INFO] ROV Cockpit launcher
 echo [INFO] Project version: unversioned; see MASTER_CONTEXT.md
 echo [INFO] Project directory: %PROJECT_ROOT%

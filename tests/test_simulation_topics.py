@@ -1,8 +1,8 @@
 from pathlib import Path
 
 
-ROOT = Path(__file__).parents[2]
-SIMULATOR = ROOT / "apps/cockpit/rov_cockpit/templates/simulator.jinja"
+ROOT = Path(__file__).parents[1]
+SIMULATOR = ROOT / "cockpit/src/rov_cockpit/templates/simulator.jinja"
 
 
 def test_simulator_exposes_all_instrument_topics() -> None:
