@@ -92,7 +92,8 @@
 			"dbaeumer.vscode-eslint",
 			"ms-vscode.makefile-tools",
 			"redhat.vscode-yaml",
-			"ms-vscode-remote.remote-ssh"
+			"ms-vscode-remote.remote-ssh",
+			"FanaticPythoner.better-todo-tree"
 		]
 	}
 }
