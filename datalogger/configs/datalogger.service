@@ -1,0 +1,21 @@
+[Unit]
+Description=ROV Datalogger
+After=network-online.target nats-server.service
+Wants=network-online.target
+
+[Service]
+User=@ROBOT_USER@
+WorkingDirectory=@DATALOGGER_ROOT@
+EnvironmentFile=-/etc/robot/nats.env
+Environment=NATS_SUBJECT=>
+Environment=DATALOGGER_DATABASE=@DATALOGGER_ROOT@/data/telemetry.sqlite3
+Environment=DATALOGGER_RETENTION_DAYS=30
+Environment=DATALOGGER_EXPORT_DIR=@COCKPIT_ROOT@/media/data/csv
+ExecStart="@DATALOGGER_ROOT@/.venv/bin/python" -m rov_datalogger.main
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
