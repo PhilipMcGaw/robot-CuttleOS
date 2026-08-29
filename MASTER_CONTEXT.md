@@ -347,6 +347,71 @@ Deployment structure:
 
 ---
 
+## Todo Tree plugin integration
+
+**Requirement:** This project uses the VS Code **Better Todo Tree** extension
+to track and visualize TODO, FIXME, and other priority tags across the codebase.
+
+### Formatting standard for TODOs and future roadmap items
+
+All TODO and FIXME comments must follow this format to be recognized by Better Todo Tree:
+
+```
+# TODO: Brief description of what needs to be done
+// TODO: Another example (JavaScript/TypeScript)
+// FIXME: Bug or issue that needs fixing
+// NOTE: Important note or consideration
+// HACK: Quick fix that needs refactoring
+```
+
+**Format rules:**
+- Use a comment marker appropriate to the file language (`#`, `//`, `--`, etc.)
+- Space between marker and tag: `# TODO:` (not `#TODO:`)
+- Space after tag: `TODO: description` (not `TODO:description`)
+- Keep descriptions concise (one line preferred)
+- No additional punctuation after the tag colon
+
+**Supported tags (recognized by Better Todo Tree):**
+- `TODO` — feature or work to be completed
+- `FIXME` — bug or issue requiring attention
+- `NOTE` — important information or context
+- `HACK` — temporary solution needing refactoring
+- `BUG` — confirmed defect
+- `XXX` — critical attention required
+
+**Roadmap items** (larger initiatives tracked in MASTER_CONTEXT.md):
+When documenting roadmap priorities in this file, prefix items with:
+- `[ROADMAP]` or `[TODO]` for alignment with the Better Todo Tree format
+
+Example:
+```markdown
+### Part IV: Future expansion (planned)
+
+#### Workspace & Development Infrastructure
+- [TODO] Better Todo Tree workspace settings (custom tags, exclude patterns, colors)
+- [TODO] Add Control and Datalogger as optional dependency groups in `pyproject.toml`
+- [TODO] Review and unify root-level `.gitignore` for all monorepo patterns
+- [TODO] Unified CI/CD pipeline documentation (GitHub Actions or similar)
+
+#### Consolidation Improvements
+- [ROADMAP] Unified requirements strategy (root-level `pyproject.toml` with optional groups instead of per-service `requirements.txt`)
+- [ROADMAP] Unified venv at monorepo root (currently per-service; simplifies Python path configuration)
+
+#### Core Features & Bug Fixes
+- [TODO] Multi-robot coordination through shared NATS namespace
+- [ROADMAP] Cockpit offline-first PWA implementation
+- [FIXME] Address control timeout race condition on restart
+```
+
+**Developer workflow:**
+1. Use Better Todo Tree extension to scan codebase for all TODO/FIXME/NOTE tags
+2. Open the Better Todo Tree panel via the Activity Bar or command palette
+3. Filter by tag, file, or scope as needed
+4. Update MASTER_CONTEXT.md with strategic roadmap items
+5. Update individual code comments as work progresses
+
+---
+
 ## See also
 
 - [CONSOLIDATION.md](CONSOLIDATION.md) — Monorepo consolidation history
