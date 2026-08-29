@@ -14,6 +14,13 @@ htmlcov/
 *.egg-info/
 dist/
 build/
+.ruff_cache/
+.mypy_cache/
+.pylint/
+.tox/
+pip-log.txt
+pip-delete-this-directory.txt
+.cache/
 
 # Node
 node_modules/
@@ -23,6 +30,11 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 
+# Frontend builds
+frontend/dist/
+frontend/build/
+cockpit/src/rov_cockpit/static/dist/
+
 # IDE
 .vscode/
 .idea/
@@ -30,6 +42,11 @@ package-lock.json
 *.swo
 *~
 .cursor/
+*.sublime-project
+*.sublime-workspace
+.vscode-test/
+.env.local
+.env.*.local
 
 # OS
 .DS_Store
@@ -47,4 +64,17 @@ media/stills/*
 !media/stills/.gitkeep
 media/videos/*
 !media/videos/.gitkeep
+media/data/*
+!media/data/.gitkeep
 *.log
+*.pid
+.DS_Store.lock
+*.swapfile
+
+# Per-service environments (if not using monorepo venv)
+cockpit/.venv/
+cockpit/venv/
+control/.venv/
+control/venv/
+datalogger/.venv/
+datalogger/venv/

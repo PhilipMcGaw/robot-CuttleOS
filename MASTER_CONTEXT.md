@@ -391,11 +391,11 @@ Example:
 - [TODO] Better Todo Tree workspace settings (custom tags, exclude patterns, colors)
 - [TODO] Add Control and Datalogger as optional dependency groups in `pyproject.toml`
 - [TODO] Review and unify root-level `.gitignore` for all monorepo patterns
-- [TODO] Unified CI/CD pipeline documentation (GitHub Actions or similar)
+- ✅ [DONE] CI/CD pipeline documentation (see [docs/ci-cd.md](docs/ci-cd.md))
 
 #### Consolidation Improvements
-- [ROADMAP] Unified requirements strategy (root-level `pyproject.toml` with optional groups instead of per-service `requirements.txt`)
-- [ROADMAP] Unified venv at monorepo root (currently per-service; simplifies Python path configuration)
+- ✅ [DONE] Unified requirements strategy (root-level `pyproject.toml` with optional groups; see [pyproject.toml](pyproject.toml))
+- ✅ [DONE] Unified venv at monorepo root (all services share `.venv/`; updated install scripts)
 
 #### Core Features & Bug Fixes
 - [TODO] Multi-robot coordination through shared NATS namespace

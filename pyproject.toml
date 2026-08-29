@@ -16,6 +16,44 @@ cockpit = [
     "pyopenssl>=25.3.0",
 ]
 
+control = [
+    "adafruit-circuitpython-ads7830>=1.0.6",
+    "adafruit-circuitpython-motor>=3.4.18",
+    "adafruit-circuitpython-pca9685>=3.4.20",
+    "fastapi>=0.115.0",
+    "gpiozero>=2.0.1",
+    "ifaddr>=0.2.0",
+    "jinja2>=3.1.0",
+    "nats-py>=2.10,<3",
+    "psutil>=7.1.0",
+    "pyopenssl>=25.3.0",
+    "pyserial>=3.5",
+    "python-dotenv>=1.2.1",
+    "serial>=0.0.97",
+    "uvicorn[standard]>=0.30.0",
+    "rpi-gpio>=0.7.1; sys_platform == 'linux'",
+]
+
+datalogger = [
+    "nats-py>=2.10,<3",
+]
+
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "black>=24.0.0",
+    "ruff>=0.1.0",
+]
+
+all = [
+    "robot-cuttleos[cockpit,control,datalogger,dev]",
+]
+
+[project.scripts]
+rov-cockpit = "rov_cockpit.app:run_app"
+rov-control = "rov_control.main:main"
+rov-datalogger = "rov_datalogger.main:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

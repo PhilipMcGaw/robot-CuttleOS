@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
+		"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,
 		"python.formatting.provider": "black",
@@ -52,7 +52,57 @@
 			"mkdir": true,
 			"cp": true,
 			"true": true
-		}
+		},
+		"better-todo-tree.tree.hideCompletedItems": false,
+		"better-todo-tree.tree.defaultExpandedFolders": ["/"],
+		"better-todo-tree.highlights.highlightDelay": 500,
+		"better-todo-tree.regex": {
+			"default": "([^\\w\\s]|^)\\s*(TODO|FIXME|NOTE|HACK|BUG|XXX|ROADMAP)\\s*:?\\s*(.*)$"
+		},
+		"better-todo-tree.highlights": {
+			"TODO": {
+				"foreground": "#A6E3A1",
+				"type": "text"
+			},
+			"FIXME": {
+				"foreground": "#F38BA8",
+				"type": "text"
+			},
+			"BUG": {
+				"foreground": "#EBA0AC",
+				"type": "text"
+			},
+			"HACK": {
+				"foreground": "#F9E2AF",
+				"type": "text"
+			},
+			"NOTE": {
+				"foreground": "#89B4FA",
+				"type": "text"
+			},
+			"XXX": {
+				"foreground": "#EBA0AC",
+				"fontStyle": "bold",
+				"type": "text"
+			},
+			"ROADMAP": {
+				"foreground": "#CBA6F7",
+				"type": "text"
+			}
+		},
+		"better-todo-tree.tree.excludeFolders": [
+			"node_modules",
+			".git",
+			"venv",
+			".venv",
+			"__pycache__",
+			"*.egg-info",
+			".pytest_cache",
+			"build",
+			"dist",
+			".ruff_cache",
+			"frontend/dist"
+		]
 	},
 	"launch": {
 		"version": "0.2.0",

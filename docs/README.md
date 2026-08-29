@@ -5,6 +5,7 @@
 - [Platform support](platform-support.md)
 - [Engineering principles](engineering-principles.md)
 - [Testing](testing.md)
+- [CI/CD Pipeline](ci-cd.md)
 - [Documentation currency policy](documentation-policy.md)
 - [Current status](status.md)
 - [Repository context](../MASTER_CONTEXT.md)

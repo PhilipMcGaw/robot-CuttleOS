@@ -3,20 +3,19 @@ set -Eeuo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VENV="$PROJECT_ROOT/.venv"
-COCKPIT_REQUIREMENTS="$PROJECT_ROOT/cockpit/requirements.txt"
 
 info() { echo "[INFO] $*"; }
 pass() { echo "[PASS] $*"; }
 fail() { echo "[FAIL] $*" >&2; exit 1; }
 
-echo "[INFO] ROV Cockpit project dependency installation"
+echo "[INFO] ROV monorepo project dependency installation"
+echo "[INFO] Services: Cockpit (FastAPI web), Control (hardware), Datalogger (telemetry)"
 echo "[INFO] Project directory: $PROJECT_ROOT"
-echo "[INFO] Runtime: project-local Python virtual environment"
+echo "[INFO] Runtime: monorepo-level Python virtual environment"
 echo "[INFO] Operating mode: local dependency installation; no system services are changed"
-echo "[INFO] Requirements: $COCKPIT_REQUIREMENTS"
 
 [[ "$(uname -s)" == "Linux" || "$(uname -s)" == "Darwin" ]] || fail "Unsupported operating system: $(uname -s). Use the Windows batch installer on Windows."
-[[ -f "$COCKPIT_REQUIREMENTS" ]] || fail "Requirements file is missing: $COCKPIT_REQUIREMENTS. Restore the repository before continuing."
+[[ -f "$PROJECT_ROOT/pyproject.toml" ]] || fail "Project configuration is missing: $PROJECT_ROOT/pyproject.toml. Restore the repository before continuing."
 command -v python3 >/dev/null 2>&1 || fail "Python 3 is unavailable. Install Python 3 using the supported operating-system method, then rerun this script."
 
 if [[ "$(uname -s)" == "Linux" && "${EUID}" -eq 0 ]]; then
@@ -40,8 +39,14 @@ else
   info "macOS detected: Node.js/npm will not be installed automatically. An existing npm is optional; committed frontend output remains available."
 fi
 
-info "Creating or reusing the project-local Python environment: $VENV"
-python3 -m venv "$VENV"
+info "Creating or reusing the monorepo-level Python environment: $VENV"
+python3 -m venv "$VENV" || fail "Virtual environment creation failed. Check Python 3 installation and filesystem permissions."
 "$VENV/bin/python" -m pip install --upgrade pip || fail "Python packaging bootstrap failed in $VENV. Check network access and filesystem permissions."
-"$VENV/bin/python" -m pip install -r "$COCKPIT_REQUIREMENTS" || fail "Python dependency installation failed from $COCKPIT_REQUIREMENTS. Review the pip diagnostics above."
-pass "Cockpit Python dependencies installed locally. No system packages or services were changed."
+
+info "Installing all services and development dependencies from $PROJECT_ROOT/pyproject.toml"
+cd "$PROJECT_ROOT"
+"$VENV/bin/python" -m pip install -e ".[all]" || fail "Dependency installation failed. Review the pip diagnostics above."
+
+pass "All services and development dependencies installed in monorepo environment."
+pass "Virtual environment: $VENV"
+pass "No system packages or services were changed."

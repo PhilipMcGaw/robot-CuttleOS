@@ -32,12 +32,43 @@ The installer downloads 64-bit WinPython into `runtime\` when required, verifies
 
 ## macOS and Linux setup
 
-The shell scripts use `uv` to create `.venv` and install the shared `requirements.txt`:
+The shell scripts create a **unified monorepo-level Python virtual environment** and install all service dependencies:
 
 ```bash
 ./scripts/1_install_dependencies.sh
 ./scripts/2_start_app.sh
 ```
+
+**Virtual environment location:** `.venv/` at the monorepo root
+
+**What gets installed:**
+- All Cockpit (FastAPI) dependencies
+- All Control (hardware) dependencies
+- All Datalogger (telemetry) dependencies
+- Development tools (pytest, black, ruff, mypy)
+
+### Running individual services
+
+Each service's `run.sh` script uses the monorepo venv automatically:
+
+```bash
+# From the monorepo root:
+./cockpit/run.sh       # Start Cockpit (web app)
+./control/run.sh       # Start Control (hardware)
+./datalogger/run.sh    # Start Datalogger (telemetry logger)
+```
+
+Or start from VS Code debug menu (F5) using the configured launch configurations.
+
+### Installing a single service's dependencies
+
+If you only need a specific service (e.g., Datalogger on a production robot), run that service's installer:
+
+```bash
+./datalogger/scripts/1_install_dependencies.sh  # Installs only Datalogger deps
+```
+
+This still uses the monorepo-level `.venv/` but skips unnecessary dependencies.
 
 ## Cockpit
 
