@@ -1,0 +1,27 @@
+{% extends "base.jinja" %}
+{% block title %}account — ROV{% endblock %}
+{% block content %}
+
+<main class="container py-5" style="max-width: 720px">
+  <h1><i class="fa-solid fa-user-shield"></i> Account settings</h1>
+  <p class="text-muted">Signed in as <strong>{{ user.user }}</strong> ({{ user.role }}).</p>
+  <div class="card bg-dark-subtle p-4">
+    <h2 class="h4">Change password</h2>
+    <p class="small text-muted">Passwords must be at least 12 characters. Existing passwords cannot be viewed.</p>
+    {% for account in managed_users %}
+    <form method="post" action="/account/password" class="row g-2 align-items-end mb-3">
+      <input type="hidden" name="username" value="{{ account }}">
+      <div class="col-md-5"><label class="form-label">Account</label><input class="form-control" value="{{ account }}" readonly></div>
+      <div class="col-md-5"><label class="form-label" for="password-{{ account }}">New password</label><input class="form-control" id="password-{{ account }}" name="password" type="password" minlength="12" autocomplete="new-password" required></div>
+      <div class="col-md-2"><button class="btn btn-primary" type="submit">Save</button></div>
+    </form>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}
+
+
+

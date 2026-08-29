@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400.667" height="400.666" viewBox="0 0 401 401">
+  <circle cx="200.5" cy="200.5" r="161" fill="#232323"/>
+  <circle cx="200.5" cy="200.5" r="151" fill="none" stroke="#777" stroke-width="2"/>
+  <g stroke="#fff" stroke-width="2" opacity=".9">
+    <path d="M200.5 39.5V62M200.5 339V361M39.5 200.5H62M339 200.5H361"/>
+    <path d="M120 60L130 78M281 60L271 78M60 120L78 130M341 120L323 130M60 281L78 271M341 281L323 271M120 341L130 323M281 341L271 323"/>
+  </g>
+  <g fill="#fff" font-family="Arial, sans-serif" font-size="19" text-anchor="middle">
+    <text x="200.5" y="57">N</text><text x="344" y="207">E</text>
+    <text x="200.5" y="354">S</text><text x="57" y="207">W</text>
+  </g>
+  <!-- Rectangular ROV top-view heading marker with four thruster pods. -->
+  <g fill="#232323" stroke="#ff321f" stroke-width="4" stroke-linejoin="round">
+    <rect x="158" y="137" width="85" height="126" rx="5"/>
+    <rect x="174" y="157" width="53" height="78" rx="4" fill="#333"/>
+    <circle cx="200.5" cy="175" r="10" fill="#ff321f" stroke="none"/>
+    <circle cx="138" cy="145" r="18" fill="#232323"/>
+    <circle cx="263" cy="145" r="18" fill="#232323"/>
+    <circle cx="138" cy="255" r="18" fill="#232323"/>
+    <circle cx="263" cy="255" r="18" fill="#232323"/>
+    <path d="M158 145H138M243 145H263M158 255H138M243 255H263"/>
+    <path d="M179 137V120H222V137"/>
+  </g>
+</svg>

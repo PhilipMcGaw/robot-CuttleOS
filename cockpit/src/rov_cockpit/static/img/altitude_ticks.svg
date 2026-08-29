@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="400.667" height="400.666" viewBox="0, 0, 400.667, 400.666">
+  <g id="Layer_1">
+    <path d="M200.333,46.915 C115.836,46.915 47.333,115.418 47.333,199.915 C47.333,284.412 115.836,352.915 200.333,352.915 C284.83,352.915 353.333,284.412 353.333,199.915 C353.333,115.418 284.831,46.915 200.333,46.915 z M275.85,221.337 C277.779,214.524 278.834,207.345 278.834,199.915 C278.834,192.518 277.789,185.369 275.876,178.583 L324.989,164.714 C328.144,175.907 329.835,187.714 329.835,199.915 C329.835,212.171 328.131,224.029 324.949,235.266 L275.85,221.337 z" fill="#232323"/>
+    <path d="M200.333,49.902 L200.333,73.334" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M288.559,78.569 L274.786,97.525" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M343.084,153.619 L320.799,160.859" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M320.799,239.144 L343.083,246.385" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M288.556,321.434 L274.784,302.477" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M200.331,350.1 L200.331,326.667" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M112.105,321.433 L125.878,302.476" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M57.579,246.383 L79.864,239.143" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M57.58,153.617 L79.864,160.857" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M112.106,78.568 L125.879,97.523" fill-opacity="0" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10"/>
+    <path d="M219.147,51.091 L217.147,66.943" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M237.662,54.623 L233.691,70.101" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M255.588,60.448 L249.709,75.307" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M272.643,68.475 L264.948,82.479" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M303.079,90.591 L292.145,102.24" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M315.981,104.331 L303.672,114.519" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M327.059,119.58 L313.571,128.145" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M336.139,136.098 L321.684,142.903" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M350.125,190.58 L334.18,191.587" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M347.763,171.88 L332.07,174.878" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M350.125,209.429 L334.179,208.429" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M347.762,228.129 L332.067,225.138" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M336.135,263.91 L321.676,257.109" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M327.054,280.427 L313.562,271.868" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M315.975,295.675 L303.663,285.493" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M303.073,309.415 L292.132,297.77" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M272.635,331.528 L264.934,317.527" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M255.58,339.554 L249.694,324.697" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M237.654,345.378 L233.676,329.9" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M219.139,348.909 L217.133,333.056" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M181.515,348.907 L183.516,333.054" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M163,345.375 L166.972,329.896" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M145.074,339.55 L150.955,324.691" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M128.02,331.523 L135.717,317.52" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M97.583,309.409 L108.521,297.758" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M84.68,295.669 L96.992,285.479" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M73.602,280.42 L87.094,271.854" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M64.521,263.902 L78.981,257.095" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M52.896,228.12 L68.595,225.123" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M50.534,209.42 L66.485,208.414" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M50.535,190.571 L66.486,191.572" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M52.897,171.871 L68.598,174.863" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M64.524,136.089 L78.988,142.892" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M73.605,119.571 L87.103,128.134" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M84.685,104.322 L97.003,114.51" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M97.589,90.582 L108.533,102.233" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M128.027,68.468 L135.73,82.476" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M145.083,60.442 L150.969,75.306" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M163.01,54.618 L166.987,70.103" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M181.525,51.087 L183.53,66.948" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10"/>
+    <text transform="matrix(1, 0, 0, 1, 201, 90.315)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">0</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 199.159, 154.087)">
+      <tspan x="-22.503" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">ALT</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 264.611, 112.482)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">1</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 306.944, 152.377)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">2</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 306.944, 248.263)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">3</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 266.361, 286.732)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">4</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 201.111, 309.982)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">5</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 134.472, 287.732)" display="none">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">6</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 96.611, 234.263)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">7</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 94.611, 166.732)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">8</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 137.361, 111.482)">
+      <tspan x="-7.452" y="8.5" font-family="Helvetica" font-size="25" fill="#FFFFFF">9</tspan>
+    </text>
+    <g>
+      <path d="M154.451,277.04 C160.69,280.764 167.424,283.741 174.523,285.873 L156.076,274.311 L154.451,277.04 z" fill="#FFFFFF"/>
+      <path d="M160.444,266.978 L196.489,289.57 C197.764,289.624 199.044,289.66 200.333,289.66 C204.509,289.66 208.618,289.374 212.641,288.821 L165.159,259.06 L160.444,266.978 z" fill="#FFFFFF"/>
+      <path d="M169.527,251.726 L224.696,286.304 C228.497,285.232 232.196,283.918 235.775,282.375 L174.242,243.809 L169.527,251.726 z" fill="#FFFFFF"/>
+      <path d="M200.333,240.833 C192.697,240.833 185.56,238.713 179.465,235.039 L178.61,236.476 L244.711,277.906 C245.193,277.631 245.678,277.362 246.154,277.078 L237.468,262.494 L202.776,240.75 C201.967,240.797 201.155,240.833 200.333,240.833 z" fill="#FFFFFF"/>
+      <path d="M221.14,235.076 C219.115,236.292 216.967,237.318 214.732,238.171 L227.897,246.423 L221.14,235.076 z" fill="#FFFFFF"/>
+    </g>
+    <text transform="matrix(1, 0, 0, 1, 227.359, 84.833)">
+      <tspan x="-18.795" y="-3.5" font-family="Helvetica" font-size="11" fill="#FFFFFF">Meters</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 183.992, 77.833)">
+      <tspan x="-9.677" y="3.5" font-family="Helvetica" font-size="11" fill="#FFFFFF">100</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 206.635, 135.482)">
+      <tspan x="-28.32" y="3.5" font-family="Helvetica" font-size="11" fill="#FFFFFF">10 meters</tspan>
+    </text>
+  </g>
+</svg>

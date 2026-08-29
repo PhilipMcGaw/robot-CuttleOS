@@ -1,0 +1,96 @@
+<!-- Shared operator shell. The document shell is provided by base.jinja. -->
+<header class="rov-status-bar" aria-label="Cockpit status and navigation">
+  <button class="rov-menu-toggle" type="button" aria-expanded="false" aria-controls="rov-navigation" aria-label="Open navigation">
+    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+  </button>
+
+  <a class="rov-status-bar__identity" href="/" aria-label="{{ active_robot_profile.display_name }} live view">
+    <i class="fa-solid {{ active_robot_profile.identity_icon }}" aria-hidden="true"></i>
+    <span>{{ active_robot_profile.display_name }}</span>
+  </a>
+
+  <p class="rov-status-bar__alert" data-cockpit-alert data-status="normal" role="status" aria-live="polite">No recent alerts.</p>
+
+  <div class="rov-status-bar__system" aria-label="System status">
+    <span data-vue-instrument="connection"></span>
+    <span data-vue-instrument="battery"></span>
+    <span data-vue-instrument="voltage"></span>
+    <time class="rov-status-bar__clock" data-cockpit-clock aria-label="Local time"><span data-cockpit-clock-hours>--</span><span class="rov-status-bar__clock-colon" aria-hidden="true">:</span><span data-cockpit-clock-minutes>--</span></time>
+  </div>
+
+  <nav class="rov-menu-popover" id="rov-navigation" hidden aria-label="Primary navigation">
+    <p class="rov-menu-popover__title"><i class="fa-solid fa-compass" aria-hidden="true"></i> Cockpit</p>
+    <a class="rov-menu-popover__item" href="/"><i class="fa-solid fa-video" aria-hidden="true"></i> Live view</a>
+    <a class="rov-menu-popover__item" href="/cameras/"><i class="fa-solid fa-camera" aria-hidden="true"></i> Cameras</a>
+    <a class="rov-menu-popover__item" href="/map/"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Map</a>
+    <a class="rov-menu-popover__item" href="/gamepad/"><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Gamepad</a>
+    <a class="rov-menu-popover__item" href="/files/"><i class="fa-solid fa-film" aria-hidden="true"></i> Files</a>
+    <a class="rov-menu-popover__item" href="/data/"><i class="fa-solid fa-table-list" aria-hidden="true"></i> Raw data</a>
+    <a class="rov-menu-popover__item" href="/simulator/"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Simulator</a>
+    <a class="rov-menu-popover__item" href="/account/"><i class="fa-solid fa-user-shield" aria-hidden="true"></i> Account</a>
+    <a class="rov-menu-popover__item" id="sessionLink" href="/login"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Login</a>
+  </nav>
+</header>
+
+<script>
+  (() => {
+    const toggle = document.querySelector('.rov-menu-toggle');
+    const menu = document.getElementById('rov-navigation');
+    const closeMenu = () => {
+      if (!toggle || !menu) return;
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('rov-menu-open');
+    };
+
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        const opening = menu.hidden;
+        menu.hidden = !opening;
+        toggle.setAttribute('aria-expanded', String(opening));
+        document.body.classList.toggle('rov-menu-open', opening);
+      });
+      menu.addEventListener('click', event => {
+        if (event.target instanceof HTMLAnchorElement) closeMenu();
+      });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
+      document.addEventListener('pointerdown', event => {
+        if (!menu.hidden && !menu.contains(event.target) && !toggle.contains(event.target)) closeMenu();
+      });
+    }
+
+    const clock = document.querySelector('[data-cockpit-clock]');
+    const clockHours = document.querySelector('[data-cockpit-clock-hours]');
+    const clockMinutes = document.querySelector('[data-cockpit-clock-minutes]');
+    const updateClock = () => {
+      const now = new Date();
+      if (clockHours) clockHours.textContent = String(now.getHours()).padStart(2, '0');
+      if (clockMinutes) clockMinutes.textContent = String(now.getMinutes()).padStart(2, '0');
+      if (clock) clock.dateTime = now.toISOString();
+    };
+    updateClock();
+    window.setInterval(updateClock, 1000);
+  })();
+
+  fetch('/api/session', {cache:'no-store', credentials:'same-origin'}).then(r=>r.json()).then(session => {
+    const link=document.getElementById('sessionLink');
+    if (link && session.authenticated) {
+      link.href='/logout'; link.innerHTML='<i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> '+session.username; link.title='Log out';
+    }
+    if (!session.authenticated || !['driver', 'admin'].includes(session.role)) return;
+    const synchroniseBrowserTime = async () => {
+      const response = await fetch('/api/system/time-sync', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify({unix_time_ms: Date.now()}),
+      });
+      if (!response.ok) return 60;
+      const result = await response.json();
+      return Number.isFinite(result.interval_seconds) ? result.interval_seconds : 60;
+    };
+    synchroniseBrowserTime().then(intervalSeconds => {
+      window.setInterval(() => { synchroniseBrowserTime().catch(() => {}); }, intervalSeconds * 1_000);
+    }).catch(() => {});
+  }).catch(() => {});
+</script>
