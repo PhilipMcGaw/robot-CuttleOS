@@ -1,1 +1,1 @@
-See the project-level Creative Commons Attribution-NonCommercial-ShareAlike 4.0 licence text maintained in the parent ROV repository.
+See the project-level Creative Commons Attribution-NonCommercial-ShareAlike 4.0 licence text maintained in the root directory: [`../LICENSE-CC-BY-NC-SA-4.0.txt`](../LICENSE-CC-BY-NC-SA-4.0.txt)

@@ -92,6 +92,7 @@ TypeScript/Vue.js frontend for the cockpit interface.
 
 ## Documentation
 See `docs/` for detailed documentation on development, deployment, and testing.
+See `ROADMAP.md` for planned architectural improvements and feature development.
 
 ## License
-See `docs/LICENSES.md` for license information.
+See `LICENSES.md` for license information.

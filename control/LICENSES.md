@@ -1,11 +1,13 @@
 # Licensing map
 
-This repository contains project-authored control software, configuration, tests, and documentation. The licences below do not replace third-party licences.
+This directory contains project-authored control software, configuration, tests, and documentation. For the complete project licensing information, see the root [`LICENSES.md`](../LICENSES.md).
 
-| Project material | Licence | Licence text |
-|---|---|---|
-| `src/rov_control/`, `configs/`, `scripts/`, `tests/`, and project-authored code | PolyForm Noncommercial 1.0.0 | [`LICENSE-POLYFORM-NonCommercial-1.0.0.txt`](LICENSE-POLYFORM-NonCommercial-1.0.0.txt) |
-| Project-authored documentation, operating instructions, diagrams, and other copyrightable written or visual material | CC BY-NC-SA 4.0 | [`LICENSE-CC-BY-NC-SA-4.0.txt`](LICENSE-CC-BY-NC-SA-4.0.txt) |
+The licences below do not replace third-party licences.
+
+|| Project material | Licence | Licence text |
+||---|---|---|
+|| `src/rov_control/`, `configs/`, `scripts/`, `tests/`, and project-authored code | PolyForm Noncommercial 1.0.0 | [`../LICENSE-POLYFORM-NonCommercial-1.0.0.txt`](../LICENSE-POLYFORM-NonCommercial-1.0.0.txt) |
+|| Project-authored documentation, operating instructions, diagrams, and other copyrightable written or visual material | CC BY-NC-SA 4.0 | [`../LICENSE-CC-BY-NC-SA-4.0.txt`](../LICENSE-CC-BY-NC-SA-4.0.txt) |
 
 ## Attribution and third-party material
 

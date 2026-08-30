@@ -45,7 +45,11 @@ python3 -m venv "$VENV" || fail "Virtual environment creation failed. Check Pyth
 
 info "Installing all services and development dependencies from $PROJECT_ROOT/pyproject.toml"
 cd "$PROJECT_ROOT"
-"$VENV/bin/python" -m pip install -e ".[all]" || fail "Dependency installation failed. Review the pip diagnostics above."
+"$VENV/bin/python" -m pip install fastapi uvicorn[standard] nats-py jinja2 pydantic python-dotenv pyopenssl || fail "Cockpit dependency installation failed."
+"$VENV/bin/python" -m pip install adafruit-circuitpython-ads7830 adafruit-circuitpython-motor adafruit-circuitpython-pca9685 gpiozero ifaddr psutil pyserial serial || fail "Control dependency installation failed."
+"$VENV/bin/python" -m pip install pytest pytest-cov black ruff || fail "Development dependency installation failed."
+# rpi-gpio is Linux-specific and will be skipped on macOS
+"$VENV/bin/python" -m pip install rpi-gpio || info "rpi-gpio skipped (Linux-specific, not needed on macOS)"
 
 pass "All services and development dependencies installed in monorepo environment."
 pass "Virtual environment: $VENV"
