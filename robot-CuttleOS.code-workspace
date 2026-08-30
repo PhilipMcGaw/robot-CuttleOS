@@ -136,14 +136,6 @@
 	},
 	"extensions": {
 		"recommendations": [
-			"ms-python.python",
-			"ms-python.vscode-pylance",
-			"esbenp.prettier-vscode",
-			"dbaeumer.vscode-eslint",
-			"ms-vscode.makefile-tools",
-			"redhat.vscode-yaml",
-			"ms-vscode-remote.remote-ssh",
-			"FanaticPythoner.better-todo-tree"
 		]
 	}
 }
