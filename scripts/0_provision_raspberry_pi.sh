@@ -4,6 +4,7 @@ set -Eeuo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONTROL_ROOT="${CONTROL_ROOT:-$PROJECT_ROOT/control}"
 DATALOGGER_ROOT="${DATALOGGER_ROOT:-$PROJECT_ROOT/datalogger}"
+COCKPIT_ROOT="${COCKPIT_ROOT:-$PROJECT_ROOT/cockpit}"
 ROBOT_PROFILE="${ROBOT_PROFILE:-rov}"
 NATS_CONFIG_FILE="${NATS_CONFIG:-$PROJECT_ROOT/configs/nats.env}"
 NETWORK_CONFIG_FILE="${NETWORK_CONFIG:-$PROJECT_ROOT/configs/network.env}"
@@ -18,13 +19,15 @@ escape_sed_replacement() { printf '%s' "$1" | sed 's/[\\&|]/\\&/g'; }
 
 render_template() {
   local source="$1" target="$2" mode="$3" owner="$4" group="$5" temporary
-  local cockpit_root control_root datalogger_root robot_user
+  local cockpit_root control_root datalogger_root robot_user project_root
   temporary="$(mktemp)"
-  cockpit_root="$(escape_sed_replacement "$PROJECT_ROOT")"
+  project_root="$(escape_sed_replacement "$PROJECT_ROOT")"
+  cockpit_root="$(escape_sed_replacement "$COCKPIT_ROOT")"
   control_root="$(escape_sed_replacement "$CONTROL_ROOT")"
   datalogger_root="$(escape_sed_replacement "$DATALOGGER_ROOT")"
   robot_user="$(escape_sed_replacement "$PROJECT_USER")"
-  sed -e "s|@COCKPIT_ROOT@|$cockpit_root|g" \
+  sed -e "s|@PROJECT_ROOT@|$project_root|g" \
+      -e "s|@COCKPIT_ROOT@|$cockpit_root|g" \
       -e "s|@CONTROL_ROOT@|$control_root|g" \
       -e "s|@DATALOGGER_ROOT@|$datalogger_root|g" \
       -e "s|@ROBOT_USER@|$robot_user|g" \
@@ -181,7 +184,7 @@ echo "[INFO] Privileged actions: apt package installation, systemd service insta
 
 [[ "$(uname -s)" == "Linux" ]] || fail "Unsupported operating system: $(uname -s). This script is for Raspberry Pi/Linux only."
 [[ "${EUID}" -eq 0 ]] || fail "This provisioning script must run with sudo/root because it changes system packages and services. Run: sudo bash scripts/0_provision_raspberry_pi.sh"
-[[ -f "$PROJECT_ROOT/requirements.txt" ]] || fail "Requirements file is missing: $PROJECT_ROOT/requirements.txt. Restore the Cockpit repository before continuing."
+[[ -f "$PROJECT_ROOT/cockpit/requirements.txt" ]] || fail "Cockpit requirements file is missing: $PROJECT_ROOT/cockpit/requirements.txt. Restore the Cockpit component before continuing."
 [[ -f "$PROJECT_ROOT/configs/cockpit.service" ]] || fail "Cockpit service file is missing: $PROJECT_ROOT/configs/cockpit.service. Restore the deployment files before continuing."
 [[ -f "$DATALOGGER_ROOT/configs/datalogger.service" ]] || fail "Datalogger service file is missing: $DATALOGGER_ROOT/configs/datalogger.service. Clone Datalogger beside Cockpit or set DATALOGGER_ROOT."
 [[ -f "$DATALOGGER_ROOT/requirements.txt" ]] || fail "Datalogger requirements are missing: $DATALOGGER_ROOT/requirements.txt. Restore the repository before continuing."
@@ -221,7 +224,7 @@ if [[ ! -d "$PROJECT_ROOT/.venv" ]]; then
   runuser -u "$PROJECT_USER" -- python3 -m venv "$PROJECT_ROOT/.venv" || fail "Could not create $PROJECT_ROOT/.venv for $PROJECT_USER. Check repository ownership and Python venv support."
 fi
 runuser -u "$PROJECT_USER" -- "$PROJECT_ROOT/.venv/bin/python" -m pip install --upgrade pip || fail "Could not update pip in $PROJECT_ROOT/.venv."
-runuser -u "$PROJECT_USER" -- "$PROJECT_ROOT/.venv/bin/python" -m pip install -r "$PROJECT_ROOT/requirements.txt" || fail "Could not install Cockpit requirements from $PROJECT_ROOT/requirements.txt."
+runuser -u "$PROJECT_USER" -- "$PROJECT_ROOT/.venv/bin/python" -m pip install -r "$COCKPIT_ROOT/requirements.txt" || fail "Could not install Cockpit requirements from $COCKPIT_ROOT/requirements.txt."
 chown -R "$PROJECT_USER:$PROJECT_GROUP" "$PROJECT_ROOT/.venv"
 pass "Cockpit Python environment installed for $PROJECT_USER."
 
