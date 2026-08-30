@@ -47,6 +47,8 @@ The shell scripts create a **unified monorepo-level Python virtual environment**
 - All Datalogger (telemetry) dependencies
 - Development tools (pytest, black, ruff, mypy)
 
+**Note:** The `pyproject.toml` file is used for dependency management rather than package installation. The installation script installs dependencies directly without attempting to install the monorepo as a Python package, which better fits the multi-service architecture.
+
 ### Running individual services
 
 Each service's `run.sh` script uses the monorepo venv automatically:
