@@ -1,11 +1,9 @@
 robot:
-  id: k9
-  name: K9
+  id: PiWars
+  name: PiWars
   type: ground
 
 capabilities:
   - drive
   - camera
-  - head
   - lights
-  - sounds
