@@ -68,7 +68,25 @@ TypeScript/Vue.js frontend for the cockpit interface.
 
 ## Getting Started
 
-### Setup
+### Quick Start (One-Click Setup)
+
+For complete robot deployment on a Raspberry Pi, use the one-line bootstrap:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | bash
+```
+
+**Available Options:**
+- **Developer mode** (SSH access): `DEPLOYMENT_MODE=ssh bash`
+- **K9 robot**: `ROBOT_PROFILE=k9 bash`
+- **Custom directory**: `ROBOTS_DIR=/path/to/dir bash`
+
+See `ONE-LINE-SETUP.txt` for complete one-liner reference and `QUICKSTART.txt` for detailed setup instructions.
+
+### Manual Setup
+
+For local development or manual deployment:
+
 ```bash
 # Install dependencies
 ./scripts/1_install_dependencies.sh
@@ -79,6 +97,34 @@ TypeScript/Vue.js frontend for the cockpit interface.
 # Start the application
 ./scripts/2_start_app.sh
 ```
+
+### Raspberry Pi Deployment
+
+For manual Raspberry Pi provisioning:
+
+```bash
+# Run the provisioning script (requires sudo)
+sudo ./scripts/0_provision_raspberry_pi.sh
+```
+
+This installs all system packages, Python environments, services, and configuration.
+
+### Robot Profile Switching
+
+Switch between different robot configurations (ROV, K9, PiWars):
+
+```bash
+# Switch to ROV profile
+sudo ./scripts/switch_robot_profile.sh rov
+
+# Switch to K9 profile
+sudo ./scripts/switch_robot_profile.sh k9
+
+# Switch to PiWars profile
+sudo ./scripts/switch_robot_profile.sh piwars
+```
+
+Available profiles: `rov`, `k9`, `piwars`
 
 ### Robot Types
 - **ROV**: Underwater robot with depth, heading, drive, camera, lights

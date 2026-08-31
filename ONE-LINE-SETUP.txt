@@ -1,0 +1,38 @@
+# One-Line Robot Setup
+
+## Fastest Setup (Recommended)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | bash
+```
+
+## Developer Setup (with SSH access)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | DEPLOYMENT_MODE=ssh bash
+```
+
+## K9 Robot Setup
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | ROBOT_PROFILE=k9 bash
+```
+
+## Manual One-Liner (if script not hosted)
+
+```bash
+mkdir -p ~/robots && cd ~/robots && git clone --depth=1 https://github.com/PhilipMcGaw/robot-CuttleOS.git robot-CuttleOS && cd robot-CuttleOS && ./scripts/bootstrap_robot.sh
+```
+
+## What This Single Command Does
+
+✅ Installs all system packages
+✅ Clones all required repositories
+✅ Sets up configuration files
+✅ Prompts for credentials
+✅ Runs complete provisioning
+✅ Configures enhanced Zsh environment
+✅ Installs all robot services
+✅ Sets up networking and security
+
+Just run one command and your robot will be fully deployed!

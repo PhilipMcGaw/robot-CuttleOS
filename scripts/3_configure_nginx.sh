@@ -2,6 +2,7 @@
 set -Eeuo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+COCKPIT_ROOT="${COCKPIT_ROOT:-$PROJECT_ROOT/cockpit}"
 NGINX_SOURCE="$PROJECT_ROOT/configs/nginx.conf"
 SITE_NAME="rov-cockpit"
 SITE_AVAILABLE="/etc/nginx/sites-available/$SITE_NAME"
@@ -43,7 +44,7 @@ fi
 info "Installing the Cockpit Nginx site configuration."
 RENDERED_SITE="$(mktemp)"
 trap 'rm -f "$RENDERED_SITE"' EXIT
-COCKPIT_ROOT_ESCAPED="$(escape_sed_replacement "$PROJECT_ROOT")"
+COCKPIT_ROOT_ESCAPED="$(escape_sed_replacement "$COCKPIT_ROOT")"
 sed "s|@COCKPIT_ROOT@|$COCKPIT_ROOT_ESCAPED|g" "$NGINX_SOURCE" > "$RENDERED_SITE"
 sudo install -o root -g root -m 0644 "$RENDERED_SITE" "$SITE_AVAILABLE" || fail "Could not install $SITE_AVAILABLE. Check sudo permissions."
 sudo ln -sfn "$SITE_AVAILABLE" "$SITE_ENABLED" || fail "Could not enable $SITE_ENABLED."

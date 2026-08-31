@@ -84,21 +84,76 @@ configure_interactive_shell() {
   [[ -f "$template" ]] || fail "Oh My Zsh template is unavailable: $template"
   usermod -s "$zsh_bin" "$PROJECT_USER"
 
+  # Install Powerlevel10k theme
+  local p10k_directory="$zsh_directory/themes/powerlevel10k"
+  if [[ ! -d "$p10k_directory" ]]; then
+    info "Installing Powerlevel10k theme for $PROJECT_USER"
+    runuser -u "$PROJECT_USER" -- env HOME="$project_user_home" git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$p10k_directory" || warn "Could not install Powerlevel10k, falling back to clean theme"
+  fi
+
+  # Install Zsh plugins
+  info "Installing enhanced Zsh plugins for $PROJECT_USER"
+  runuser -u "$PROJECT_USER" -- env HOME="$project_user_home" git clone --depth=1 https://github.com/zsh-users/zsh-completions "$zsh_directory/plugins/zsh-completions" 2>/dev/null || warn "Could not install zsh-completions plugin"
+  runuser -u "$PROJECT_USER" -- env HOME="$project_user_home" git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$zsh_directory/plugins/zsh-autosuggestions" 2>/dev/null || warn "Could not install zsh-autosuggestions plugin"
+  runuser -u "$PROJECT_USER" -- env HOME="$project_user_home" git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting "$zsh_directory/plugins/zsh-syntax-highlighting" 2>/dev/null || warn "Could not install zsh-syntax-highlighting plugin"
+
   if [[ ! -f "$zshrc" ]]; then
     install -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0644 "$template" "$zshrc"
   fi
-  if grep -Eq '^ZSH_THEME=' "$zshrc"; then
-    sed -i 's|^ZSH_THEME=.*|ZSH_THEME="clean"|' "$zshrc"
+
+  # Set theme to Powerlevel10k if available, otherwise clean
+  if [[ -d "$p10k_directory" ]]; then
+    if grep -Eq '^ZSH_THEME=' "$zshrc"; then
+      sed -i 's|^ZSH_THEME=.*|ZSH_THEME="powerlevel10k/powerlevel10k"|' "$zshrc"
+    else
+      temporary="$(mktemp)"
+      awk '
+        /oh-my-zsh\.sh/ && !theme_added { print "ZSH_THEME=\"powerlevel10k/powerlevel10k\""; theme_added=1 }
+        { print }
+        END { if (!theme_added) print "ZSH_THEME=\"powerlevel10k/powerlevel10k\"" }
+      ' "$zshrc" > "$temporary"
+      install -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0644 "$temporary" "$zshrc"
+      rm -f "$temporary"
+    fi
   else
+    if grep -Eq '^ZSH_THEME=' "$zshrc"; then
+      sed -i 's|^ZSH_THEME=.*|ZSH_THEME="clean"|' "$zshrc"
+    else
+      temporary="$(mktemp)"
+      awk '
+        /oh-my-zsh\.sh/ && !theme_added { print "ZSH_THEME=\"clean\""; theme_added=1 }
+        { print }
+        END { if (!theme_added) print "ZSH_THEME=\"clean\"" }
+      ' "$zshrc" > "$temporary"
+      install -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0644 "$temporary" "$zshrc"
+      rm -f "$temporary"
+    fi
+  fi
+
+  # Configure plugins (Linux-appropriate plugins only)
+  if ! grep -Eq '^plugins=\(' "$zshrc"; then
     temporary="$(mktemp)"
     awk '
-      /oh-my-zsh\.sh/ && !theme_added { print "ZSH_THEME=\"clean\""; theme_added=1 }
+      /oh-my-zsh\.sh/ && !plugins_added {
+        print "plugins=(git debian systemd python sudo history-substring-search command-not-found zsh-completions zsh-autosuggestions zsh-syntax-highlighting)"
+        plugins_added=1
+      }
       { print }
-      END { if (!theme_added) print "ZSH_THEME=\"clean\"" }
+      END { if (!plugins_added) print "plugins=(git debian systemd python sudo history-substring-search command-not-found zsh-completions zsh-autosuggestions zsh-syntax-highlighting)" }
     ' "$zshrc" > "$temporary"
     install -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0644 "$temporary" "$zshrc"
     rm -f "$temporary"
   fi
+
+  # Configure Oh My Zsh auto-update mode
+  if ! grep -Eq '^zstyle.*:omz:update' "$zshrc"; then
+    cat >> "$zshrc" <<'EOF'
+
+# Oh My Zsh auto-update configuration
+zstyle ':omz:update' mode auto
+EOF
+  fi
+
   if ! grep -Fq 'oh-my-zsh.sh' "$zshrc"; then
     cat >> "$zshrc" <<'EOF'
 
@@ -107,6 +162,16 @@ export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
 source "$ZSH/oh-my-zsh.sh"
 EOF
   fi
+
+  # Add prompt anchoring (commented out by default as it may interfere with HyFetch)
+  cat >> "$zshrc" <<'EOF'
+
+# Optional: Fix prompt at the bottom of the terminal window
+# Uncomment the following lines if you want this behavior:
+# alias clear="clear && printf '\n%.0s' {1..100}"
+# printf '\n%.0s' {1..100}
+EOF
+
   chown "$PROJECT_USER:$PROJECT_GROUP" "$zshrc"
   chmod 0644 "$zshrc"
 
@@ -128,7 +193,7 @@ fi
 EOF
   install -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0644 "$temporary" "$zprofile"
   rm -f "$temporary"
-  pass "Zsh, Oh My Zsh clean theme, and interactive HyFetch greeting are configured for $PROJECT_USER."
+  pass "Zsh, Oh My Zsh with Powerlevel10k theme, enhanced plugins (git, debian, systemd, python, sudo, history-substring-search, command-not-found, zsh-completions, zsh-autosuggestions, zsh-syntax-highlighting), and interactive HyFetch greeting are configured for $PROJECT_USER."
 }
 
 install_nats_configuration() {
@@ -211,6 +276,16 @@ info "Installing Python, Node.js/npm, Nginx, Motion, NATS, NetworkManager, SMB, 
 apt-get install -y "${PACKAGES[@]}" || fail "Platform package installation failed. Review the apt diagnostics above; services have not been configured by this script."
 pass "Platform packages installed or already present."
 
+info "Installing ncurses-term for Ghostty terminfo support."
+apt-get install -y ncurses-term || warn "ncurses-term installation failed; Ghostty may have terminal display issues."
+# Create symlink for Ghostty terminfo if it doesn't exist
+if [[ ! -f "/usr/share/terminfo/x/xterm-ghostty" ]] && [[ -f "/usr/share/terminfo/g/ghostty" ]]; then
+  ln -s /usr/share/terminfo/g/ghostty /usr/share/terminfo/x/xterm-ghostty || warn "Could not create Ghostty terminfo symlink."
+  pass "Ghostty terminfo symlink created."
+else
+  info "Ghostty terminfo already configured or ncurses-term not available."
+fi
+
 info "Creating the project-local Python environment and installing Cockpit requirements."
 if [[ "${SUDO_USER:-}" != "" && "${SUDO_USER}" != "root" ]]; then
   PROJECT_USER="$SUDO_USER"
@@ -234,8 +309,8 @@ if [[ ! -d "$DATALOGGER_ROOT/.venv" ]]; then
 fi
 runuser -u "$PROJECT_USER" -- "$DATALOGGER_ROOT/.venv/bin/python" -m pip install --upgrade pip || fail "Could not update pip in $DATALOGGER_ROOT/.venv."
 runuser -u "$PROJECT_USER" -- "$DATALOGGER_ROOT/.venv/bin/python" -m pip install -r "$DATALOGGER_ROOT/requirements.txt" || fail "Could not install Datalogger requirements."
-install -d -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0750 "$DATALOGGER_ROOT/data" "$PROJECT_ROOT/media/stills" "$PROJECT_ROOT/media/videos" "$PROJECT_ROOT/media/data/csv"
-chown -R "$PROJECT_USER:$PROJECT_GROUP" "$DATALOGGER_ROOT/.venv" "$DATALOGGER_ROOT/data" "$PROJECT_ROOT/media"
+install -d -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0750 "$DATALOGGER_ROOT/data" "$PROJECT_ROOT/media/stills" "$PROJECT_ROOT/media/videos" "$PROJECT_ROOT/data/csv"
+chown -R "$PROJECT_USER:$PROJECT_GROUP" "$DATALOGGER_ROOT/.venv" "$DATALOGGER_ROOT/data" "$PROJECT_ROOT/media" "$PROJECT_ROOT/data"
 pass "Datalogger Python environment and shared CSV directory configured."
 
 info "Installing Control dependencies and hardware service environment."
@@ -276,7 +351,8 @@ pass "Robot profile installed at /etc/robot/profile.json: $ROBOT_PROFILE"
 
 if [[ -x "$CONTROL_ROOT/scripts/0_deploy_network.sh" ]]; then
   info "Invoking Control-owned networking, SMB and Avahi deployment."
-  COCKPIT_ROOT="$PROJECT_ROOT" \
+  PROJECT_ROOT="$PROJECT_ROOT" \
+  COCKPIT_ROOT="$COCKPIT_ROOT" \
   ROBOT_RUNTIME_USER="$PROJECT_USER" \
   NETWORK_CONFIG="$NETWORK_CONFIG_FILE" \
   NETWORK_SECRETS="$NETWORK_SECRETS_FILE" \
@@ -309,6 +385,6 @@ configure_interactive_shell
 configure_passwordless_sudo
 
 echo "[INFO] Environment summary:"
-echo "[INFO] Python=installed and configured; Nginx=installed, configured and active; Motion=installed and enabled; NATS Server=authenticated, enabled and active; Cockpit=installed, enabled and active; Datalogger=installed, enabled and active; CSV export=shared with Cockpit media/SMB; runtime shell=Zsh with Oh My Zsh clean theme and HyFetch."
+echo "[INFO] Python=installed and configured; Nginx=installed, configured and active; Motion=installed and enabled; NATS Server=authenticated, enabled and active; Cockpit=installed, enabled and active; Datalogger=installed, enabled and active; CSV export=shared with Cockpit data directory; runtime shell=Zsh with Oh My Zsh Powerlevel10k theme, enhanced plugins, and HyFetch greeting."
 echo "[WARN] Hardware cameras, motor controllers, sensors, network links and ROV operation are not physically validated by this script."
 echo "[INFO] Provisioning completed at $TIMESTAMP."

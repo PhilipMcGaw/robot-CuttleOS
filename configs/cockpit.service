@@ -4,11 +4,11 @@ After=network.target
 
 [Service]
 User=@ROBOT_USER@
-WorkingDirectory=@COCKPIT_ROOT@
+WorkingDirectory=@PROJECT_ROOT@
 EnvironmentFile=-/etc/robot/nats.env
-ExecStart=/bin/bash "@COCKPIT_ROOT@/cockpit/run.sh"
+ExecStart=/bin/bash "@COCKPIT_ROOT@/run.sh"
 Environment=MAP_TILE_PROXY=true
-Environment=CSV_ROOT=@COCKPIT_ROOT@/data/csv
+Environment=CSV_ROOT=@PROJECT_ROOT@/data/csv
 Restart=always
 StandardOutput=journal
 StandardError=journal

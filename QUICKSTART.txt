@@ -1,0 +1,58 @@
+# One-Click Robot CuttleOS Setup
+
+## Single-Line Bootstrap Command
+
+Copy and paste this single command to install everything:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | bash
+```
+
+## Alternative Commands
+
+### For HTTPS (read-only) deployment:
+```bash
+wget -qO- https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | bash
+```
+
+### For SSH (developer) deployment:
+```bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | DEPLOYMENT_MODE=ssh bash
+```
+
+### For specific robot profile:
+```bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | ROBOT_PROFILE=k9 bash
+```
+
+## Manual One-Liner
+
+If the script isn't hosted yet, use this manual version:
+
+```bash
+mkdir -p ~/robots && cd ~/robots && git clone --depth=1 https://github.com/PhilipMcGaw/robot-CuttleOS.git robot-CuttleOS && cd robot-CuttleOS && bash scripts/bootstrap_robot.sh
+```
+
+## Environment Variables
+
+- `DEPLOYMENT_MODE`: 'https' (default) or 'ssh' for developer access
+- `ROBOT_PROFILE`: 'rov' (default) or 'k9' for different robot types
+- `ROBOTS_DIR`: Target directory (default: ~/robots)
+- `GITHUB_USER`: GitHub username (default: PhilipMcGaw)
+
+## What This Does
+
+1. Installs required system packages (git, etc.)
+2. Clones robot-CuttleOS, Control, and Datalogger repositories
+3. Sets up configuration files from examples
+4. Prompts for credential editing
+5. Runs complete Raspberry Pi provisioning
+6. Configures Zsh, Powerlevel10k, and enhanced plugins
+7. Installs all services (Cockpit, Control, Datalogger, NATS, Nginx, Motion)
+
+## Requirements
+
+- Raspberry Pi with Debian-based OS
+- Root/sudo access
+- Internet connection
+- GitHub account (for SSH mode)
