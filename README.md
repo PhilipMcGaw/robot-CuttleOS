@@ -7,12 +7,12 @@ CuttleOS is part of the SquidLink, CuttleOS, and NautiPi set
     The operating system, this name combines “Cuttlefish” (a clever cephalopod) with “OS” (operating system), giving it a futuristic yet natural feel.
 
 The other two names are
-1. SquidLink  (For your main control software or Raspberry Pi)
+1. SquidLink  (For your main control software or Raspberry Pi) - https://github.com/PhilipMcGaw/robot-SquidLink
 
     A sleek, tech-sounding-name that implies connectivity and agility—perfect for a robotics control system.
 
 
-3. NautiPi (For your secondary device or backup system)
+3. NautiPi (For your secondary device or backup system) - https://github.com/PhilipMcGaw/robot-NautiPi
 
     A nod to the “Nautilus” (the shell of a nautilus, another cephalopod relative) and “Raspberry Pi,” making it a fun and functional name.
 
@@ -25,7 +25,10 @@ Why These Work Together:
 ## Demo
 
 I have a demo of my Robot Cockpit 🙂 https://cuttleos.philipmcgaw.com/
-not sure why the icons are not displaying correctly
+
+
+ * need the generator script to correct font location /assets/webfonts/
+ * replace background image with https://www.youtube.com/watch?v=4Gz9FJzXeb8 (need to correctly give cc/licence etc) can the video be on loop?
 
 ## Architecture
 
