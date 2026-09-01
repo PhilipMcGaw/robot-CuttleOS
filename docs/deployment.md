@@ -22,7 +22,7 @@ getconf LONG_BIT
 
 Expected baseline: `aarch64`, Raspberry Pi OS based on Debian Trixie, and `64`.
 
-On Linux, the documented default development location is `~/robots/ROV---Cockpit`, beside the other ROV repositories. On macOS, use a user-selected workspace beneath the home directory, for example `~/Projects/ROV/ROV---Cockpit`. Raspberry Pi provisioning renders the installed systemd and Nginx files using the actual repository locations and runtime account; no `/home/pi` checkout path is required.
+On Linux, the documented default development location is `~/robots/robot-CuttleOS`. On macOS, use a user-selected workspace beneath the home directory, for example `~/Projects/ROV/robot-CuttleOS`. Raspberry Pi provisioning renders the installed systemd and Nginx files using the actual repository location and runtime account; no `/home/pi` checkout path is required.
 
 ## One-time installation
 
@@ -56,9 +56,9 @@ sudo apt install git
 
 ### Choose a source-installation route
 
-The robot needs Cockpit, Control, and Datalogger as sibling repositories in
-`~/robots/`. Choose exactly one route below. Both install the same code and
-continue at [Configure deployment secrets](#configure-deployment-secrets).
+The robot uses one monorepo containing Cockpit, Control, and Datalogger. Choose
+exactly one source-installation route below. Both routes continue at
+[Configure deployment secrets](#configure-deployment-secrets).
 
 #### Route A — standard robot installation
 
@@ -69,18 +69,14 @@ Use it when the Pi only needs to receive reviewed updates.
 ```zsh
 mkdir -p ~/robots
 cd ~/robots
-git clone --depth=1 https://github.com/PhilipMcGaw/ROV---Cockpit.git ROV---Cockpit
-git clone --depth=1 https://github.com/PhilipMcGaw/ROV---Control.git ROV---Control
-git clone --depth=1 https://github.com/PhilipMcGaw/ROV---Datalogger.git ROV---Datalogger
+git clone --depth=1 https://github.com/PhilipMcGaw/robot-CuttleOS.git robot-CuttleOS
 ```
 
-To receive a later reviewed update, pull each repository and rerun the
-provisioner only when a deployment-affecting change requires it:
+To receive a later reviewed update, pull the monorepo and rerun the provisioner
+only when a deployment-affecting change requires it:
 
 ```zsh
-cd ~/robots/ROV---Cockpit && git pull --ff-only
-cd ~/robots/ROV---Control && git pull --ff-only
-cd ~/robots/ROV---Datalogger && git pull --ff-only
+cd ~/robots/robot-CuttleOS && git pull --ff-only
 ```
 
 #### Route B — Philip's developer installation
@@ -119,16 +115,14 @@ git config --global user.name "Philip McGaw"
 git config --global user.email "<Philip's verified GitHub email address>"
 mkdir -p ~/robots
 cd ~/robots
-git clone git@github.com:PhilipMcGaw/ROV---Cockpit.git ROV---Cockpit
-git clone git@github.com:PhilipMcGaw/ROV---Control.git ROV---Control
-git clone git@github.com:PhilipMcGaw/ROV---Datalogger.git ROV---Datalogger
+git clone git@github.com:PhilipMcGaw/robot-CuttleOS.git robot-CuttleOS
 ```
 
 For normal developer work, create a branch, commit only non-secret changes,
 and push it for review:
 
 ```zsh
-cd ~/robots/ROV---Cockpit
+cd ~/robots/robot-CuttleOS
 git switch -c <descriptive-branch-name>
 git status
 git add <reviewed-files>
@@ -143,30 +137,36 @@ stash, or deliberately discard only your own local code changes. Do not use
 
 ### Configure deployment secrets
 
-The three repositories have separate responsibilities but are installed
-side-by-side on the same Raspberry Pi:
+The three services have separate responsibilities but are installed from one
+repository on the same Raspberry Pi:
 
 The final layout is:
 
 ```text
 ~/robots/
-├── ROV---Cockpit/
-├── ROV---Control/
-└── ROV---Datalogger/
+└── robot-CuttleOS/
+    ├── cockpit/
+    ├── control/
+    └── datalogger/
 ```
 
 HiL/SiL normally remains on the development workstation or VM rather than on the robot:
 
 ```text
-~/robots/ROV---HiL-and-SiL/
+~/robots/robot-CuttleOS/  # HiL/SiL normally runs elsewhere
 ```
 
-The Cockpit provisioning script can find Control and Datalogger automatically when they are beside Cockpit. Use `CONTROL_ROOT` or `DATALOGGER_ROOT` if either repository is stored elsewhere. The provisioning path installs all three virtual environments, renders the Control, Cockpit, and Datalogger systemd units for the invoking runtime account and actual checkout locations, configures shared media/CSV directories, and invokes Control's networking deployment.
+The provisioning script finds Control and Datalogger in the monorepo by default.
+Use `CONTROL_ROOT` or `DATALOGGER_ROOT` only when deliberately overriding those
+locations. The provisioning path installs all three virtual environments,
+renders the Control, Cockpit, and Datalogger systemd units for the invoking
+runtime account and actual checkout locations, configures shared media/CSV
+directories, and invokes Control's networking deployment.
 
 Before provisioning, create the ignored Control deployment files and replace every placeholder credential:
 
 ```zsh
-cd ~/robots/ROV---Control
+cd ~/robots/robot-CuttleOS
 cp configs/network.env.example configs/network.env
 cp configs/network.secrets.example configs/network.secrets.env
 cp configs/nats.env.example configs/nats.env

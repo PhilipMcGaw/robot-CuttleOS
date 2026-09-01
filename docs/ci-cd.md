@@ -55,10 +55,10 @@ mypy cockpit/src control/src datalogger/src
 ./scripts/build_frontend.sh
 
 # Lint TypeScript
-cd frontend/cockpit && npm run lint
+cd frontend/cockpit && npm run typecheck
 
 # Format TypeScript
-cd frontend/cockpit && npm run format
+No formatting script is currently defined in `frontend/cockpit/package.json`.
 ```
 
 ## GitHub Actions Workflows
@@ -118,8 +118,7 @@ The following workflows should be configured in `.github/workflows/`:
 - Install dependencies: `npm install` in `frontend/cockpit/`
 - TypeScript compilation:
   - `npm run build`
-  - `npm run lint`
-  - `npm run type-check`
+  - `npm run typecheck`
 - Fail if build or linting fails
 - (Optional) Upload compiled artifacts for deployment staging
 
@@ -257,7 +256,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend/cockpit
-        run: npm ci
+        run: npm install
 
       - name: Build
         working-directory: ./frontend/cockpit
@@ -265,11 +264,9 @@ jobs:
 
       - name: Lint
         working-directory: ./frontend/cockpit
-        run: npm run lint
-
       - name: Type check
         working-directory: ./frontend/cockpit
-        run: npm run type-check
+        run: npm run typecheck
 ```
 
 ## Testing Strategy

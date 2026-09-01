@@ -9,9 +9,13 @@ Keep `MASTER_CONTEXT.md` current when project architecture, boundaries, conventi
 Before submitting a change, run:
 
 ```text
-python tests/test_documentation.py
+python tests/test_control_documentation.py
+python control/tests/test_documentation.py
+python datalogger/tests/test_documentation.py
 ```
 
-The documentation audit runs in CI. Documentation drift causes the check to fail.
+Where CI is enabled, the documentation checks run as part of the validation
+pipeline. Documentation drift should be treated as a failed check locally as
+well.
 
 Pull requests are also checked by `tests/documentation_change_policy.py`. Its allowlist classifies source, frontend, configuration, deployment, dependency, and project-entry files as potentially behaviour-affecting. Such a change must include documentation in the same pull request. Intentional exemptions are maintained, with reasons, in `tests/documentation_change_policy.json`.

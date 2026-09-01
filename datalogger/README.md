@@ -32,7 +32,7 @@ scripts\2_start_app.bat
 
 Linux/Raspberry Pi:
 
-For an installed robot, follow Cockpit's `docs/deployment.md`: its canonical
+For an installed robot, follow the repository's [`docs/deployment.md`](../docs/deployment.md): its canonical
 provisioner installs this service beside Cockpit and Control, renders the
 systemd unit for the actual checkout location, and supplies the local
 authenticated NATS URL. For local Linux development:

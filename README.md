@@ -29,15 +29,11 @@ This project uses a monorepo structure with the following layout:
 
 ```
 robot-CuttleOS/
-├── apps/              # Application services
-│   └── cockpit/       # FastAPI/Vue web UI for robot control
-├── packages/          # Shared libraries
-│   ├── messages/      # NATS message schemas
-│   ├── robot/         # Robot abstractions
-│   ├── hardware/      # Hardware interfaces
-│   └── common/        # Shared utilities
-├── frontend/          # Frontend applications
-│   └── cockpit/       # Vue.js cockpit frontend
+├── cockpit/           # FastAPI web service and static browser assets
+├── control/           # Hardware-facing control service
+├── datalogger/        # NATS telemetry logger
+├── frontend/          # Frontend source and build configuration
+│   └── cockpit/
 ├── configs/           # Configuration files
 │   ├── robots/        # Robot-specific configs (rov.yaml, k9.yaml)
 │   └── profiles/      # Cockpit profiles
@@ -70,16 +66,18 @@ TypeScript/Vue.js frontend for the cockpit interface.
 
 ### Quick Start (One-Click Setup)
 
-For complete robot deployment on a Raspberry Pi, use the one-line bootstrap:
+For complete robot deployment on a Raspberry Pi, follow [the deployment guide](docs/deployment.md).
+The bootstrap script requires root privileges:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | sudo bash
 ```
 
-**Available Options:**
-- **Developer mode** (SSH access): `DEPLOYMENT_MODE=ssh bash`
-- **K9 robot**: `ROBOT_PROFILE=k9 bash`
-- **Custom directory**: `ROBOTS_DIR=/path/to/dir bash`
+Set options in the environment before invoking the script, for example:
+
+```bash
+sudo ROBOT_PROFILE=k9 ROBOTS_DIR=/home/philip/robots bash scripts/bootstrap_robot.sh
+```
 
 See `ONE-LINE-SETUP.txt` for complete one-liner reference and `QUICKSTART.txt` for detailed setup instructions.
 

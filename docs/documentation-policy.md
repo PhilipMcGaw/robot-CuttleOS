@@ -14,7 +14,15 @@ Documentation must distinguish implemented, automated-test verified, bench-teste
 
 ## Enforcement
 
-Run `python tests/test_documentation.py` from the repository root. The audit checks required maintained documents, current-state status sections, status vocabulary, references to scripts, configuration, examples, frontend artefacts, and the required third-party entries in `LICENSES.md`. The pull-request classifier `tests/documentation_change_policy.py` applies the maintainable rules in `tests/documentation_change_policy.json` to changed files. Changes to application code, frontend assets, dependency manifests, or licence material must include a documentation change. A classified behaviour-affecting change must include a documentation file. Intentional exemptions are listed in that JSON file with their reasons. Both checks run in CI and must pass before a change is accepted.
+Run the repository's documentation checks from the repository root:
+`python tests/test_control_documentation.py`, `python control/tests/test_documentation.py`, and
+`python datalogger/tests/test_documentation.py`. The pull-request classifier
+`tests/documentation_change_policy.py` applies the maintainable rules in
+`tests/documentation_change_policy.json` to changed files. Changes to application
+code, frontend assets, dependency manifests, or licence material must include a
+documentation change. A classified behaviour-affecting change must include a
+documentation file. Intentional exemptions are listed in that JSON file with
+their reasons.
 
 ## Change completion gate
 

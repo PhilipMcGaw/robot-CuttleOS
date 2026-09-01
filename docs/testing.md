@@ -5,7 +5,7 @@ Run tests in increasing order of risk. Record the date, software revision, hardw
 ## 1. Static checks
 
 ```bash
-python -m py_compile src/rov_cockpit/app.py src/rov_cockpit/auth.py
+python -m py_compile cockpit/src/rov_cockpit/app.py cockpit/src/rov_cockpit/auth.py
 python tests/test_status_instruments.py
 python tests/test_raspberry_pi_provisioning.py
 ```
@@ -81,4 +81,12 @@ playback: record separate Control and speaker bench evidence before claiming
 that a K9 sound was heard.
 # Documentation currency audit
 
-Run `python tests/test_documentation.py` before submitting changes. The check is intentionally independent of application dependencies so that documentation drift can be detected on a clean or locked-down workstation. CI runs the same command.
+Run the available documentation checks before submitting changes:
+
+```bash
+python tests/test_control_documentation.py
+python control/tests/test_documentation.py
+python datalogger/tests/test_documentation.py
+```
+
+These checks are designed to run without the application dependencies.

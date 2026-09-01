@@ -2,7 +2,7 @@
 
 ## Architecture
 
-The application layer is FastAPI served by Uvicorn. NATS is accessed only by the server; the browser receives telemetry through `/ws/telemetry`. The TypeScript telemetry layer is under `frontend/src` and its browser output is under `src/rov_cockpit/static/dist`. The ROV navigation display is the combined `<rov-hud>` Web Component; shared status instruments remain separate components.
+The application layer is FastAPI served by Uvicorn. NATS is accessed only by the server; the browser receives telemetry through `/ws/telemetry`. The TypeScript telemetry layer is under `frontend/cockpit/`, and its browser output is emitted into `cockpit/src/rov_cockpit/static/dist/`. The ROV navigation display is the combined `<rov-hud>` Web Component; shared status instruments remain separate components.
 
 ## Implemented behaviour
 
@@ -36,7 +36,7 @@ The application layer is FastAPI served by Uvicorn. NATS is accessed only by the
 
 ## Automated-test verification
 
-The standard-library documentation audit is implemented in `tests/test_documentation.py`. `tests/test_raspberry_pi_provisioning.py` statically checks the provisioner's Zsh, HyFetch, Oh My Zsh, and validated-sudo-policy contract, and checks Bash syntax when Bash is available. Python source compilation and the documentation audit can run without application dependencies. The TypeScript source and generated browser artefacts are checked during development; a complete browser build requires the frontend toolchain.
+The repository documentation checks are implemented in `tests/test_control_documentation.py`, `control/tests/test_documentation.py`, and `datalogger/tests/test_documentation.py`. `tests/test_raspberry_pi_provisioning.py` statically checks the provisioner's Zsh, HyFetch, Oh My Zsh, and validated-sudo-policy contract, and checks Bash syntax when Bash is available. Python source compilation and the documentation checks can run without application dependencies. The TypeScript source and generated browser artefacts are checked during development; a complete browser build requires the frontend toolchain.
 
 ## Bench-tested and Production-validated status
 
@@ -67,11 +67,9 @@ The current repository state is not recorded as bench-tested or production-valid
 - `docs/testing.md`
 - `tests/documentation_change_policy.py`
 - `tests/documentation_change_policy.json`
-- `frontend/src/transport/telemetry-websocket.ts`
-- `frontend/src/telemetry/store.ts`
-- `frontend/src/components/instruments/rov-depth.ts`
-- `src/rov_cockpit/static/dist/main.js`
-- `src/rov_cockpit/static/dist/components/rov-depth.js`
+- `frontend/cockpit/`
+- `cockpit/src/rov_cockpit/static/dist/main.js`
+- `cockpit/src/rov_cockpit/static/dist/components/rov-depth.js`
 - `configs/nats.env.example`
 - `scripts/0_provision_raspberry_pi.sh`
 - `tests/test_raspberry_pi_provisioning.py`

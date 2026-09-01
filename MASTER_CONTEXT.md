@@ -295,7 +295,7 @@ Deployment structure:
 ```text
 ~/robots/robot-CuttleOS/
 ├── cockpit/                    # Cockpit web application
-│   ├── src/rov_cockpit/
+│   ├── cockpit/src/rov_cockpit/
 │   ├── configs/
 │   ├── scripts/
 │   └── ...

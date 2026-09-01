@@ -6,12 +6,12 @@ The licences below do not replace third-party licences.
 
 || Project material | Licence | Licence text |
 ||---|---|---|
-|| `src/rov_cockpit/`, `configs/`, `scripts/`, and project-authored code | PolyForm Noncommercial 1.0.0 | [`../LICENSE-POLYFORM-NonCommercial-1.0.0.txt`](../LICENSE-POLYFORM-NonCommercial-1.0.0.txt) |
+|| `../cockpit/src/rov_cockpit/`, `../configs/`, `../scripts/`, and project-authored code | PolyForm Noncommercial 1.0.0 | [`../LICENSE-POLYFORM-NonCommercial-1.0.0.txt`](../LICENSE-POLYFORM-NonCommercial-1.0.0.txt) |
 || Project-authored documentation, operating instructions, diagrams, and other copyrightable written or visual material | CC BY-NC-SA 4.0 | [`../LICENSE-CC-BY-NC-SA-4.0.txt`](../LICENSE-CC-BY-NC-SA-4.0.txt) |
 
 ## Attribution and third-party material
 
-Retain copyright and licence notices for third-party material. In particular, `src/rov_cockpit/static/` contains bundled libraries and assets with their own licences. Those notices remain applicable and are not relicensed by this project.
+Retain copyright and licence notices for third-party material. In particular, `../cockpit/src/rov_cockpit/static/` contains bundled libraries and assets with their own licences. Those notices remain applicable and are not relicensed by this project.
 
 Where a directory contains imported or historical material, inspect its README, source headers, or licence notice before modifying or redistributing it. If project material and third-party material are combined, keep the applicable notices together and do not imply that the third-party material is covered by the project licence.
 
@@ -23,13 +23,13 @@ The following third-party components are currently shipped by the Cockpit or inc
 
 || Component | Location/use | Licence / notice |
 ||---|---|---|
-|| Vue 3 | `package.json`; committed browser runtime at `src/rov_cockpit/static/dist/vendor/vue.runtime.esm-browser.prod.js` | MIT; [Vue licence](https://github.com/vuejs/core/blob/main/LICENSE) |
-|| Pico CSS 2.1.1 | `src/rov_cockpit/static/css/pico.css`; npm dependency `@picocss/pico` | MIT; the bundled file retains its upstream notice |
-|| Font Awesome Free 7 | `src/rov_cockpit/static/css/all.css` and `webfonts/` | Icons: CC BY 4.0; fonts: SIL OFL 1.1; code: MIT. See the notice at the top of `all.css` and [Font Awesome licensing](https://fontawesome.com/license/free) |
-|| Leaflet | `src/rov_cockpit/static/js/leaflet.js` and `css/leaflet.css` | BSD-2-Clause; retain the upstream notice |
-|| jQuery | `src/rov_cockpit/static/js/jquery.js` | MIT |
-|| jQuery Flight Indicators | `src/rov_cockpit/static/js/jquery.flightindicators.js` and `css/flightindicators.css` | GPL-3.0; the upstream notice is retained in `flightindicators.css` |
-|| Weather Icons | `src/rov_cockpit/static/css/weather-icons*.css` and `font/` | SIL OFL 1.1; retain the upstream font and CSS notices |
+|| Vue 3 | `../frontend/cockpit/package.json`; committed browser runtime at `../cockpit/src/rov_cockpit/static/dist/vendor/vue.runtime.esm-browser.prod.js` | MIT; [Vue licence](https://github.com/vuejs/core/blob/main/LICENSE) |
+|| Pico CSS 2.1.1 | `../cockpit/src/rov_cockpit/static/css/pico.css`; npm dependency `@picocss/pico` | MIT; the bundled file retains its upstream notice |
+|| Font Awesome Free 7 | `../cockpit/src/rov_cockpit/static/css/all.css` and `webfonts/` | Icons: CC BY 4.0; fonts: SIL OFL 1.1; code: MIT. See the notice at the top of `all.css` and [Font Awesome licensing](https://fontawesome.com/license/free) |
+|| Leaflet | `../cockpit/src/rov_cockpit/static/js/leaflet.js` and `css/leaflet.css` | BSD-2-Clause; retain the upstream notice |
+|| jQuery | `../cockpit/src/rov_cockpit/static/js/jquery.js` | MIT |
+|| jQuery Flight Indicators | `../cockpit/src/rov_cockpit/static/js/jquery.flightindicators.js` and `css/flightindicators.css` | GPL-3.0; the upstream notice is retained in `flightindicators.css` |
+|| Weather Icons | `../cockpit/src/rov_cockpit/static/css/weather-icons*.css` and `font/` | SIL OFL 1.1; retain the upstream font and CSS notices |
 
 The npm lockfile records licences for the complete dependency tree, including transitive Vue and TypeScript build dependencies. It is not a substitute for this human-readable register.
 

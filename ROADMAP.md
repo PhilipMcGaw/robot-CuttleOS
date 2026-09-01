@@ -59,6 +59,11 @@ This document outlines the planned architectural improvements and feature develo
 - Single cockpit, communications architecture, and video system
 
 **Structure:**
+
+The following is a proposed future architecture, not a description of the
+current repository layout. The current implementation remains the monorepo
+described in `README.md`.
+
 ```
 robots/
 ├── apps/              # Generic software (works for any robot)

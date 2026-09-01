@@ -10,16 +10,15 @@ The three separate repositories have been consolidated into a single `robot-Cutt
 
 **Before:**
 ```
-ROV---Cockpit/
-ROV---Control/
-ROV---Datalogger/
-apps/cockpit/
+cockpit/
+control/
+datalogger/
 ```
 
 **After:**
 ```
 cockpit/                    # Cockpit web application
-├── src/rov_cockpit/        # FastAPI application code
+├── cockpit/src/rov_cockpit/ # FastAPI application code
 ├── requirements.txt
 └── run.sh
 
