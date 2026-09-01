@@ -39,6 +39,9 @@ def test_only_k9_enables_the_profile_soundboard_drawer() -> None:
     assert k9.capabilities["soundboard"] is True
     assert k9.soundboard is not None
     assert [sound.id for sound in k9.soundboard.sounds] == ["affirmative", "negative", "alert"]
+    sound_directory = ROOT / k9.soundboard.directory
+    assert sound_directory.is_dir()
+    assert all((sound_directory / sound.file).is_file() for sound in k9.soundboard.sounds)
     assert k9.commands["sound.play"].subject == "k9.command.sound.play"
     assert any(item["id"] == "soundboard" and item["position"] == "right-drawer" for item in json.loads((ROOT / "configs" / "profiles" / "k9.json").read_text(encoding="utf-8"))["instruments"])
     assert rov.capabilities["soundboard"] is False

@@ -334,7 +334,7 @@ install_nats_configuration
 
 info "Installing portable systemd units for Cockpit."
 render_template "$PROJECT_ROOT/configs/cockpit.service" /etc/systemd/system/cockpit.service 0644 root root
-# TODO: Uncomment when Control and Datalogger apps are implemented
+# TODO: Enable these units after Control and Datalogger deployment is ready and validated.
 # render_template "$DATALOGGER_ROOT/configs/datalogger.service" /etc/systemd/system/datalogger.service 0644 root root
 # render_template "$CONTROL_ROOT/configs/python.service" /etc/systemd/system/python.service 0644 root root
 systemctl daemon-reload || fail "systemd daemon reload failed after installing service units."

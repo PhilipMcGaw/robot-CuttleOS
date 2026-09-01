@@ -50,6 +50,10 @@ mypy cockpit/src control/src datalogger/src
 
 ### Frontend
 
+The TypeScript source is under `frontend/src/`. The npm package and its
+`package.json` are under `frontend/cockpit/`; the shared build scripts compile
+the source into `cockpit/src/rov_cockpit/static/dist/`.
+
 ```bash
 # Build frontend
 ./scripts/build_frontend.sh

@@ -49,7 +49,6 @@ The current repository state is not recorded as bench-tested or production-valid
 - Profile-driven selection of instrument modules beyond the current ROV HUD and shared status instruments.
 - Robot-backed persistence for instrument visual settings.
 - Profile-defined live-dock controls, including properly authorised arm/mode/camera actions and live Control status.
-- More complete profile-driven status and instrument selection.
 - A depth-scale configuration GUI, with robot-backed minimum, maximum, graduation-step, visibility-window, and presentation settings.
 - Complete profile-driven instrument selection and further TypeScript frontend migration.
 - A profile-compatible icon-system migration: introduce library-neutral icon IDs and a locally bundled, curated SVG registry for new Vue components; assess Lucide as the preferred candidate, then retire Font Awesome only after all remaining template and legacy-component uses have migrated.
