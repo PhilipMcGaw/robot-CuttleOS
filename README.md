@@ -22,6 +22,10 @@ Why These Work Together:
     Clear Roles: Each name suggests a different component (software, PCB/OS, and device).
     Memorable: They’re short, catchy, and easy to remember.
 
+## Demo
+
+I have a demo of my Robot Cockpit 🙂 https://cuttleos.philipmcgaw.com/
+not sure why the icons are not displaying correctly
 
 ## Architecture
 
