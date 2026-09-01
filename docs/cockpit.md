@@ -12,6 +12,27 @@ PYTHONPATH=src ../.venv/bin/python -m uvicorn rov_cockpit.app:app --host 127.0.0
 
 The Windows launcher uses `runtime\python.exe` instead. The application defaults to port `8080` and serves the dashboard at `/`.
 
+## Static animated demo
+
+The repository can generate a self-contained, browser-only showcase of the ROV
+HUD for a normal Linux web server. From the repository root, run:
+
+```bash
+./scripts/build_static_demo.sh
+```
+
+Upload the contents of `static-demo/` to the document root for a public host
+such as `cockpit.skippy.org.uk`. The demo uses the existing HUD, background,
+typography, colours, and icons, while generating safe animated heading, pitch,
+roll, depth, battery, light, camera-tilt, and temperature values in the
+browser. It does not require Python, FastAPI, NATS, authentication, a camera,
+robot hardware, or Control. The displayed `DEMO` link-off status is deliberate.
+
+The generated directory is suitable for Nginx, Apache, object storage, or a
+static hosting service. Configure HTTPS and the DNS record separately. The
+static demo is a visual showcase only; the production Cockpit remains the
+FastAPI application described below.
+
 ## Important routes
 
 - `/` — profile-aware live dashboard, including the ROV HUD where enabled, camera fallback, diagnostics, and the K9 soundboard drawer where enabled.
