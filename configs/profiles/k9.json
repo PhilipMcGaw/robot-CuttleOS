@@ -66,9 +66,9 @@
   "soundboard": {
     "directory": "sounds/k9",
     "sounds": [
-      { "id": "affirmative", "label": "Affirmative", "file": "affirmative.wav" },
-      { "id": "negative", "label": "Negative", "file": "negative.wav" },
-      { "id": "alert", "label": "Alert", "file": "alert.wav" }
+      { "id": "affirmative", "label": "Affirmative", "file": "afermative_afermitvive.mp3" },
+      { "id": "negative", "label": "Negative", "file": "afermative_1.mp3" },
+      { "id": "alert", "label": "Alert", "file": "afermative_2.mp3" }
     ]
   },
   "input_mappings": {

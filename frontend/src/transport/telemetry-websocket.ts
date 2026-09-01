@@ -7,9 +7,14 @@ export function connectTelemetry(): WebSocket {
     try {
       const update = JSON.parse(event.data) as { topic?: string; value?: unknown };
       if (typeof update.topic !== "string") return;
-      const value = ["string", "number", "boolean"].includes(typeof update.value)
-        ? (update.value as string | number | boolean)
-        : null;
+      const numericString = typeof update.value === "string" && update.value.trim() !== ""
+        ? Number(update.value)
+        : NaN;
+      const value = typeof update.value === "string" && Number.isFinite(numericString)
+        ? numericString
+        : ["string", "number", "boolean"].includes(typeof update.value)
+          ? (update.value as string | number | boolean)
+          : null;
       updateTelemetry(update.topic, value);
     } catch {
       // Ignore malformed telemetry; the operator shell must remain available.

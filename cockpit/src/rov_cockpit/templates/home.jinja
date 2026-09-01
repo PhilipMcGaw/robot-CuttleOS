@@ -91,7 +91,7 @@
             </div>
             <div class="rov-command-dock__metric">
                 <i class="fa-solid fa-camera-rotate" aria-hidden="true"></i>
-                <span class="rov-command-dock__metric-copy"><output id="cameraPitch">-- %</output><small>Cam Tilt</small></span>
+                <span class="rov-command-dock__metric-copy"><output id="cameraPitch">-- °</output><small>Cam Tilt</small></span>
             </div>
             <div class="rov-command-dock__metric">
                 <i class="fa-solid fa-water" aria-hidden="true"></i>
@@ -266,8 +266,8 @@
                 const metricValues = {
                     "sensor/water/depth": ["depth", " m"],
                     "sensor/water/temperature": ["temperature", " °C"],
-                    "control/lights/level": ["lightLevel", " %"],
-                    "control/camera/pitch": ["cameraPitch", " %"],
+                    "output/lights/left": ["lightLevel", " %"],
+                    "sensor/camera/main/pitch": ["cameraPitch", " °"],
                     "control/pilot/gain": ["pilotGain", " %"],
                 };
                 const metric = metricValues[topic];

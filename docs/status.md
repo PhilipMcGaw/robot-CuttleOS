@@ -2,7 +2,7 @@
 
 ## Architecture
 
-The application layer is FastAPI served by Uvicorn. NATS is accessed only by the server; the browser receives telemetry through `/ws/telemetry`. The TypeScript telemetry layer is under `frontend/cockpit/`, and its browser output is emitted into `cockpit/src/rov_cockpit/static/dist/`. The ROV navigation display is the combined `<rov-hud>` Web Component; shared status instruments remain separate components.
+The application layer is FastAPI served by Uvicorn. NATS is accessed only by the server; the browser receives telemetry through `/ws/telemetry`. The TypeScript telemetry layer is under `frontend/src/`, and its browser output is emitted into `cockpit/src/rov_cockpit/static/dist/`. The ROV navigation display is the combined `<rov-hud>` Web Component; shared status instruments remain separate components.
 
 ## Implemented behaviour
 
@@ -10,18 +10,20 @@ The application layer is FastAPI served by Uvicorn. NATS is accessed only by the
 - Browser telemetry through the FastAPI WebSocket endpoint.
 - TypeScript state, topic mapping, parsing, and reconnecting WebSocket adapter.
 - Independent `<rov-depth>` Web Component consuming shared cockpit state.
-- Vue-rendered battery status instrument consuming shared cockpit state.
+- Battery, voltage, NATS status, depth, and HUD instruments consuming the shared cockpit telemetry path.
 - Shared translucent operator shell on every page: compact status bar, browser-WebSocket link indicator, 24-hour local clock with a 1 Hz flashing colon, and a hamburger-triggered navigation popover.
 - The central shared-header status shows `Simulation mode` while simulation is enabled, `NATS offline` when the server-side NATS client is disconnected, and `No recent alerts.` otherwise.
 - Collapsible left-hand live-view diagnostics tray. It currently holds the read-only estimated browser-to-Cockpit network transfer rate and leaves the primary flight display uncluttered.
-- Vue-rendered live-view bottom dock presenting the selected camera and live depth, heading, roll, pitch, primary-light percentage, camera tilt, and water temperature without sending control commands.
+- Live-view bottom dock presenting the selected camera and live depth, heading, roll, pitch, primary-light percentage, camera tilt, and water temperature without sending control commands.
 - The HUD depth scale retains only its graduations and centre read-off line; live numeric depth is presented once in the bottom dock.
 - Battery-percentage contract enforced as numeric `0–100` percent; legacy `0–10` and `0–1` scaling is not supported. Missing or invalid percentage telemetry uses the empty battery icon and `-- %` placeholder.
-- Independent `<rov-network-status>` and `<rov-depth>` Web Components consuming shared cockpit state until their Vue ports are completed.
+- Independent `<rov-network-status>` and `<rov-depth>` Web Components consuming shared cockpit state; NATS status polls server-side broker health and shows a red link-off indicator when offline.
 - ROV combined `<rov-hud>` instrument presenting roll, pitch, depth, and heading in one navigation overlay. This is the intended navigation instrument for the ROV cockpit.
 - The former standalone heading band and depth meter have been removed; heading and depth are rendered only within the combined HUD.
 - The HUD presentation has been rebuilt toward the reference design: transparent central attitude arcs, side roll scales, a right-side depth scale, and a bottom heading tape. Heading marks are projected relative to the live heading in 3-degree increments: North/0° uses the largest tick, all other 15-degree divisions use an intermediate tick, and the remaining divisions use minor ticks, with a fixed centre pointer.
 - Reusable HUD style editor with live colour and line-thickness controls; settings currently persist in browser local storage.
+- Attitude HUD with viewport-centred open arcs, roll-rotated reference lines, outside pitch ladders from +/-10 through +/-50, live pitch/roll readouts, right-side depth graduations, and a centred heading tape.
+- Battery icon fill states and green/amber/red charge colours, plus the shared amber instrument icon treatment and muted unavailable-value treatment.
 - Development sensor simulator page with runtime enable/disable control and slider-driven browser telemetry injection.
 - Profile-driven browser-assisted time relay: an authenticated driver/admin page publishes UTC Unix milliseconds to the active profile's Cockpit NATS subject on load and every 60 seconds; Control remains the sole service permitted to alter the RPi clock.
 - K9/profile-enabled right-edge soundboard drawer. It displays the active profile's sound labels and lets an authenticated driver or administrator publish the validated selected ID to the profile-owned `sound.play` NATS command. ROV and PiWars profiles do not render this drawer.
@@ -47,9 +49,9 @@ The current repository state is not recorded as bench-tested or production-valid
 - Profile-driven selection of instrument modules beyond the current ROV HUD and shared status instruments.
 - Robot-backed persistence for instrument visual settings.
 - Profile-defined live-dock controls, including properly authorised arm/mode/camera actions and live Control status.
-- Alert and NATS-health summaries for the shared status bar; the current `Link` indicator intentionally represents only the browser WebSocket.
+- More complete profile-driven status and instrument selection.
 - A depth-scale configuration GUI, with robot-backed minimum, maximum, graduation-step, visibility-window, and presentation settings.
-- CSS Grid, Pico.css, Vue component migration, and complete TypeScript frontend migration.
+- Complete profile-driven instrument selection and further TypeScript frontend migration.
 - A profile-compatible icon-system migration: introduce library-neutral icon IDs and a locally bundled, curated SVG registry for new Vue components; assess Lucide as the preferred candidate, then retire Font Awesome only after all remaining template and legacy-component uses have migrated.
 - Reproducible TypeScript generation in every supported development environment.
 - Complete production authentication and authorisation hardening.
@@ -67,7 +69,7 @@ The current repository state is not recorded as bench-tested or production-valid
 - `docs/testing.md`
 - `tests/documentation_change_policy.py`
 - `tests/documentation_change_policy.json`
-- `frontend/cockpit/`
+- `frontend/src/`
 - `cockpit/src/rov_cockpit/static/dist/main.js`
 - `cockpit/src/rov_cockpit/static/dist/components/instruments/rov-depth.js`
 - `configs/nats.env.example`

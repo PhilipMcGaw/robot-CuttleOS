@@ -53,6 +53,21 @@ should also remain supported.
 The architecture is intended to support different robot types without requiring
 substantial changes to the generic Cockpit application.
 
+The current ROV live view uses a transparent, viewport-centred HUD. Its
+attitude instrument has open white roll arcs, attached square-ended reference
+lines, and pitch ladders outside the arcs. The ladders move with both pitch and
+roll and include +/-10 through +/-50 graduations. A right-hand depth scale
+shares the attitude centreline, and a heading tape with 3-degree graduations
+and a fixed amber centre marker runs above the bottom command dock. Battery
+status uses fill-level Font Awesome icons with green, amber, and red charge
+colours; the NATS indicator uses a red link-off icon when the server-side
+broker is offline. These are software-rendered and simulator-verified visual
+behaviours, not physical or production validation.
+
+Robot-specific K9 sound assets are stored under `sounds/k9/`, separate from
+the JSON profiles in `configs/profiles/`. The K9 profile maps stable sound IDs
+to the available audio files. Future robots should use `sounds/<profile_id>/`.
+
 The initial robot profiles are:
 
 - ROV;

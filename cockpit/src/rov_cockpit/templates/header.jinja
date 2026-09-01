@@ -12,9 +12,9 @@
   <p class="rov-status-bar__alert" data-cockpit-alert data-status="normal" role="status" aria-live="polite">No recent alerts.</p>
 
   <div class="rov-status-bar__system" aria-label="System status">
-    <span data-vue-instrument="connection"></span>
-    <span data-vue-instrument="battery"></span>
-    <span data-vue-instrument="voltage"></span>
+    <rov-network-status class="rov-instrument rov-link-status"></rov-network-status>
+    <rov-battery class="rov-instrument rov-battery"></rov-battery>
+    <rov-voltage class="rov-instrument"></rov-voltage>
     <time class="rov-status-bar__clock" data-cockpit-clock aria-label="Local time"><span data-cockpit-clock-hours>--</span><span class="rov-status-bar__clock-colon" aria-hidden="true">:</span><span data-cockpit-clock-minutes>--</span></time>
   </div>
 

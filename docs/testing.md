@@ -32,6 +32,10 @@ Also verify `/ws/telemetry` in the browser, `/api/session` before and after logi
 
 With NATS stopped, confirm that the central header status becomes `NATS offline`.
 On `/simulator/`, enable simulation and confirm that the same surface changes immediately to `Simulation mode`; disable it and confirm that the status returns to the current NATS state.
+Confirm the header NATS indicator changes to a red link-off icon while NATS is
+offline and returns to its normal link icon after reconnection. Move the
+simulator battery percentage through 0%, 25%, 50%, and 75% and confirm the
+empty, quarter, half, three-quarter, and full icons and corresponding colours.
 
 ## 3. Serial protocol test
 
@@ -40,6 +44,14 @@ Connect the Cockpit to a test NATS server with actuators disabled. Confirm that 
 ## 4. Sensor test
 
 With propulsion still disabled, verify system uptime/time, battery telemetry, water sensors, AHRS values, and leak status. Compare displayed units with the raw NATS payloads.
+
+For the ROV HUD, set simulator values for heading, pitch, roll, and depth and
+confirm that the heading tape, attitude arcs, outside pitch ladders, and right-
+hand depth scale move together. At zero pitch/roll/depth, confirm both attitude
+zero lines and the depth `0 m` line share the attitude centreline. Confirm
+positive pitch is above zero, negative pitch is below zero, roll rotates the
+arcs and attached reference lines, and the live depth readout is not drawn on
+top of the depth graduations.
 
 ## 5. Actuator bench test
 
@@ -78,7 +90,9 @@ and verify exactly one message on `k9.command.sound.play` with its configured
 sound ID as `value`, the profile ID `k9`, and source
 `cockpit-sound-drawer`. An accepted Cockpit request does not demonstrate audio
 playback: record separate Control and speaker bench evidence before claiming
-that a K9 sound was heard.
+that a K9 sound was heard. Confirm `configs/profiles/k9.json` maps the three
+sound IDs to the files that exist in `sounds/k9/`; Cockpit does not serve or
+play those files itself.
 # Documentation currency audit
 
 Run the available documentation checks before submitting changes:
