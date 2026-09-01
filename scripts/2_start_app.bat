@@ -14,21 +14,28 @@ echo [INFO] Optional components: NATS Server must be available for live telemetr
 if "%SCRIPT_DIR:~0,2%"=="\\" (
  echo [FAIL] Direct UNC execution is unsupported: %SCRIPT_DIR%
  echo [FAIL] Corrective action: copy the project locally or map the share to a drive letter.
+ pause
  exit /b 1
 )
 if not exist "%PYTHON%" (
  echo [FAIL] Project interpreter not found: %PYTHON%
  echo [FAIL] Why it matters: the application must use the portable project runtime.
  echo [FAIL] Corrective action: run scripts\1_install_dependencies.bat.
+ pause
  exit /b 1
 )
 if not exist "%COCKPIT_DIR%\rov_cockpit\app.py" (
  echo [FAIL] Cockpit entry point not found: %COCKPIT_DIR%\rov_cockpit\app.py
  echo [FAIL] Corrective action: restore the Cockpit source tree.
+ pause
  exit /b 1
 )
 call "%SCRIPT_DIR%build_frontend.bat"
-if errorlevel 1 exit /b 1
+if errorlevel 1 (
+ echo [FAIL] Frontend build failed.
+ pause
+ exit /b 1
+)
 echo [INFO] Starting Uvicorn on http://127.0.0.1:8080; no system settings will be changed.
 echo [INFO] NATS connectivity will be attempted at the configured NATS_URL, defaulting to nats://127.0.0.1:4222.
 start "ROV Cockpit" http://127.0.0.1:8080
@@ -37,4 +44,5 @@ cd /d "%COCKPIT_DIR%"
 set "EXIT_CODE=%ERRORLEVEL%"
 if not "%EXIT_CODE%"=="0" echo [FAIL] Cockpit stopped with exit code %EXIT_CODE%. Check NATS availability and the preceding diagnostics.
 if "%EXIT_CODE%"=="0" echo [PASS] Cockpit stopped normally.
+if not "%EXIT_CODE%"=="0" pause
 exit /b %EXIT_CODE%

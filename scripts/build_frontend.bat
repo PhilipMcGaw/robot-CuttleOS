@@ -25,6 +25,8 @@ if errorlevel 1 exit /b 1
 call "%NPM%" run build
 if errorlevel 1 exit /b 1
 if exist "%FRONTEND_DIR%\node_modules\@picocss\pico\css\pico.css" copy /Y "%FRONTEND_DIR%\node_modules\@picocss\pico\css\pico.css" "%STATIC_DIR%\css\pico.css" >nul
+if not exist "%STATIC_DIR%\dist\vendor" mkdir "%STATIC_DIR%\dist\vendor"
+if exist "%FRONTEND_DIR%\node_modules\vue\dist\vue.runtime.esm-browser.prod.js" copy /Y "%FRONTEND_DIR%\node_modules\vue\dist\vue.runtime.esm-browser.prod.js" "%STATIC_DIR%\dist\vendor\vue.runtime.esm-browser.prod.js" >nul
 popd
 echo [PASS] TypeScript frontend compiled successfully.
 exit /b 0

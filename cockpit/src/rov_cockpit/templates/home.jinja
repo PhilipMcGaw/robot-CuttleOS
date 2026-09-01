@@ -72,9 +72,42 @@
 -->
 
     {% if active_robot_profile.profile_id == "rov" %}
-    <rov-hud id="rov-hud" aria-label="ROV navigation HUD"></rov-hud>
+    <rov-hud id="rov-hud" class="rov-hud" aria-label="ROV navigation HUD"></rov-hud>
     <rov-instrument-style-editor target="rov-hud" profile="rov"></rov-instrument-style-editor>
-    <div data-vue-instrument="live-dock"></div>
+    <section class="rov-command-dock" aria-label="Vehicle controls and live telemetry">
+        <div class="rov-command-dock__view">
+            <i class="fa-solid fa-compass" aria-hidden="true"></i>
+            <span>HUD View</span>
+            <small aria-hidden="true">▾</small>
+        </div>
+        <div class="rov-command-dock__metrics">
+            <div class="rov-command-dock__metric">
+                <i class="fa-solid fa-person-running" aria-hidden="true"></i>
+                <span class="rov-command-dock__metric-copy"><output id="pilotGain">-- %</output><small>Pilot Gain</small></span>
+            </div>
+            <div class="rov-command-dock__metric">
+                <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+                <span class="rov-command-dock__metric-copy"><output id="lightLevel">-- %</output><small>Lights</small></span>
+            </div>
+            <div class="rov-command-dock__metric">
+                <i class="fa-solid fa-camera-rotate" aria-hidden="true"></i>
+                <span class="rov-command-dock__metric-copy"><output id="cameraPitch">-- %</output><small>Cam Tilt</small></span>
+            </div>
+            <div class="rov-command-dock__metric">
+                <i class="fa-solid fa-water" aria-hidden="true"></i>
+                <span class="rov-command-dock__metric-copy"><output id="depth">-- m</output><small>Depth</small></span>
+            </div>
+            <div class="rov-command-dock__metric">
+                <i class="fa-solid fa-temperature-half" aria-hidden="true"></i>
+                <span class="rov-command-dock__metric-copy"><output id="temperature">-- °C</output><small>Water Temp</small></span>
+            </div>
+        </div>
+        <div class="rov-command-dock__control-state">
+            <span class="rov-command-dock__safety"><i class="fa-solid fa-circle" aria-hidden="true"></i> Disarmed</span>
+            <span class="rov-command-dock__mode">Manual ▾</span>
+            <span class="rov-command-dock__camera"><i class="fa-solid fa-circle" aria-hidden="true"></i> Front Cam</span>
+        </div>
+    </section>
     {% endif %}
 
     <!-- End your project here-->
@@ -84,7 +117,7 @@
         
 {% endblock %}
 {% block scripts %}
-<script type="module" src="/static/dist/components/rov-depth.js"></script>
+<script type="module" src="/static/dist/components/instruments/rov-depth.js"></script>
 <script>
         (() => {
             const toggle = document.querySelector('[data-diagnostic-toggle]');
@@ -229,6 +262,17 @@
                         tempElement.innerHTML = "<i class=\"fa-solid fa-temperature-half\"></i>&nbsp;" + message.toString()  + " &deg;C";
                     }
                 }
+
+                const metricValues = {
+                    "sensor/water/depth": ["depth", " m"],
+                    "sensor/water/temperature": ["temperature", " °C"],
+                    "control/lights/level": ["lightLevel", " %"],
+                    "control/camera/pitch": ["cameraPitch", " %"],
+                    "control/pilot/gain": ["pilotGain", " %"],
+                };
+                const metric = metricValues[topic];
+                const output = metric && document.getElementById(metric[0]);
+                if (output) output.textContent = message.toString() + metric[1];
             }
 
             let telemetrySocket;

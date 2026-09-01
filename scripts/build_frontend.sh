@@ -15,4 +15,6 @@ fi
 "$NPM" --prefix "${FRONTEND_DIR}" run build
 PICO_SOURCE="${FRONTEND_DIR}/node_modules/@picocss/pico/css/pico.css"
 if [[ -f "$PICO_SOURCE" ]]; then cp "$PICO_SOURCE" "${STATIC_DIR}/css/pico.css"; fi
+VUE_SOURCE="${FRONTEND_DIR}/node_modules/vue/dist/vue.runtime.esm-browser.prod.js"
+if [[ -f "$VUE_SOURCE" ]]; then mkdir -p "${STATIC_DIR}/dist/vendor"; cp "$VUE_SOURCE" "${STATIC_DIR}/dist/vendor/vue.runtime.esm-browser.prod.js"; fi
 printf '%s\n' '[PASS] TypeScript frontend compiled successfully.'

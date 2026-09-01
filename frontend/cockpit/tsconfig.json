@@ -3,6 +3,8 @@
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": { "vue": ["./node_modules/vue"] },
     "strict": true,
     "noImplicitOverride": true,
     "noUncheckedIndexedAccess": true,
@@ -11,10 +13,10 @@
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "rootDir": "frontend/src",
-    "outDir": "src/rov_cockpit/static/dist",
+    "rootDir": "../src",
+    "outDir": "../../cockpit/src/rov_cockpit/static/dist",
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["frontend/src/**/*.ts"],
-  "exclude": ["node_modules", "src/rov_cockpit/static/dist"]
+  "include": ["../src/**/*.ts"],
+  "exclude": ["node_modules", "../../cockpit/src/rov_cockpit/static/dist"]
 }

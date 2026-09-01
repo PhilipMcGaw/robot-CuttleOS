@@ -69,7 +69,7 @@ The current repository state is not recorded as bench-tested or production-valid
 - `tests/documentation_change_policy.json`
 - `frontend/cockpit/`
 - `cockpit/src/rov_cockpit/static/dist/main.js`
-- `cockpit/src/rov_cockpit/static/dist/components/rov-depth.js`
+- `cockpit/src/rov_cockpit/static/dist/components/instruments/rov-depth.js`
 - `configs/nats.env.example`
 - `scripts/0_provision_raspberry_pi.sh`
 - `tests/test_raspberry_pi_provisioning.py`

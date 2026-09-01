@@ -78,3 +78,4 @@ control/.venv/
 control/venv/
 datalogger/.venv/
 datalogger/venv/
+*.ini
