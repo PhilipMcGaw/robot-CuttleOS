@@ -83,16 +83,16 @@ Open the live Cockpit page and use the left-edge diagnostics tab. Confirm that t
 
 On a development system, start Cockpit with `ROBOT_PROFILE=k9` and use a test
 NATS server with no live actuator hardware. Confirm that the right-edge
-soundboard tab is present, lists the three K9 profile sound labels, and opens
+soundboard tab is present, lists the 58 K9 profile sound labels, and opens
 and closes without affecting the diagnostics tray. Confirm that a viewer sees
 disabled buttons, then sign in as a driver or administrator. Select one sound
 and verify exactly one message on `k9.command.sound.play` with its configured
 sound ID as `value`, the profile ID `k9`, and source
 `cockpit-sound-drawer`. An accepted Cockpit request does not demonstrate audio
 playback: record separate Control and speaker bench evidence before claiming
-that a K9 sound was heard. Confirm `configs/profiles/k9.json` maps the three
-sound IDs to the files that exist in `sounds/k9/`; Cockpit does not serve or
-play those files itself.
+that a K9 sound was heard. Confirm every sound ID in `configs/profiles/k9.json`
+maps to an existing file in `sounds/k9/`; Cockpit does not serve or play those
+files itself.
 # Documentation currency audit
 
 Run the available documentation checks before submitting changes:

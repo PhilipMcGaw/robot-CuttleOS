@@ -38,7 +38,8 @@ def test_only_k9_enables_the_profile_soundboard_drawer() -> None:
     assert piwars.identity_icon == "fa-robot"
     assert k9.capabilities["soundboard"] is True
     assert k9.soundboard is not None
-    assert [sound.id for sound in k9.soundboard.sounds] == ["affirmative", "negative", "alert"]
+    assert len(k9.soundboard.sounds) == 58
+    assert {"affirmative_x2", "negative", "maximum_defensive_mode"}.issubset({sound.id for sound in k9.soundboard.sounds})
     sound_directory = ROOT / k9.soundboard.directory
     assert sound_directory.is_dir()
     assert all((sound_directory / sound.file).is_file() for sound in k9.soundboard.sounds)
@@ -69,16 +70,16 @@ def test_authorised_k9_soundboard_request_publishes_the_profile_command() -> Non
             "rov_cockpit.app.ACTIVE_ROBOT_PROFILE", k9
         ):
             return await relay_soundboard_playback(
-                SoundboardPlaybackRequest(sound_id="affirmative"), request
+                SoundboardPlaybackRequest(sound_id="affirmative_x2"), request
             )
 
     result = asyncio.run(relay())
 
-    assert result == {"accepted": True, "sound_id": "affirmative", "label": "Affirmative"}
+    assert result == {"accepted": True, "sound_id": "affirmative_x2", "label": "Affirmative x2"}
     assert client.flushed is True
     assert client.published[0][0] == "k9.command.sound.play"
     assert json.loads(client.published[0][1]) == {
-        "value": "affirmative",
+        "value": "affirmative_x2",
         "units": "",
         "profile": "k9",
         "source": "cockpit-sound-drawer",

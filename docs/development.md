@@ -178,7 +178,7 @@ The shared header uses live telemetry-aware custom elements for battery and volt
 
 The NATS indicator is separate from the browser WebSocket indicator. It polls `/api/system/status` and shows a normal link icon when the server-side NATS client is connected, or a red link-off icon and red `NATS` label when NATS is offline. The central alert reports `NATS offline` when appropriate, while the simulator state takes precedence and reports `Simulation mode`.
 
-K9 sound files are stored in `sounds/k9/`, outside the configuration directory. `configs/profiles/k9.json` defines the profile-specific sound IDs and maps them to the existing `.mp3` files. Future robots should use `sounds/<profile_id>/`; `configs/profiles/` remains configuration-only. Cockpit publishes only the validated logical sound ID; Control remains responsible for resolving and playing the file on the robot.
+K9 sound files are stored in `sounds/k9/`, outside the configuration directory. `configs/profiles/k9.json` currently defines 58 profile-specific sound IDs and maps them to `.mp3` files in that directory. Future robots should use `sounds/<profile_id>/`; `configs/profiles/` remains configuration-only. Cockpit publishes only the validated logical sound ID; Control remains responsible for resolving and playing the file on the robot.
 
 The Windows dependency and launcher batch files print their failure reason, why it matters, and corrective action, then pause before exiting so errors remain visible in a terminal window.
 

@@ -61,8 +61,10 @@ FastAPI-based web application providing:
 - Authentication
 - Configuration UI
 
-### Frontend (frontend/cockpit)
-TypeScript/Vue.js frontend for the cockpit interface.
+### Frontend
+TypeScript frontend source is under `frontend/src/`, with the npm package and
+toolchain under `frontend/cockpit/`. The compiled browser modules are emitted
+to `cockpit/src/rov_cockpit/static/dist/`.
 
 ### Configuration
 - Robot definitions in `configs/robots/`
