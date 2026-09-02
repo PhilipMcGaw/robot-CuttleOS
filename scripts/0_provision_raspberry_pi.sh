@@ -266,9 +266,9 @@ info "Refreshing Debian package metadata."
 apt-get update || fail "apt-get update failed. Check network access, repository configuration, and system time."
 
 info "Checking that all required platform packages are available before installation."
-PACKAGES=(python3 python3-venv python3-dev nodejs npm nginx motion curl ca-certificates git zsh hyfetch nats-server network-manager dnsmasq-base avahi-daemon samba)
+PACKAGES=(python3 python3-venv python3-dev nodejs npm nginx motion curl ca-certificates git zsh hyfetch nats-server network-manager dnsmasq-base avahi-daemon samba alsa-utils)
 if [[ "$ROBOT_PROFILE" == "k9" ]]; then
-  PACKAGES+=(espeak-ng sox alsa-utils)
+  PACKAGES+=(espeak-ng sox)
 fi
 for package in "${PACKAGES[@]}"; do
   apt-cache show "$package" >/dev/null 2>&1 || fail "Required package is unavailable in the configured repositories: $package. Add a trusted repository or install this dependency using the documented vendor method before rerunning. No partial service configuration was attempted."

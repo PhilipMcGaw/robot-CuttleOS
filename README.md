@@ -129,7 +129,7 @@ sudo ./scripts/switch_robot_profile.sh k9
 sudo ./scripts/switch_robot_profile.sh piwars
 ```
 
-Switching to K9 automatically checks and installs `espeak-ng`, `sox`, and `alsa-utils` before activating the profile.
+Switching to K9 automatically checks and installs `espeak-ng` and `sox`; shared `alsa-utils` support is installed for all robot profiles.
 
 Available profiles: `rov`, `k9`, `piwars`
 

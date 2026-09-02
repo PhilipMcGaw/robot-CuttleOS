@@ -93,6 +93,17 @@ playback: record separate Control and speaker bench evidence before claiming
 that a K9 sound was heard. Confirm every sound ID in `configs/profiles/k9.json`
 maps to an existing file in `assets/robots/k9/audio/`; Cockpit does not serve or play those
 files itself.
+## Planned USB microphone and audio-stream test
+
+After microphone streaming is implemented, connect a USB microphone to the
+Pi and confirm that `arecord -l` identifies it. Verify the selected profile
+advertises `microphone` and `audio_stream`, the capture service starts with the
+robot, the browser receives audio through the Nginx boundary, and reconnects
+cleanly after the microphone or network is interrupted. Confirm that anonymous
+users cannot access the stream and that the operator UI clearly indicates when
+the microphone is active or unavailable. Test K9 first, then repeat on ROV if
+the capability is enabled there.
+
 # Documentation currency audit
 
 Run the available documentation checks before submitting changes:

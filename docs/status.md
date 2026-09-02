@@ -28,6 +28,7 @@ The application layer is FastAPI served by Uvicorn. NATS is accessed only by the
 - Profile-driven browser-assisted time relay: an authenticated driver/admin page publishes UTC Unix milliseconds to the active profile's Cockpit NATS subject on load and every 60 seconds; Control remains the sole service permitted to alter the RPi clock.
 - K9/profile-enabled right-edge soundboard drawer. It displays the active profile's sound labels and lets an authenticated driver or administrator publish the validated selected ID to the profile-owned `sound.play` NATS command. ROV and PiWars profiles do not render this drawer.
 - Shared-profile validation of Control-owned hardware adapters. K9 and PiWars now bind selected Adeept Robot HAT ADM133 functions to logical command and telemetry keys. K9 additionally maps the semantic aliases `head-pan` and `head-tilt` to stable `servo-00` and `servo-01` port aliases. The Control driver and all physical HAT behaviour remain planned and unbench-tested.
+- macOS first-boot preparation helper and cloud-init/systemd wrapper for unattended profile-driven Raspberry Pi provisioning.
 - Canonical Raspberry Pi provisioning for the co-installed Cockpit, Control, and Datalogger services. It renders service, Motion, and Nginx templates for the actual checkout paths; installs authenticated NATS configuration; invokes Control-owned network, SMB, and Avahi deployment; and creates the shared media/CSV directories.
 - Canonical first-boot instructions with two source-installation routes: a
   read-only HTTPS route for normal robots, and Philip's Pi-specific GitHub SSH
@@ -58,6 +59,7 @@ The current repository state is not recorded as bench-tested or production-valid
 - Raspberry Pi 3B+ Trixie Lite 64-bit bench validation of the canonical provisioner, NATS service override, Wi-Fi/hotspot failover, SMB share, Motion camera configuration, and co-installed service restart behaviour.
 - Raspberry Pi bench validation of the runtime-user shell, Oh My Zsh installation, HyFetch greeting, and passwordless-sudo policy on a clean target image.
 - Control-side K9 sound-file resolution and speaker playback. The Cockpit drawer publishes the logical request, but it does not yet prove that a robot sound was produced.
+- USB microphone capture and live browser audio streaming. `alsa-utils` is installed for all profiles and provides device inspection tools, but capture service, streaming, authentication, and K9/ROV voice behaviour remain planned.
 
 ## Important references
 

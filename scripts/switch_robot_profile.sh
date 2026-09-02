@@ -61,7 +61,7 @@ python3 -m json.tool "$TARGET_PROFILE_FILE" >/dev/null || fail "Profile file is 
 profile_packages=()
 case "$TARGET_PROFILE" in
   k9)
-    profile_packages=(espeak-ng sox alsa-utils)
+    profile_packages=(espeak-ng sox)
     ;;
 esac
 

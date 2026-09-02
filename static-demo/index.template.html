@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en-GB" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROV Cockpit — Static Demo</title>
+  <link rel="stylesheet" href="./assets/pico.css">
+  <link rel="stylesheet" href="./assets/cockpit.css">
+  <link rel="stylesheet" href="./assets/all.css">
+  <style>
+    .static-demo-video { position:absolute; inset:0; width:100%; height:100%; border:0; object-fit:cover; pointer-events:none; }
+    .static-demo-badge { position: fixed; z-index: 81; top: 4.7rem; right: 1rem; padding: .35rem .65rem; border: 1px solid rgba(255,255,255,.2); border-radius: .4rem; color: #ffe0a3; background: rgba(118,76,14,.72); font: 700 .7rem Arial,sans-serif; letter-spacing: .08em; }
+    .static-demo-note { position: fixed; z-index: 81; left: 50%; bottom: calc(var(--rov-command-dock-height) + .4rem); transform: translateX(-50%); color: rgba(255,255,255,.72); font: .7rem Arial,sans-serif; pointer-events: auto; }
+  </style>
+</head>
+<body class="rov-live-page">
+  <header class="rov-status-bar" aria-label="Demo status and navigation">
+    <button class="rov-menu-toggle" type="button" aria-label="Demo navigation"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+    <div class="rov-status-bar__identity"><i class="fa-solid fa-otter" aria-hidden="true"></i><span>ROV</span></div>
+    <p class="rov-status-bar__alert">Static animated demo</p>
+    <div class="rov-status-bar__system">
+      <span class="rov-instrument rov-link-status" style="color:#ff7777"><i class="fa-solid fa-link-slash" aria-hidden="true"></i><span class="rov-instrument__value">DEMO</span></span>
+      <span class="rov-instrument rov-battery rov-battery--normal"><i class="fa-solid fa-battery-three-quarters" aria-hidden="true"></i><span class="rov-instrument__value">-- %</span></span>
+      <span class="rov-instrument"><i class="fa-solid fa-bolt" aria-hidden="true"></i><span class="rov-instrument__value">-- V</span></span>
+      <time class="rov-status-bar__clock"><span data-demo-time>--:--:--</span></time>
+    </div>
+  </header>
+  <span class="static-demo-badge">STATIC DEMO</span>
+  <div class="bg-image" style="background:#071321 url('./assets/background.jpg') center/cover no-repeat;">
+    <iframe class="static-demo-video" src="https://www.youtube-nocookie.com/embed/4Gz9FJzXeb8?autoplay=1&mute=1&loop=1&playlist=4Gz9FJzXeb8&controls=0&modestbranding=1&playsinline=1&rel=0" title="Background video from YouTube" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <rov-hud class="rov-hud" aria-label="Animated ROV navigation HUD"></rov-hud>
+  <section class="rov-command-dock" aria-label="Demo telemetry">
+    <div class="rov-command-dock__view"><i class="fa-solid fa-compass" aria-hidden="true"></i><span>HUD View</span></div>
+    <div class="rov-command-dock__metrics">
+      <div class="rov-command-dock__metric"><i class="fa-solid fa-person-running" aria-hidden="true"></i><span class="rov-command-dock__metric-copy"><output>-- %</output><small>Pilot Gain</small></span></div>
+      <div class="rov-command-dock__metric"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i><span class="rov-command-dock__metric-copy"><output id="lightLevel">-- %</output><small>Lights</small></span></div>
+      <div class="rov-command-dock__metric"><i class="fa-solid fa-camera-rotate" aria-hidden="true"></i><span class="rov-command-dock__metric-copy"><output id="cameraPitch">-- °</output><small>Cam Tilt</small></span></div>
+      <div class="rov-command-dock__metric"><i class="fa-solid fa-water" aria-hidden="true"></i><span class="rov-command-dock__metric-copy"><output>-- m</output><small>Depth</small></span></div>
+      <div class="rov-command-dock__metric"><i class="fa-solid fa-temperature-half" aria-hidden="true"></i><span class="rov-command-dock__metric-copy"><output id="temperature">-- °C</output><small>Water Temp</small></span></div>
+    </div>
+    <div class="rov-command-dock__control-state"><span class="rov-command-dock__safety"><i class="fa-solid fa-circle" aria-hidden="true"></i> Disarmed</span><span class="rov-command-dock__mode">Manual</span><span class="rov-command-dock__camera"><i class="fa-solid fa-circle" aria-hidden="true"></i> Demo Cam</span></div>
+  </section>
+  <p class="static-demo-note">No robot, NATS connection, camera, or control hardware is used by this demo. Background footage: Baited Remote Underwater Video Surveys (BRUVS), credited to <a href="https://oceanfirstinstitute.org" target="_blank" rel="noopener noreferrer">Ocean First Institute</a>. <a href="https://www.youtube.com/watch?v=4Gz9FJzXeb8" target="_blank" rel="noopener noreferrer">YouTube source</a>.</p>
+  <script type="module" src="./assets/static-demo.js"></script>
+</body>
+</html>

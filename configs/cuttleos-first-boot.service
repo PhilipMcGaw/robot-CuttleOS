@@ -1,0 +1,17 @@
+[Unit]
+Description=CuttleOS first-boot provisioning
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=!/var/lib/cuttleos/first-boot-complete
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/cuttleos-first-boot
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

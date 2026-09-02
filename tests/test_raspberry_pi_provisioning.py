@@ -95,12 +95,36 @@ def test_profile_switcher_installs_k9_dependencies_before_activation() -> None:
     for required in (
         'case "$TARGET_PROFILE" in',
         'k9)',
-        'profile_packages=(espeak-ng sox alsa-utils)',
+        'profile_packages=(espeak-ng sox)',
         'apt-get install -y "${profile_packages[@]}"',
         'Profile $TARGET_PROFILE was not activated.',
     ):
         assert required in switcher
 
+def test_first_boot_files_and_macos_helper_are_noninteractive() -> None:
+    helper = read(COCKPIT_ROOT / "scripts" / "prepare_first_boot.sh")
+    first_boot = read(COCKPIT_ROOT / "scripts" / "first_boot_provision.sh")
+    service = read(COCKPIT_ROOT / "configs" / "cuttleos-first-boot.service")
+
+    for required in (
+        "uname -s",
+        "Darwin",
+        "#cloud-config-archive",
+        "--config-dir",
+        "network.secrets.env",
+        "cuttleos-first-boot.service",
+    ):
+        assert required in helper
+    for required in (
+        "apt-get update",
+        "git clone",
+        "0_provision_raspberry_pi.sh",
+        "first-boot-complete",
+        "ROBOT_PROFILE",
+    ):
+        assert required in first_boot
+    assert "network-online.target" in service
+    assert "ConditionPathExists=!/var/lib/cuttleos/first-boot-complete" in service
 def main() -> int:
     checks = (
         test_provisioner_installs_the_required_platform_contract,
@@ -110,6 +134,7 @@ def main() -> int:
         test_network_deployment_supports_named_profiles_and_wifi_fallback,
         test_control_runtime_launcher_derives_its_own_path,
         test_rendered_nginx_and_motion_configuration_do_not_assume_a_checkout_path,
+        test_first_boot_files_and_macos_helper_are_noninteractive,
     )
     for check in checks:
         check()

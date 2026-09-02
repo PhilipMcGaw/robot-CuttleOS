@@ -24,6 +24,40 @@ Expected baseline: `aarch64`, Raspberry Pi OS based on Debian Trixie, and `64`.
 
 On Linux, the documented default development location is `~/robots/robot-CuttleOS`. On macOS, use a user-selected workspace beneath the home directory, for example `~/Projects/ROV/robot-CuttleOS`. Raspberry Pi provisioning renders the installed systemd and Nginx files using the actual repository location and runtime account; no `/home/pi` checkout path is required.
 
+## Hands-off first boot from macOS
+
+For a fresh Raspberry Pi OS Trixie Lite card, use Raspberry Pi Imager to set the
+hostname, runtime user, Wi-Fi and SSH access. After Imager finishes, eject and
+reinsert the card so the `bootfs` volume appears in Finder. From a macOS checkout
+of this repository, prepare the card with:
+
+```zsh
+chmod +x scripts/prepare_first_boot.sh
+scripts/prepare_first_boot.sh /Volumes/bootfs \
+  --user philip \
+  --profile k9 \
+  --config-dir ~/robot-deployment/k9
+```
+
+The private configuration directory must contain `nats.env`, `network.env` and
+`network.secrets.env`. The helper preserves Imager's existing `user-data` and
+adds a cloud-init archive containing the CuttleOS first-boot wrapper and
+systemd service. On power-up, the Pi waits for the network, retrieves the three
+repositories, installs the selected profile and runs the canonical provisioner.
+
+Do not commit or broadly share the directory passed to `--config-dir`: its
+`network.secrets.env` file contains robot credentials. If the option is omitted,
+the first-boot service stops safely with a journal error rather than prompting
+on a headless robot. Inspect it with:
+
+```zsh
+ssh philip@k9.local
+sudo journalctl -u cuttleos-first-boot.service -b --no-pager
+```
+
+The service writes `/var/lib/cuttleos/first-boot-complete` only after the
+provisioner succeeds. This first-boot path is implemented but remains
+unbench-tested until it has completed on a clean Raspberry Pi image.
 ## One-time installation
 
 ### Connect to the new Raspberry Pi
@@ -182,7 +216,7 @@ chmod +x scripts/*.sh
 sudo bash scripts/0_provision_raspberry_pi.sh
 ```
 
-The provisioning script is the initial Raspberry Pi setup path. It installs Python, Node.js/npm, Nginx, Motion, curl, certificates, Git, Zsh, HyFetch, NATS Server, NetworkManager, its `dnsmasq` shared-network dependency, Avahi, Samba from the configured Debian repositories; when `ROBOT_PROFILE=k9` is selected, it also installs the K9 speech dependencies (`espeak-ng`, `sox`, and `alsa-utils`) from those repositories; creates the Cockpit, Control, and Datalogger virtual environments; creates the shared `stills/`, `videos/`, and `data/csv/` directories; installs the shared robot profile at `/etc/robot/profile.json`; renders the Control, Cockpit, Datalogger, Motion, and Nginx configuration for the actual checkout paths; enables the services; and invokes Control's network deployment. NATS uses the credentials from the ignored secrets file and binds to `127.0.0.1` unless `NATS_REMOTE_ACCESS=true` is configured. It requires `sudo` because it changes system packages and services. It does not physically validate cameras, sensors, motor controllers, network failover, or the ROV data link.
+The provisioning script is the initial Raspberry Pi setup path. It installs Python, Node.js/npm, Nginx, Motion, curl, certificates, Git, Zsh, HyFetch, NATS Server, NetworkManager, its `dnsmasq` shared-network dependency, Avahi, Samba, and shared ALSA audio tools (`alsa-utils`) from the configured Debian repositories; when `ROBOT_PROFILE=k9` is selected, it also installs the K9 speech dependencies (`espeak-ng` and `sox`) from those repositories; creates the Cockpit, Control, and Datalogger virtual environments; creates the shared `stills/`, `videos/`, and `data/csv/` directories; installs the shared robot profile at `/etc/robot/profile.json`; renders the Control, Cockpit, Datalogger, Motion, and Nginx configuration for the actual checkout paths; enables the services; and invokes Control's network deployment. NATS uses the credentials from the ignored secrets file and binds to `127.0.0.1` unless `NATS_REMOTE_ACCESS=true` is configured. It requires `sudo` because it changes system packages and services. It does not physically validate cameras, sensors, motor controllers, network failover, or the ROV data link.
 
 ### Runtime-shell and sudo policy
 
@@ -209,9 +243,11 @@ baseline for a shared or Internet-exposed host.
 
 The installed Control systemd unit grants only `CAP_SYS_TIME` for the profile-driven browser-time synchronisation feature. This allows Control, rather than Cockpit or the browser, to correct the RPi system clock. After deploying a changed Control unit, run `sudo systemctl daemon-reload` and restart Control when the robot is safe. A logged-in driver/admin Cockpit browser then provides UTC time immediately and every 60 seconds. This is not a replacement for NTP where a trusted network time service is available.
 
+A USB microphone can be connected after provisioning as a standard Linux USB Audio Class device. Confirm that the Pi sees it with `arecord -l` or `arecord -L`; the microphone does not need to be present during provisioning, and provisioning does not select a device or start recording. Capture policy, device selection, permissions, live browser streaming, and any K9 voice-input behaviour remain Control/application work; live microphone streaming is not implemented yet.
+
 The development sensor simulator is available at `/simulator/` but starts in a safe, disabled state. Set `COCKPIT_ENABLE_SIMULATOR=true` only for development or HiL/SiL deployments, never for a live robot. It injects values into Cockpit browser telemetry and does not replace NATS, Control, or physical sensor validation.
 
-The profile switcher installs any profile-specific Debian dependencies before activating the new profile. Switching to K9 therefore requires root access and automatically installs `espeak-ng`, `sox`, and `alsa-utils`; switching away from K9 does not remove them. Set `ROBOT_PROFILE` when provisioning a non-ROV robot, for example `ROBOT_PROFILE=k9 sudo bash scripts/0_provision_raspberry_pi.sh`. Set `CONTROL_ROOT` or `DATALOGGER_ROOT` when either sibling repository is not located beside Cockpit. The Control network and NATS configuration files must already exist, and the secrets file must use mode `600`, before provisioning starts.
+The provisioner installs shared `alsa-utils` support for every robot profile, providing `arecord` and `aplay` for USB microphone and audio-device use. When `ROBOT_PROFILE=k9` is selected, it additionally installs the K9 speech dependencies `espeak-ng` and `sox`. The profile switcher installs any profile-specific Debian dependencies before activating the new profile; switching to K9 therefore requires root access, while switching away from K9 does not remove its speech packages. Set `ROBOT_PROFILE` when provisioning a non-ROV robot, for example `ROBOT_PROFILE=k9 sudo bash scripts/0_provision_raspberry_pi.sh`. Set `CONTROL_ROOT` or `DATALOGGER_ROOT` when either sibling repository is not located beside Cockpit. The Control network and NATS configuration files must already exist, and the secrets file must use mode `600`, before provisioning starts.
 
 If NATS Server is unavailable from the configured Debian repositories, provisioning stops before service configuration. Add a trusted, documented repository or use the approved NATS deployment procedure; do not substitute an unverified installer.
 

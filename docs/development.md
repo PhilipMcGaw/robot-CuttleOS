@@ -209,14 +209,16 @@ bash assets/robots/k9/tools/k9-say.sh -p alarm "Danger! Danger!"
 The options are:
 
 - `-p` or `--preset` selects the voice treatment.
-- `normal` is the default preset.
+- 
+ormal` is the default preset.
 - `calm` uses a slower, softer delivery.
 - `alert` uses a faster, brighter delivery.
 - `alarm` uses the fastest and most aggressive delivery.
 
 The command accepts the remaining arguments as the text to speak. Text is
 required; calling it without text prints the usage message and exits with an
-error. An unrecognised preset currently falls back to `normal`.
+error. An unrecognised preset currently falls back to 
+ormal`.
 
 The helper requires `espeak-ng`, `sox`, and `alsa-utils`. The Raspberry Pi
 provisioner installs these automatically when `ROBOT_PROFILE=k9` is selected.
@@ -229,6 +231,23 @@ sudo apt install espeak-ng sox alsa-utils
 The current Cockpit soundboard publishes logical pre-recorded sound IDs. K9
 generated speech is a separate helper until Control-side playback and a
 profile-defined generated-speech command are implemented.
+
+### USB microphone and live audio streaming
+
+The Raspberry Pi provisioner installs shared `alsa-utils` support for every
+robot profile. A USB microphone can therefore be discovered with `arecord -l`
+or `arecord -L` after it is connected. The current repository does not yet
+capture or stream microphone audio through Cockpit; it only provides the ALSA
+utilities needed for future capture and audio playback.
+
+The planned design is profile-driven, initially enabling K9 and optionally ROV
+with capabilities such as `microphone` and `audio_stream`. A robot-side ALSA
+capture service would encode the microphone stream and expose it to the
+operator through the existing Nginx boundary. HTTP Opus is the initial simple
+option; WebRTC should be evaluated if lower latency is required. The stream
+must be authenticated or otherwise restricted, support device selection and
+reconnection, and provide a clear privacy/status indicator. The microphone
+must never become part of the hardware-control safety path.
 
 The Windows dependency and launcher batch files print their failure reason, why it matters, and corrective action, then pause before exiting so errors remain visible in a terminal window.
 
@@ -281,4 +300,16 @@ frontend package or bundled static asset is added, removed, or replaced.
 
 ### Static demo background video
 
-The static demo embeds the YouTube video `4Gz9FJzXeb8` as a muted, autoplaying, looping background using the YouTube iframe player. The video is not downloaded or redistributed; the demo retains the local background image underneath as a fallback. The source is credited in `static-demo/index.html` as Baited Remote Underwater Video Surveys (BRUVS), with Ocean First Institute and the YouTube video linked. Its licence remains whatever licence the uploader has selected, and must be confirmed before treating the video as reusable media; successful embedding is not proof of a reuse licence.
+To optionally upload the generated demo after a build, set `DEMO_UPLOAD_DEST`
+to an rsync destination:
+
+```bash
+DEMO_UPLOAD_DEST="user@example.com:/var/www/cockpit" \
+  ./scripts/build_static_demo.sh
+```
+
+The generator asks for confirmation at the end and defaults to skipping the
+upload. The upload uses `rsync -avz` without `--delete`; verify the destination
+and command in `scripts/build_static_demo.sh` before using it for a live site.
+
+The static demo embeds the YouTube video `4Gz9FJzXeb8` as a muted, autoplaying, looping background using the YouTube iframe player. The video is not downloaded or redistributed; the demo retains the local background image underneath as a fallback. The source is credited in `static-demo/index.template.html` and carried into the generated `static-demo/index.html` as Baited Remote Underwater Video Surveys (BRUVS), with Ocean First Institute and the YouTube video linked. Its licence remains whatever licence the uploader has selected, and must be confirmed before treating the video as reusable media; successful embedding is not proof of a reuse licence.

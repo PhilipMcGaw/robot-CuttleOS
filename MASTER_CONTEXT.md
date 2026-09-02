@@ -418,6 +418,8 @@ Example:
 
 #### Core Features & Bug Fixes
 - [TODO] Multi-robot coordination through shared NATS namespace
+- [TODO] Profile-driven USB microphone capture and authenticated Cockpit audio streaming
+
 - [ROADMAP] Cockpit offline-first PWA implementation
 - [FIXME] Address control timeout race condition on restart
 ```

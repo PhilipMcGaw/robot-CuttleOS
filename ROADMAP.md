@@ -118,6 +118,15 @@ robots/
   - `robots/` - actual robot software
   - `robots-hil/` - ROS 2, Gazebo, simulation environment
 
+## Repeatable Raspberry Pi deployment
+
+- [x] Add a macOS helper that prepares Raspberry Pi Imager's cloud-init
+  `user-data` without discarding Imager's hostname, user, network or SSH
+  customisation.
+- [x] Add a non-interactive first-boot wrapper and systemd service that reuse the
+  canonical profile-driven provisioner.
+- [ ] Complete clean-image bench validation on a Raspberry Pi OS Trixie Lite
+  target, including failure recovery and service startup.
 ## Feature Development
 
 ### K9 Soundboard and Generated Speech
@@ -126,6 +135,14 @@ robots/
 - [ ] Define profile-controlled text validation and the supported `normal`, `calm`, `alert`, and `alarm` presets
 - [ ] Allow generated speech to fall back to, or replace, pre-recorded soundboard clips where appropriate
 - [ ] Add playback failure reporting and Raspberry Pi audio-device validation
+
+### USB Microphone and Live Audio Streaming
+
+- [ ] Add profile capabilities such as `microphone` and `audio_stream`, initially for K9 and optionally for ROV
+- [ ] Add a robot-side ALSA capture service for a configured USB microphone
+- [ ] Provide a browser-compatible low-latency stream through the existing Nginx deployment; evaluate HTTP Opus first and WebRTC where lower latency is required
+- [ ] Add authenticated access, device selection, reconnect handling, and microphone privacy/status indicators
+- [ ] Validate audio capture, bandwidth, and service recovery on K9 and ROV hardware
 
 ### Robot Capabilities Discovery
 - [ ] Implement capability-based UI rendering
