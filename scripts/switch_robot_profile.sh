@@ -58,6 +58,24 @@ TARGET_PROFILE_FILE="$PROFILES_DIR/${TARGET_PROFILE}.json"
 # Validate JSON
 python3 -m json.tool "$TARGET_PROFILE_FILE" >/dev/null || fail "Profile file is not valid JSON: $TARGET_PROFILE_FILE"
 
+profile_packages=()
+case "$TARGET_PROFILE" in
+  k9)
+    profile_packages=(espeak-ng sox alsa-utils)
+    ;;
+esac
+
+if [[ "${#profile_packages[@]}" -gt 0 ]]; then
+  [[ "${EUID}" -eq 0 ]] || fail "Profile $TARGET_PROFILE requires additional Debian packages. Run this switch with sudo so dependencies can be installed before the profile changes."
+  command -v apt-get >/dev/null 2>&1 || fail "apt-get is unavailable; cannot install dependencies for profile $TARGET_PROFILE."
+  info "Refreshing Debian package metadata for profile $TARGET_PROFILE."
+  apt-get update || fail "apt-get update failed; profile $TARGET_PROFILE was not activated."
+  for package in "${profile_packages[@]}"; do
+    apt-cache show "$package" >/dev/null 2>&1 || fail "Required package is unavailable in the configured repositories: $package. Profile $TARGET_PROFILE was not activated."
+  done
+  info "Installing profile-specific packages: ${profile_packages[*]}"
+  apt-get install -y "${profile_packages[@]}" || fail "Profile dependency installation failed; profile $TARGET_PROFILE was not activated."
+fi
 info "Switching to profile: $TARGET_PROFILE"
 
 # Update local active profile

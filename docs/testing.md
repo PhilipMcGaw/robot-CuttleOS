@@ -91,7 +91,7 @@ sound ID as `value`, the profile ID `k9`, and source
 `cockpit-sound-drawer`. An accepted Cockpit request does not demonstrate audio
 playback: record separate Control and speaker bench evidence before claiming
 that a K9 sound was heard. Confirm every sound ID in `configs/profiles/k9.json`
-maps to an existing file in `sounds/k9/`; Cockpit does not serve or play those
+maps to an existing file in `assets/robots/k9/audio/`; Cockpit does not serve or play those
 files itself.
 # Documentation currency audit
 

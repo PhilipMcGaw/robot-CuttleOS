@@ -26,10 +26,6 @@ Why These Work Together:
 
 I have a demo of my Robot Cockpit 🙂 https://cuttleos.philipmcgaw.com/
 
-
- * need the generator script to correct font location /assets/webfonts/
- * replace background image with https://www.youtube.com/watch?v=4Gz9FJzXeb8 (need to correctly give cc/licence etc) can the video be on loop?
-
 ## Architecture
 
 This project uses a monorepo structure with the following layout:
@@ -41,6 +37,7 @@ robot-CuttleOS/
 ├── datalogger/        # NATS telemetry logger
 ├── frontend/          # Frontend source and build configuration
 │   └── cockpit/
+├── assets/            # Version-controlled shared and robot assets
 ├── configs/           # Configuration files
 │   ├── robots/        # Robot-specific configs (rov.yaml, k9.yaml)
 │   └── profiles/      # Cockpit profiles
@@ -127,9 +124,12 @@ sudo ./scripts/switch_robot_profile.sh rov
 # Switch to K9 profile
 sudo ./scripts/switch_robot_profile.sh k9
 
+
 # Switch to PiWars profile
 sudo ./scripts/switch_robot_profile.sh piwars
 ```
+
+Switching to K9 automatically checks and installs `espeak-ng`, `sox`, and `alsa-utils` before activating the profile.
 
 Available profiles: `rov`, `k9`, `piwars`
 

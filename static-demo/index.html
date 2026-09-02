@@ -8,8 +8,9 @@
   <link rel="stylesheet" href="./assets/cockpit.css">
   <link rel="stylesheet" href="./assets/all.css">
   <style>
+    .static-demo-video { position:absolute; inset:0; width:100%; height:100%; border:0; object-fit:cover; pointer-events:none; }
     .static-demo-badge { position: fixed; z-index: 81; top: 4.7rem; right: 1rem; padding: .35rem .65rem; border: 1px solid rgba(255,255,255,.2); border-radius: .4rem; color: #ffe0a3; background: rgba(118,76,14,.72); font: 700 .7rem Arial,sans-serif; letter-spacing: .08em; }
-    .static-demo-note { position: fixed; z-index: 81; left: 50%; bottom: calc(var(--rov-command-dock-height) + .4rem); transform: translateX(-50%); color: rgba(255,255,255,.72); font: .7rem Arial,sans-serif; pointer-events: none; }
+    .static-demo-note { position: fixed; z-index: 81; left: 50%; bottom: calc(var(--rov-command-dock-height) + .4rem); transform: translateX(-50%); color: rgba(255,255,255,.72); font: .7rem Arial,sans-serif; pointer-events: auto; }
   </style>
 </head>
 <body class="rov-live-page">
@@ -25,7 +26,9 @@
     </div>
   </header>
   <span class="static-demo-badge">STATIC DEMO</span>
-  <div class="bg-image"><img id="mainCamera" src="./assets/background.jpg" alt="Animated ROV demo background"></div>
+  <div class="bg-image" style="background:#071321 url('./assets/background.jpg') center/cover no-repeat;">
+    <iframe class="static-demo-video" src="https://www.youtube-nocookie.com/embed/4Gz9FJzXeb8?autoplay=1&mute=1&loop=1&playlist=4Gz9FJzXeb8&controls=0&modestbranding=1&playsinline=1&rel=0" title="Background video from YouTube" allow="autoplay; fullscreen"></iframe>
+  </div>
   <rov-hud class="rov-hud" aria-label="Animated ROV navigation HUD"></rov-hud>
   <section class="rov-command-dock" aria-label="Demo telemetry">
     <div class="rov-command-dock__view"><i class="fa-solid fa-compass" aria-hidden="true"></i><span>HUD View</span></div>
@@ -38,7 +41,7 @@
     </div>
     <div class="rov-command-dock__control-state"><span class="rov-command-dock__safety"><i class="fa-solid fa-circle" aria-hidden="true"></i> Disarmed</span><span class="rov-command-dock__mode">Manual</span><span class="rov-command-dock__camera"><i class="fa-solid fa-circle" aria-hidden="true"></i> Demo Cam</span></div>
   </section>
-  <p class="static-demo-note">No robot, NATS connection, camera, or control hardware is used by this demo.</p>
+  <p class="static-demo-note">No robot, NATS connection, camera, or control hardware is used by this demo. Background footage: Baited Remote Underwater Video Surveys (BRUVS), credited to <a href="https://oceanfirstinstitute.org" target="_blank" rel="noopener noreferrer">Ocean First Institute</a>. <a href="https://www.youtube.com/watch?v=4Gz9FJzXeb8" target="_blank" rel="noopener noreferrer">YouTube source</a>.</p>
   <script type="module" src="./assets/static-demo.js"></script>
 </body>
 </html>

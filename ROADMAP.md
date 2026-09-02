@@ -120,6 +120,13 @@ robots/
 
 ## Feature Development
 
+### K9 Soundboard and Generated Speech
+
+- [ ] Add a Control-side K9 generated-speech command backed by `assets/robots/k9/tools/k9-say.sh`
+- [ ] Define profile-controlled text validation and the supported `normal`, `calm`, `alert`, and `alarm` presets
+- [ ] Allow generated speech to fall back to, or replace, pre-recorded soundboard clips where appropriate
+- [ ] Add playback failure reporting and Raspberry Pi audio-device validation
+
 ### Robot Capabilities Discovery
 - [ ] Implement capability-based UI rendering
 - [ ] Cockpit discovers robot capabilities from configuration

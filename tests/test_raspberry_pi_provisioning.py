@@ -23,6 +23,10 @@ def test_provisioner_installs_the_required_platform_contract() -> None:
         "dnsmasq-base",
         "avahi-daemon",
         "samba",
+        "espeak-ng",
+        "sox",
+        "alsa-utils",
+        "if [[ \"$ROBOT_PROFILE\" == \"k9\" ]]",
         "install_nats_configuration",
         "render_template \"$PROJECT_ROOT/configs/cockpit.service\"",
         "NETWORK_CONFIG=\"$NETWORK_CONFIG_FILE\"",
@@ -85,9 +89,22 @@ def test_rendered_nginx_and_motion_configuration_do_not_assume_a_checkout_path()
     assert "@COCKPIT_ROOT@" in motion_template
 
 
+def test_profile_switcher_installs_k9_dependencies_before_activation() -> None:
+    switcher = read(COCKPIT_ROOT / "scripts" / "switch_robot_profile.sh")
+
+    for required in (
+        'case "$TARGET_PROFILE" in',
+        'k9)',
+        'profile_packages=(espeak-ng sox alsa-utils)',
+        'apt-get install -y "${profile_packages[@]}"',
+        'Profile $TARGET_PROFILE was not activated.',
+    ):
+        assert required in switcher
+
 def main() -> int:
     checks = (
         test_provisioner_installs_the_required_platform_contract,
+        test_profile_switcher_installs_k9_dependencies_before_activation,
         test_provisioner_configures_runtime_shell_and_sudo,
         test_service_templates_are_portable_and_use_the_restricted_nats_environment,
         test_network_deployment_supports_named_profiles_and_wifi_fallback,

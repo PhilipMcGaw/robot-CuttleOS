@@ -64,7 +64,7 @@
     "devices": [{ "id": "main", "label": "Main camera", "enabled": true, "stream_path": "/cam1" }]
   },
   "soundboard": {
-    "directory": "sounds/k9",
+    "directory": "assets/robots/k9/audio",
     "sounds": [
       { "id": "affirmative_x2", "label": "Affirmative x2", "file": "afermative_x2.mp3" },
       { "id": "affirmative_1", "label": "Affirmative 1", "file": "afermative_1.mp3" },

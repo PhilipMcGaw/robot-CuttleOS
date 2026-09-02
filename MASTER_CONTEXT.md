@@ -64,9 +64,12 @@ colours; the NATS indicator uses a red link-off icon when the server-side
 broker is offline. These are software-rendered and simulator-verified visual
 behaviours, not physical or production validation.
 
-Robot-specific K9 sound assets are stored under `sounds/k9/`, separate from
-the JSON profiles in `configs/profiles/`. The K9 profile maps stable sound IDs
-to the available audio files. Future robots should use `sounds/<profile_id>/`.
+Robot-specific assets are stored under `assets/robots/<profile_id>/`, grouped
+by type such as `audio/`, `images/`, `models/`, and `ui/`, separate from the
+JSON profiles in `configs/profiles/`. The K9 profile maps stable sound IDs to
+audio files under `assets/robots/k9/audio/`. The K9 speech-generation
+helper is `assets/robots/k9/tools/k9-say.sh`. Runtime-generated stills and
+recordings remain under `media/`.
 
 The initial robot profiles are:
 
@@ -247,7 +250,8 @@ Database crash ≠ control loss.
 - Selected internal messaging middleware
 - Subject naming: `<namespace>.<category>.<type>.<field>`
   - Example: `rov.telemetry.power.battery.voltage`
-- Default dev: `nats://127.0.0.1:4222`
+- Default dev: 
+ats://127.0.0.1:4222`
 - Production: authenticated loopback from `/etc/robot/nats.env`
 - **JetStream explicitly out of scope**
 - **Browser never talks NATS directly** (Cockpit WebSocket relays only)
