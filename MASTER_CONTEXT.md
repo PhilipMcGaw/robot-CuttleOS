@@ -4,14 +4,37 @@
 > assistants working on robot-CuttleOS (the consolidated monorepo).
 >
 > **Authority:** Current code and physical bench evidence > current status and
-> roadmap > this file > older documentation and chat recollection.
+> roadmap > this file and the authoritative system architecture > older
+> documentation and chat recollection.
 >
-> **Maintenance:** Update this file whenever a significant architectural
-> decision, validated behaviour, deployment mechanism, safety boundary, release
-> milestone, or roadmap priority changes.
+> **Cross-repository authority:** `docs/system-architecture.md` is the
+> authoritative system-level architecture for robot-CuttleOS, robot-SquidLink,
+> and robot-NautiPi. This file remains authoritative for CuttleOS-specific
+> engineering context, service boundaries, deployment, and development policy.
+>
+> **Maintenance:** Update this file whenever a significant CuttleOS-specific
+> architectural decision, validated behaviour, deployment mechanism, safety
+> boundary, release milestone, or roadmap priority changes. Update
+> `docs/system-architecture.md` when a change affects the wider system or a
+> cross-repository contract.
 >
 > **Status discipline:** Never describe designed, simulated, expected, or
 > software-tested behaviour as physically or production validated.
+
+---
+
+## System-level architecture
+
+The wider robot system spans three repositories:
+
+- **robot-CuttleOS** — production robot software and cross-repository application architecture;
+- **robot-SquidLink** — ROS 2/Gazebo simulation and SiL/HiL integration testing;
+- **robot-NautiPi** — physical hardware designs and hardware evidence.
+
+The authoritative system-level architecture is [`docs/system-architecture.md`](docs/system-architecture.md).
+
+Repository-specific documentation must implement or exercise that architecture
+without redefining another repository's responsibilities or shared interfaces.
 
 ---
 
@@ -250,8 +273,7 @@ Database crash ≠ control loss.
 - Selected internal messaging middleware
 - Subject naming: `<namespace>.<category>.<type>.<field>`
   - Example: `rov.telemetry.power.battery.voltage`
-- Default dev: 
-ats://127.0.0.1:4222`
+- Default dev: `nats://127.0.0.1:4222`
 - Production: authenticated loopback from `/etc/robot/nats.env`
 - **JetStream explicitly out of scope**
 - **Browser never talks NATS directly** (Cockpit WebSocket relays only)
@@ -292,7 +314,7 @@ It:
 - Renders systemd units with actual checkout paths
 - Renders Nginx config with actual checkout paths
 - Enables systemd services
-- Configures network (NetworkManager, DHCP, hotspot)
+- Configures network (NetworkManager, DHCP, hotspot,)
 
 Deployment structure:
 
@@ -379,66 +401,27 @@ All TODO and FIXME comments must follow this format to be recognized by Better T
 # TODO: Brief description of what needs to be done
 // TODO: Another example (JavaScript/TypeScript)
 // FIXME: Bug or issue that needs fixing
-// NOTE: Important note or consideration
+// NOTE: Important note or context
 // HACK: Quick fix that needs refactoring
 ```
 
-**Format rules:**
-- Use a comment marker appropriate to the file language (`#`, `//`, `--`, etc.)
-- Space between marker and tag: `# TODO:` (not `#TODO:`)
-- Space after tag: `TODO: description` (not `TODO:description`)
-- Keep descriptions concise (one line preferred)
-- No additional punctuation after the tag colon
+### Developer workflow
 
-**Supported tags (recognized by Better Todo Tree):**
-- `TODO` — feature or work to be completed
-- `FIXME` — bug or issue requiring attention
-- `NOTE` — important information or context
-- `HACK` — temporary solution needing refactoring
-- `BUG` — confirmed defect
-- `XXX` — critical attention required
-
-**Roadmap items** (larger initiatives tracked in MASTER_CONTEXT.md):
-When documenting roadmap priorities in this file, prefix items with:
-- `[ROADMAP]` or `[TODO]` for alignment with the Better Todo Tree format
-
-Example:
-```markdown
-### Part IV: Future expansion (planned)
-
-#### Workspace & Development Infrastructure
-- [TODO] Better Todo Tree workspace settings (custom tags, exclude patterns, colors)
-- [TODO] Add Control and Datalogger as optional dependency groups in `pyproject.toml`
-- ✅ [DONE] Review and unify root-level `.gitignore` for all monorepo patterns
-- ✅ [DONE] CI/CD pipeline documentation (see [docs/ci-cd.md](docs/ci-cd.md))
-
-#### Consolidation Improvements
-- ✅ [DONE] Unified requirements strategy (root-level `pyproject.toml` with optional groups; see [pyproject.toml](pyproject.toml))
-- ✅ [DONE] Unified venv at monorepo root (all services share `.venv/`; updated install scripts)
-
-#### Distant and conditional ideas
-- [ROADMAP] Revisit multi-robot coordination through a shared NATS namespace only if CuttleOS becomes useful to the [SwarmBot project](https://philipmcgaw.com/projects/swarmbot/). This is not a core CuttleOS feature or an active near-term task.
-
-#### Core Features & Bug Fixes
-- [TODO] Profile-driven USB microphone capture and authenticated Cockpit audio streaming
-
-- [ROADMAP] Cockpit offline-first PWA implementation
-- [FIXME] Address control timeout race condition on restart
-```
-
-**Developer workflow:**
 1. Use Better Todo Tree extension to scan codebase for all TODO/FIXME/NOTE tags
 2. Open the Better Todo Tree panel via the Activity Bar or command palette
 3. Filter by tag, file, or scope as needed
-4. Update MASTER_CONTEXT.md with strategic roadmap items
+4. Update `MASTER_CONTEXT.md` with strategic roadmap items
 5. Update individual code comments as work progresses
 
 ---
 
 ## See also
 
+- [`docs/system-architecture.md`](docs/system-architecture.md) — cross-repository system architecture
 - [CONSOLIDATION.md](CONSOLIDATION.md) — Monorepo consolidation history
 - [docs/](docs/) — Comprehensive documentation
 - [cockpit/](cockpit/) — Cockpit service source code and docs
 - [control/](control/) — Control service source code and docs
 - [datalogger/](datalogger/) — Datalogger service source code and docs
+- **robot-SquidLink** — simulation and SiL/HiL implementation
+- **robot-NautiPi** — physical hardware designs and evidence
