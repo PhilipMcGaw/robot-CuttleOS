@@ -51,6 +51,29 @@ The profile may define the robot hostname and unique fallback network identity. 
 
 Each profile shall define one default camera and support any number of additional cameras. Camera device paths and stream endpoints shall be configuration data, not hard-coded application assumptions.
 
+### Media and capability declarations
+
+Robot profiles shall describe optional media capabilities rather than requiring Cockpit to infer hardware from robot identity. A profile may declare capabilities such as:
+
+- `video` — camera/video acquisition is available;
+- `stereo_video` — synchronised left/right video is available;
+- `microphone` — a robot microphone is available;
+- `audio_stream` — live microphone audio can be sent to the operator;
+- `speaker` — robot audio output is available;
+- `local_recording` — media can be recorded on the robot;
+- `local_storage` — dedicated or otherwise suitable media storage is available;
+- `vr_presentation` — the profile supports stereoscopic presentation modes.
+
+The exact schema representation may evolve, but the semantic requirement is stable: **Cockpit shall render and enable media functions from declared capabilities, not from hard-coded robot names.** A robot without a microphone, stereo camera, speaker, or suitable storage must not display controls for that capability.
+
+Stereo camera configuration should be able to identify the left and right sources, synchronisation method, baseline, calibration reference, and supported capture modes. Where known, camera configuration should also identify sensor resolution, frame rate, shutter characteristics, and field of view. A stereo pair intended for remote driving should prefer synchronised global-shutter capture where practical.
+
+Media acquisition and presentation shall remain separate. The profile may describe the available source and processing capabilities, but Cockpit presentation should be able to select mono, side-by-side stereo, or future stereoscopic presentation without changing the stored master recording.
+
+For audio-capable robots, the profile should identify the capture device and audio output capability without making ALSA device names part of the Cockpit UI contract. Control/media services own physical device selection and recovery.
+
+Storage capability should include enough information for policy decisions such as local recording, retention, and free-space monitoring. K9 is expected to have dedicated high-capacity local storage; ROV must remain capable of operating with reduced storage capability where an SSD is not installed.
+
 Battery state-of-charge telemetry shall use the namespaced battery-percentage topic and a numeric value in the inclusive `0–100` range, expressed as percent. `0` means empty and `100` means full. Control publishers, simulator inputs, Datalogger records, and Cockpit displays shall use this contract; legacy `0–10` and `0–1` scaling is not supported.
 
 Camera sources shall pass through an extensible processing pipeline before reaching the common Nginx stream endpoint. The pipeline shall support source adapters for Raspberry Pi CSI, USB, and ROS 2 virtual cameras, with optional processing stages such as lens de-warping. Processing stages shall be profile-configurable so they can be introduced without changing the Cockpit camera UI or Nginx routing.
@@ -92,6 +115,23 @@ During development, reproducible test credentials may be committed to Git to mak
 ## Example profiles
 
 The framework shall provide functional ROV, K9, and PiWars profiles. K9 shall include its optional soundboard capability, a `sound.play` command on `<namespace>.command.sound.play`, and a soundboard list of stable IDs, operator labels, and Control-resolved file names. Cockpit shall expose this list only through a K9/profile-enabled drawer and shall publish an authenticated selected ID; it shall not control speaker hardware or serve the sound files. K9 and PiWars shall declare their shared ADM133 adapter and bind its currently selected board functions to profile topic keys. PiWars shall support configurable competition-oriented controls and sensors. Where physical hardware is not yet available, the examples shall run against mock or simulated Controller behaviour and shall label unverified or planned capabilities explicitly.
+
+## Media recording and provenance
+
+The recording architecture shall preserve raw media and raw telemetry as authoritative data. Presentation formats such as telemetry subtitles or rendered overlays are derived outputs and must not replace the master recording.
+
+Every engineering-useful recording should be traceable to the configuration that produced it. Where practical, recording metadata shall identify:
+
+- robot identity and active profile;
+- CuttleOS/framework revision;
+- profile revision or configuration hash;
+- camera configuration and calibration reference;
+- stereo baseline and left/right source identity;
+- video and audio configuration;
+- recording start time and timebase;
+- associated telemetry/control recording identifiers.
+
+Stereo calibration data shall be versioned independently of application code where appropriate. Recordings should retain a calibration identifier so later stereo processing can determine which intrinsic/extrinsic calibration applied at capture time.
 
 ## Consistency and maintenance
 
