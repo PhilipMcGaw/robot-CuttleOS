@@ -1,7 +1,7 @@
 # robot-CuttleOS
 
-[![Code: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/Code-PolyForm_Noncommercial_1.0.0-purple.svg)](LICENSE-POLYFORM-NonCommercial-1.0.0.txt)
-[![Documentation: CC BY-NC-SA 4.0](https://img.shields.io/badge/Documentation-CC_BY--NC--SA_4.0-purple.svg)](LICENSE-CC-BY-NC-SA-4.0.txt)
+[![Code: PolyForm Noncommercial 1.0.0](LICENSE-POLYFORM-NonCommercial-1.0.0.txt)]
+[![Documentation: CC BY-NC-SA 4.0](LICENSE-CC-BY-NC-SA-4.0.txt)]
 [![Raspberry Pi](https://img.shields.io/badge/Hardware-Raspberry_Pi-c51a4a.svg)](https://www.raspberrypi.com/)
 [![Python](https://img.shields.io/badge/Language-Python-3776ab.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/Web-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
@@ -67,9 +67,51 @@ robot-CuttleOS/
 FastAPI-based web application providing:
 - Browser-based operator interface
 - WebSocket telemetry streaming
-- Camera management
-- Authentication
+- Low-latency live video and media presentation
+- Mono and planned stereo camera support
+- Local video and still recording/download management
+- Optional live and recorded audio
+- Authentication and role-based access
 - Configuration UI
+- Gamepad/operator input support
+- Capability-driven UI adaptation for different robot profiles
+
+### Media architecture
+
+CuttleOS treats camera acquisition, recording, live transport, and presentation
+as separate concerns. Stereo video is a common capability for robots such as K9
+and ROV rather than a K9-specific implementation.
+
+```text
+Camera / microphone
+        │
+        ├──► Local recorder ──► Vehicle storage
+        │          │
+        │          └──► video + audio master
+        │
+        └──► Live media service ──► WebRTC ──► Operator / Quest
+
+NATS telemetry + control logs ──► Datalogger
+             │
+             └──► timestamp-aligned export / subtitles
+```
+
+Local recording is independent of the operator connection. Live video is
+on-demand, so a robot with zero viewers does not need to send live video over
+its network link. WebRTC is the preferred live transport where low latency is
+important, particularly for K9 operation over a mobile network. Live quality
+must be adaptive and must not starve safety-critical control or telemetry.
+
+The master recording preserves native stereo where available. Telemetry and
+control remain authoritative in their raw NATS/logging forms; presentation
+formats such as WebVTT subtitles or rendered overlays are derived outputs.
+Video, audio, telemetry, and control events should share a common time
+reference.
+
+K9's planned media capability includes a USB microphone for live environmental
+awareness, microphone audio in saved recordings, and a low-latency audio return
+path to the robot speaker/soundboard. K9 also has planned dedicated high-capacity
+local storage, while ROV storage remains an optional discovered capability.
 
 ### Frontend
 TypeScript frontend source is under `frontend/src/`, with the npm package and
@@ -137,7 +179,6 @@ sudo ./scripts/switch_robot_profile.sh rov
 # Switch to K9 profile
 sudo ./scripts/switch_robot_profile.sh k9
 
-
 # Switch to PiWars profile
 sudo ./scripts/switch_robot_profile.sh piwars
 ```
@@ -147,18 +188,22 @@ Switching to K9 automatically checks and installs `espeak-ng` and `sox`; shared 
 Available profiles: `rov`, `k9`, `piwars`
 
 ### Robot Types
-- **ROV**: Underwater robot with depth, heading, drive, camera, lights
-- **K9**: Ground robot with drive, camera, head, lights
+- **ROV**: Underwater robot with depth, heading, drive, camera, lights, and planned stereo/media capabilities
+- **K9**: Ground robot with drive, camera, head, lights, and planned stereo/audio/media capabilities
 
 ## Technology Stack
 - **Backend**: Python, FastAPI, NATS
 - **Frontend**: TypeScript, Vue.js
 - **Configuration**: YAML/TOML
 - **Validation**: Pydantic
+- **Live media**: WebRTC planned for low-latency video/audio
 
 ## Documentation
 See `docs/` for detailed documentation on development, deployment, and testing.
+See `MASTER_CONTEXT.md` for architectural decisions and service boundaries.
 See `ROADMAP.md` for planned architectural improvements and feature development.
+See `docs/status.md` for implementation and validation status.
+See `docs/robot-profile-requirements.md` for profile and capability contracts.
 
 ## License
 See `LICENSES.md` for license information.
