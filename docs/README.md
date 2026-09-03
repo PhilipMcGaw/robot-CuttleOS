@@ -1,4 +1,13 @@
-# Cockpit documentation
+# CuttleOS documentation
+
+## Architecture
+
+- [System architecture](system-architecture.md) — cross-repository system authority
+- [Control architecture](control-architecture.md) — command, safety, and actuator-control boundaries
+- [Hardware interface](hardware-interface.md) — software-to-hardware boundary, node identity, and RS-485 principles
+- [NATS contract](nats-contract.md) — application messaging and interface principles
+
+## Engineering and development
 
 - [Development](development.md)
 - [Historical ROV notes](historical-rov-notes.md)
