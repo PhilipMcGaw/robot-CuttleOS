@@ -314,7 +314,7 @@ It:
 - Renders systemd units with actual checkout paths
 - Renders Nginx config with actual checkout paths
 - Enables systemd services
-- Configures network (NetworkManager, DHCP, hotspot,)
+- Configures network (NetworkManager, DHCP, hotspot)
 
 Deployment structure:
 
@@ -418,6 +418,9 @@ All TODO and FIXME comments must follow this format to be recognized by Better T
 ## See also
 
 - [`docs/system-architecture.md`](docs/system-architecture.md) — cross-repository system architecture
+- [`docs/control-architecture.md`](docs/control-architecture.md) — Control safety and command architecture
+- [`docs/hardware-interface.md`](docs/hardware-interface.md) — software-to-hardware boundary and RS-485 principles
+- [`docs/nats-contract.md`](docs/nats-contract.md) — application messaging contract principles
 - [CONSOLIDATION.md](CONSOLIDATION.md) — Monorepo consolidation history
 - [docs/](docs/) — Comprehensive documentation
 - [cockpit/](cockpit/) — Cockpit service source code and docs
