@@ -1,30 +1,43 @@
 # robot-CuttleOS
 
-A monorepo for robot control systems, supporting multiple robot types (ROV, K9) with a shared architecture.
+[![Code: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/Code-PolyForm_Noncommercial_1.0.0-purple.svg)](LICENSE-POLYFORM-NonCommercial-1.0.0.txt)
+[![Documentation: CC BY-NC-SA 4.0](https://img.shields.io/badge/Documentation-CC_BY--NC--SA_4.0-purple.svg)](LICENSE-CC-BY-NC-SA-4.0.txt)
+[![Raspberry Pi](https://img.shields.io/badge/Hardware-Raspberry_Pi-c51a4a.svg)](https://www.raspberrypi.com/)
+[![Python](https://img.shields.io/badge/Language-Python-3776ab.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/Web-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
+[![Vue.js](https://img.shields.io/badge/Frontend-Vue.js-42b883.svg)](https://vuejs.org/)
+[![NATS](https://img.shields.io/badge/Messaging-NATS-27aae1.svg)](https://nats.io/)
 
-CuttleOS is part of the SquidLink, CuttleOS, and NautiPi set
+<p align="center">
+  <img src="cockpit/src/rov_cockpit/static/android-chrome-512x512.png" alt="CuttleOS project icon" width="220">
+</p>
 
-    The operating system, this name combines “Cuttlefish” (a clever cephalopod) with “OS” (operating system), giving it a futuristic yet natural feel.
+CuttleOS is the robot-side software stack for Raspberry Pi-based robots. It
+provides the shared Cockpit, Control and Datalogger services for the ROV, K9
+and future robot profiles.
 
-The other two names are
-1. SquidLink  (For your main control software or Raspberry Pi) - https://github.com/PhilipMcGaw/robot-SquidLink
+CuttleOS is one part of a related set of projects:
 
-    A sleek, tech-sounding-name that implies connectivity and agility—perfect for a robotics control system.
+- [SquidLink](https://github.com/PhilipMcGaw/robot-SquidLink) — the independent
+  ROV software-in-the-loop and hardware-in-the-loop environment using ROS 2,
+  Gazebo and the same application-facing NATS contracts.
+- [NautiPi](https://github.com/PhilipMcGaw/robot-NautiPi) — the physical hardware,
+  electronics and Arduino project work supporting the robots.
 
-
-3. NautiPi (For your secondary device or backup system) - https://github.com/PhilipMcGaw/robot-NautiPi
-
-    A nod to the “Nautilus” (the shell of a nautilus, another cephalopod relative) and “Raspberry Pi,” making it a fun and functional name.
-
-Why These Work Together:
-
-    Thematic Unity: All three names tie into cephalopods and technology.
-    Clear Roles: Each name suggests a different component (software, PCB/OS, and device).
-    Memorable: They’re short, catchy, and easy to remember.
+The relationship is deliberately straightforward: CuttleOS runs the real
+robot software, SquidLink provides simulation and integration testing, and
+NautiPi contains the physical hardware and embedded-project material. They are
+separate projects with defined interfaces rather than one shared codebase.
 
 ## Demo
 
 I have a demo of my Robot Cockpit 🙂 https://cuttleos.philipmcgaw.com/
+
+## People who have helped
+
+- Philip 'Skippy' McGaw - <philip@mcgaw.eu> - [philipmcgaw.com](https://philipmcgaw.com)
+- Tamarisk 'NotQuiteHere' McGaw - <tamarisk@mcgaw.eu> - [tamarisk.it](https://tamarisk.it)
+- Bob 'thinkl33t' Clough - <bob@clough.me> - [thinkl33t.co.uk](https://thinkl33t.co.uk)
 
 ## Architecture
 

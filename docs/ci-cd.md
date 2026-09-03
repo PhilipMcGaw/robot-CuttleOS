@@ -67,6 +67,8 @@ No formatting script is currently defined in `frontend/cockpit/package.json`.
 
 ## GitHub Actions Workflows
 
+The standalone service archives contained CI workflow examples, but they refer to repository layouts that are not the current monorepo. Any future workflow should be designed around the monorepo test and deployment paths.
+
 The following workflows should be configured in `.github/workflows/`:
 
 ### 1. Tests & Lint (`test-and-lint.yml`)

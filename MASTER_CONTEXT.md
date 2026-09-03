@@ -409,15 +409,17 @@ Example:
 #### Workspace & Development Infrastructure
 - [TODO] Better Todo Tree workspace settings (custom tags, exclude patterns, colors)
 - [TODO] Add Control and Datalogger as optional dependency groups in `pyproject.toml`
-- [TODO] Review and unify root-level `.gitignore` for all monorepo patterns
+- ✅ [DONE] Review and unify root-level `.gitignore` for all monorepo patterns
 - ✅ [DONE] CI/CD pipeline documentation (see [docs/ci-cd.md](docs/ci-cd.md))
 
 #### Consolidation Improvements
 - ✅ [DONE] Unified requirements strategy (root-level `pyproject.toml` with optional groups; see [pyproject.toml](pyproject.toml))
 - ✅ [DONE] Unified venv at monorepo root (all services share `.venv/`; updated install scripts)
 
+#### Distant and conditional ideas
+- [ROADMAP] Revisit multi-robot coordination through a shared NATS namespace only if CuttleOS becomes useful to the [SwarmBot project](https://philipmcgaw.com/projects/swarmbot/). This is not a core CuttleOS feature or an active near-term task.
+
 #### Core Features & Bug Fixes
-- [TODO] Multi-robot coordination through shared NATS namespace
 - [TODO] Profile-driven USB microphone capture and authenticated Cockpit audio streaming
 
 - [ROADMAP] Cockpit offline-first PWA implementation

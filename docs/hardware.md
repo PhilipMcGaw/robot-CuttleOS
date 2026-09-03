@@ -1,6 +1,6 @@
 # Hardware interfaces
 
-The historical root-repository `Pins.md` is a physical-reference starting point only. The relevant KiCad project and the fitted-board commissioning record are authoritative for board-level connectivity. Do not treat a root pin table as an approved Control allocation.
+The ROV electronics, mechanical and BOM archive is maintained in the sibling `robot-NautiPi` project. The historical `Pins.md` material there is a physical-reference starting point only. The relevant KiCad project and the fitted-board commissioning record are authoritative for board-level connectivity. Do not treat a root pin table as an approved Control allocation.
 
 ## Interfaces in use
 

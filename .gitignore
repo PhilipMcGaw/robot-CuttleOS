@@ -10,6 +10,7 @@ ENV/
 env/
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
 *.egg-info/
 dist/
@@ -22,42 +23,32 @@ pip-log.txt
 pip-delete-this-directory.txt
 .cache/
 
-# Node
+# Node and frontend tooling
 node_modules/
 node-runtime/
+_bootstrap_node/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 
-# Frontend builds
+# Generated frontend output
 frontend/dist/
 frontend/build/
 cockpit/src/rov_cockpit/static/dist/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.cursor/
-*.sublime-project
-*.sublime-workspace
-.vscode-test/
-.env.local
-.env.*.local
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Project specific
+# Local configuration and secrets
 *.env
 !*.env.example
+!*.env.*.example
+.envrc
+*.local
+
+# Related projects outside CuttleOS
+/robot-NautiPi/
+/robot-SquidLink/
+
+# Runtime data and logs
 runtime/
-node-runtime/
-_bootstrap_node/
 data/csv/*
 !data/csv/.gitkeep
 media/stills/*
@@ -68,14 +59,24 @@ media/data/*
 !media/data/.gitkeep
 *.log
 *.pid
-.DS_Store.lock
-*.swapfile
+*.db
+*.sqlite
+*.sqlite3
 
-# Per-service environments (if not using monorepo venv)
-cockpit/.venv/
-cockpit/venv/
-control/.venv/
-control/venv/
-datalogger/.venv/
-datalogger/venv/
-*.ini
+# IDE and editor files
+.vscode/
+.idea/
+.cursor/
+.vscode-test/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+*~
+
+# Operating-system files
+.DS_Store
+.DS_Store.lock
+.AppleDouble
+.LSOverride
+Thumbs.db

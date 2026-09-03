@@ -1,6 +1,7 @@
 # Cockpit documentation
 
 - [Development](development.md)
+- [Historical ROV notes](historical-rov-notes.md)
 - [Deployment](deployment.md)
 - [Platform support](platform-support.md)
 - [Engineering principles](engineering-principles.md)

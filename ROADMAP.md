@@ -184,6 +184,9 @@ robots/
 - Enhanced configuration validation
 - Robot capabilities discovery
 
+### Distant and conditional work
+- Multi-robot coordination through a shared NATS namespace is explicitly deferred. Revisit it only if CuttleOS proves useful for the [SwarmBot project](https://philipmcgaw.com/projects/swarmbot/); it is not part of the core CuttleOS roadmap.
+
 ### Long-term (6+ months)
 - Architecture restructuring
 - NATS protocol evaluation
