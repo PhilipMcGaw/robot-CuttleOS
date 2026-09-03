@@ -30,10 +30,7 @@ The application layer is FastAPI served by Uvicorn. NATS is accessed only by the
 - Shared-profile validation of Control-owned hardware adapters. K9 and PiWars now bind selected Adeept Robot HAT ADM133 functions to logical command and telemetry keys. K9 additionally maps the semantic aliases `head-pan` and `head-tilt` to stable `servo-00` and `servo-01` port aliases. The Control driver and all physical HAT behaviour remain planned and unbench-tested.
 - macOS first-boot preparation helper and cloud-init/systemd wrapper for unattended profile-driven Raspberry Pi provisioning.
 - Canonical Raspberry Pi provisioning for the co-installed Cockpit, Control, and Datalogger services. It renders service, Motion, and Nginx templates for the actual checkout paths; installs authenticated NATS configuration; invokes Control-owned network, SMB, and Avahi deployment; and creates the shared media/CSV directories.
-- Canonical first-boot instructions with two source-installation routes: a
-  read-only HTTPS route for normal robots, and Philip's Pi-specific GitHub SSH
-  route for developer pull/push work. Both produce the same sibling checkout
-  layout before Cockpit provisioning begins.
+- Canonical first-boot instructions with two source-installation routes: a read-only HTTPS route for normal robots, and Philip's Pi-specific GitHub SSH route for developer pull/push work. Both produce the same sibling checkout layout before Cockpit provisioning begins.
 - Canonical Raspberry Pi provisioning installs Zsh, HyFetch, and Oh My Zsh for the selected runtime user, selects the `clean` theme, and adds an interactive-login greeting. It also creates a `visudo`-validated, passwordless-sudo policy for that user; this is intentional for a trusted robot/development machine, not evidence of a hardened multi-user host.
 - Existing instruments, camera handling, media capture/download, CSV access, authentication, and Gamepad API support remain part of the application.
 
@@ -60,14 +57,47 @@ The current repository state is not recorded as bench-tested or production-valid
 - Raspberry Pi bench validation of the runtime-user shell, Oh My Zsh installation, HyFetch greeting, and passwordless-sudo policy on a clean target image.
 - Control-side K9 sound-file resolution and speaker playback. The Cockpit drawer publishes the logical request, but it does not yet prove that a robot sound was produced.
 - USB microphone capture and live browser audio streaming. `alsa-utils` is installed for all profiles and provides device inspection tools, but capture service, streaming, authentication, and K9/ROV voice behaviour remain planned.
+- Common synchronised stereo-video acquisition and recording for K9 and ROV.
+- Low-latency WebRTC video distribution, including on-demand activation and adaptive quality for constrained links.
+- K9 live microphone audio for operator situational awareness and microphone audio embedded in saved recordings.
+- Low-latency operator-to-K9 audio return through the robot speaker/soundboard path.
+- Vehicle storage capability discovery, including K9's planned dedicated 1 TB SSD and ROV operation with optional high-capacity storage.
+- Common timestamping and provenance across stereo video, audio, NATS telemetry, and control logs.
+- Telemetry subtitle/export generation and optional permanent rendered overlays.
+- Meta Quest/WebXR stereoscopic Cockpit presentation.
+
+## Media capability status
+
+The following status applies to the architecture, not to physical validation:
+
+| Capability | Current status |
+|---|---|
+| Existing mono camera handling | Implemented; physical deployment requires validation |
+| Local Motion video recording | Implemented; physical deployment requires validation |
+| Stereo camera abstraction | Planned |
+| Stereo master recording | Planned |
+| On-demand live video | Planned |
+| WebRTC live video | Planned |
+| Adaptive live video | Planned |
+| K9 USB microphone capture | Planned |
+| K9 live audio to operator | Planned |
+| K9 recorded microphone audio | Planned |
+| K9 operator-to-robot audio | Planned |
+| K9 dedicated SSD recording | Planned |
+| ROV optional high-capacity storage | Planned |
+| Video/audio/telemetry timestamp alignment | Planned |
+| Telemetry subtitle generation | Planned |
+| Meta Quest/WebXR stereo presentation | Planned |
 
 ## Important references
 
 - `MASTER_CONTEXT.md`
+- `ROADMAP.md`
 - `docs/documentation-policy.md`
 - `docs/development.md`
 - `docs/deployment.md`
 - `docs/testing.md`
+- `docs/robot-profile-requirements.md`
 - `tests/documentation_change_policy.py`
 - `tests/documentation_change_policy.json`
 - `frontend/src/`
