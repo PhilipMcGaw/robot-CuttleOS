@@ -35,6 +35,16 @@ NATS telemetry + control events
 
 Cockpit presents media and controls media sessions; it does not own physical camera, microphone, speaker, or storage drivers.
 
+## Preferred stereo camera candidate
+
+The current preferred possible stereo camera is the **HJCam Binocular Camera Module**. It is a candidate rather than a selected production component and must be evaluated on the target Raspberry Pi hardware before the design is committed.
+
+[HJCam Binocular Camera Module — Stereo Vision USB](https://www.hjcam.com/binocular-camera-module)
+
+The current manufacturer specification is attractive for CuttleOS because it offers hardware-synchronised dual cameras, 2 × 1080p dual-stream operation at up to 60 fps, selectable 40 mm / 60 mm / 80 mm baseline, USB 2.0 / 3.0 UVC operation, and global-shutter sensor options. The 80 mm configuration is particularly aligned with the present CuttleOS stereo baseline target.
+
+This remains a procurement and engineering candidate, not a validated recommendation. Before selection, verify the exact sensor, lens/FOV, USB bandwidth, Linux/V4L2 behaviour, frame synchronisation, thermal performance, enclosure/environmental suitability, and availability at the required quantity. The manufacturer's published MOQ is currently 200 units, so a lower-volume prototype may require a different purchasing route or camera candidate.
+
 ## Live video
 
 WebRTC is the preferred live transport where low latency matters. This is particularly important for K9, which is expected to use a mobile-network connection rather than relying on a local Wi-Fi network.
