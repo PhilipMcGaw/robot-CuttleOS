@@ -127,6 +127,7 @@ robots/
   canonical profile-driven provisioner.
 - [ ] Complete clean-image bench validation on a Raspberry Pi OS Trixie Lite
   target, including failure recovery and service startup.
+
 ## Feature Development
 
 ### K9 Soundboard and Generated Speech
@@ -143,14 +144,45 @@ robots/
 - [ ] Provide a browser-compatible low-latency stream through the existing Nginx deployment; evaluate HTTP Opus first and WebRTC where lower latency is required
 - [ ] Add authenticated access, device selection, reconnect handling, and microphone privacy/status indicators
 - [ ] Validate audio capture, bandwidth, and service recovery on K9 and ROV hardware
+- [ ] For K9, provide live microphone audio to the operator for local situational awareness
+- [ ] Include captured microphone audio as an audio track in every applicable saved video recording
+- [ ] Define a low-latency operator-to-K9 audio return path for the soundboard/speaker
+
+### Common Stereo Video and Media Pipeline
+
+Stereo video is a common CuttleOS capability for robots such as K9 and ROV, rather than a K9-specific feature. The camera, recording, live-streaming, and presentation layers should remain separate so that the same stereo source can support multiple outputs.
+
+- [ ] Define a common vehicle-side video service for synchronised stereo camera acquisition, encoding, recording, still capture, and live distribution
+- [ ] Support synchronised left/right camera capture, with global shutter preferred for remote driving
+- [ ] Target approximately 75–80 mm stereo baseline where the vehicle camera installation permits it
+- [ ] Preserve native stereo as the master recording; do not make anaglyph the primary storage format
+- [ ] Decouple local recording from live streaming so recording can continue when no operator is viewing the live feed
+- [ ] Implement on-demand live streaming so that zero viewers results in zero live video traffic over the network
+- [ ] Prefer WebRTC for low-latency live video, particularly for K9 operation over a mobile network
+- [ ] Add adaptive live-video quality profiles for changing network conditions, with a degraded mono/low-resolution mode available when bandwidth is constrained
+- [ ] Ensure video traffic cannot starve safety-critical control and telemetry traffic
+- [ ] Support a common media presentation layer capable of mono, side-by-side stereo, and future stereoscopic/VR presentation
+- [ ] Investigate Meta Quest/WebXR support as a Cockpit viewing mode without changing the vehicle-side stereo master
+- [ ] Define a common timestamp/reference clock for stereo video, audio, telemetry, and control events
+- [ ] Preserve raw video and raw NATS telemetry/control logs as the authoritative recordings
+- [ ] Generate synchronised telemetry subtitle tracks (for example WebVTT) from recorded NATS data rather than burning telemetry into the master video
+- [ ] Provide optional rendered telemetry overlays for exported video where a permanent overlay is required
+
+### Vehicle Storage and Recording
+
+- [ ] Treat storage as a discovered vehicle capability rather than assuming every robot has the same media storage
+- [ ] For K9, support a dedicated 1 TB portable SSD for video, audio, telemetry, command/control logs, stills, and diagnostics, while retaining the SD card for OS/application storage
+- [ ] For ROV, support both SSD-equipped high-rate recording and reduced-capability operation where only SD-card storage is available
+- [ ] Define recording retention, free-space monitoring, and failure behaviour when storage becomes unavailable or full
+- [ ] Keep the recording service independent of Cockpit so loss of the operator connection does not stop local recording
 
 ### Robot Capabilities Discovery
 - [ ] Implement capability-based UI rendering
 - [ ] Cockpit discovers robot capabilities from configuration
 - [ ] Dynamic UI adaptation based on available features
 - [ ] Examples:
-  - ROV: depth, heading, thruster allocation, buoyancy, underwater cameras
-  - K9: wheel/leg control, head movement, arm control, different camera arrangements
+  - ROV: depth, heading, thruster allocation, buoyancy, underwater cameras, stereo video
+  - K9: wheel/leg control, head movement, arm control, different camera arrangements, stereo video, microphone, speaker/audio output
 
 ### Enhanced Configuration Validation
 - [ ] Expand Pydantic schema coverage
@@ -171,27 +203,45 @@ robots/
 - [ ] Performance comparison between YAML and TOML parsing
 - [ ] Validation that all existing configurations work with new format
 
+### Media and Cockpit Testing
+- [ ] Test mono and stereo live-video paths independently of the recording path
+- [ ] Verify that no live video traffic is generated when there are zero viewers
+- [ ] Test adaptive video profiles over constrained/mobile-network links
+- [ ] Measure end-to-end video latency for remote driving and establish an engineering target
+- [ ] Verify synchronisation between left/right video, microphone audio, NATS telemetry, and control logs
+- [ ] Test recording recovery after network loss, Cockpit restart, camera failure, and storage failure
+- [ ] Validate K9 SSD recording endurance and behaviour at low free space
+- [ ] Validate ROV operation with and without optional high-capacity storage
+- [ ] Test Meta Quest/WebXR stereo presentation without altering the master recording
+
 ## Timeline
 
 ### Short-term (1-2 months)
 - Phase 1: Robot profile TOML migration
 - Pydantic model updates
 - Basic testing framework
+- Define common media-service interfaces and robot media capabilities
+- Establish the stereo recording/live-stream architecture
 
 ### Medium-term (3-6 months)
 - Phase 2: Hardware configuration migration
 - Phase 3: Application configuration migration
 - Enhanced configuration validation
 - Robot capabilities discovery
+- Implement common stereo video recording and on-demand live streaming
+- Implement K9 microphone capture, live audio, and recorded audio
+- Add vehicle storage capability and recording-health monitoring
 
 ### Distant and conditional work
 - Multi-robot coordination through a shared NATS namespace is explicitly deferred. Revisit it only if CuttleOS proves useful for the [SwarmBot project](https://philipmcgaw.com/projects/swarmbot/); it is not part of the core CuttleOS roadmap.
+- Meta Quest/WebXR presentation is conditional on achieving an acceptable low-latency stereo WebRTC path first.
 
 ### Long-term (6+ months)
 - Architecture restructuring
 - NATS protocol evaluation
 - Repository naming decision
 - HIL repository separation
+- Advanced stereo/VR presentation and media export tooling
 
 ## Dependencies
 
@@ -200,6 +250,8 @@ This roadmap depends on:
 - Stable robot profile implementation
 - Hardware interface validation
 - Team consensus on architectural changes
+- Validation of the chosen camera and encoding hardware on target Raspberry Pi hardware
+- Sufficient network performance for the intended remote-driving use case
 
 ## References
 
