@@ -33,12 +33,16 @@ pca.frequency = 50
 
 NATS_URL = os.getenv("NATS_URL", "nats://127.0.0.1:4222")
 NATS_SUBJECT = os.getenv("NATS_SUBJECT", ">")
+NATS_LOSS_TIMEOUT_MS = float(os.getenv("NATS_LOSS_TIMEOUT_MS", "100"))
 ROBOT_PROFILE_PATH = Path(os.getenv("ROBOT_PROFILE_PATH", "/etc/robot/profile.json"))
 nats_data = {}
 nats_lock = threading.Lock()
 nats_client = None
 nats_loop = None
 nats_ready = threading.Event()
+nats_connected = threading.Event()
+nats_fault = threading.Event()
+nats_disconnected_at = None
 
 
 def load_active_time_synchronisation_config() -> TimeSynchronisationConfig | None:
@@ -69,7 +73,7 @@ servo_channels = {
     "Vertical Left Front": ServoChannelData(5, "output/servos/vertical_left_front/demand", 90, 90),
     "Vertical Right Front": ServoChannelData(6, "output/servos/vertical_right_front/demand", 90, 90),
     "Vertical Rear Left": ServoChannelData(7, "output/servos/vertical_rear_left/demand", 90, 90),
-    "Vertical Rear Right": ServoChannelData(8, "output/servos/vertical_rear_right/demand", 90, 90),
+    "Vertical Rear Right": ServoChannelData(8, "output/servos/vertical_right_rear/demand", 90, 90),
 }
 
 AnalogChannelData = namedtuple('AnalogChannelData', ['number', 'topic', 'previous_value', 'current_value', 'last_read_time', 'alpha', 'interval'])
@@ -165,11 +169,36 @@ async def on_message(message):
         nats_data[dashboard_topic(message.subject)] = message.data.decode(errors="replace")
 
 
+async def on_nats_disconnected():
+    global nats_disconnected_at
+    nats_connected.clear()
+    nats_disconnected_at = time.monotonic()
+    logger.warning("NATS connection interrupted; monitoring for recovery within %.0f ms.", NATS_LOSS_TIMEOUT_MS)
+
+
+async def on_nats_reconnected():
+    global nats_disconnected_at
+    disconnected_for = 0.0
+    if nats_disconnected_at is not None:
+        disconnected_for = (time.monotonic() - nats_disconnected_at) * 1_000
+    nats_disconnected_at = None
+    nats_connected.set()
+    if nats_fault.is_set():
+        logger.warning("NATS connection restored after %.0f ms; operator re-arm required.", disconnected_for)
+    else:
+        logger.warning("NATS connection recovered after %.0f ms; operation continues.", disconnected_for)
+
+
 async def connect_nats():
     global nats_client
-    nats_client = await nats.connect(NATS_URL)
+    nats_client = await nats.connect(
+        NATS_URL,
+        disconnected_cb=on_nats_disconnected,
+        reconnected_cb=on_nats_reconnected,
+    )
     await nats_client.subscribe(NATS_SUBJECT, cb=on_message)
     nats_ready.set()
+    nats_connected.set()
     logger.info("Connected to NATS Core at %s, subject %s", NATS_URL, NATS_SUBJECT)
 
 
@@ -186,8 +215,28 @@ def nats_thread():
         nats_loop.close()
 
 
+def enter_nats_safe_state() -> None:
+    if nats_fault.is_set():
+        return
+    nats_fault.set()
+    logger.error("NATS connection has exceeded %.0f ms; forcing robot to safe state.", NATS_LOSS_TIMEOUT_MS)
+    for data in servo_channels.values():
+        set_angle(int(data.number), int(data.home_angle))
+    pca.channels[12].duty_cycle = 0x0000
+    pca.channels[13].duty_cycle = 0x0000
+    pca.channels[14].duty_cycle = 0x0000
+    pca.channels[15].duty_cycle = 0x0000
+
+
+def check_nats_safety() -> None:
+    if nats_connected.is_set() or nats_fault.is_set() or nats_disconnected_at is None:
+        return
+    if (time.monotonic() - nats_disconnected_at) * 1_000 >= NATS_LOSS_TIMEOUT_MS:
+        enter_nats_safe_state()
+
+
 def publish_nats(topic, value):
-    if nats_client is None or nats_loop is None or not nats_ready.is_set():
+    if nats_client is None or nats_loop is None or not nats_ready.is_set() or not nats_connected.is_set():
         logger.warning("NATS is not connected; cannot publish %s", topic)
         return
     subject = topic.replace("/", ".")
@@ -329,6 +378,7 @@ if __name__ == "__main__":
     try:
         setup()
         while True:
+            check_nats_safety()
             write_servo_outputs()
             read_analog_channels()
             write_hbridge_outputs()
