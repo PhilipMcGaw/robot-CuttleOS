@@ -1,5 +1,6 @@
 [Unit]
 Description=ROV Datalogger
+Requires=nats-server.service
 After=network-online.target nats-server.service
 Wants=network-online.target
 
