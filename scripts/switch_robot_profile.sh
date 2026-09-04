@@ -90,7 +90,7 @@ if [[ "${EUID}" -eq 0 ]]; then
     cp "$TARGET_PROFILE_FILE" "$SYSTEM_PROFILE"
     info "System profile updated. Restart services to apply changes:"
     echo "  sudo systemctl restart cockpit"
-    echo "  sudo systemctl restart control"
+    echo "  sudo systemctl restart python"
     echo "  sudo systemctl restart datalogger"
   else
     warn "System profile not found at $SYSTEM_PROFILE. Robot may not be fully provisioned."
