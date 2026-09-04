@@ -6,6 +6,7 @@
 - [Control architecture](control-architecture.md) — command, safety, and actuator-control boundaries
 - [Hardware interface](hardware-interface.md) — software-to-hardware boundary, node identity, and RS-485 principles
 - [NATS contract](nats-contract.md) — application messaging and interface principles
+- [Test provenance](test-provenance.md) — test-run identity, provenance, lifecycle markers, capability, and validation evidence
 
 ## Engineering and development
 
