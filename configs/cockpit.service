@@ -1,6 +1,7 @@
 [Unit]
 Description=ROV Cockpit web application
-After=network.target
+Requires=nats-server.service
+After=network.target nats-server.service
 
 [Service]
 User=@ROBOT_USER@
