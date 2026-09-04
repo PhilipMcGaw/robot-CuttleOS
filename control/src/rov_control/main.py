@@ -6,6 +6,7 @@ import os
 import threading
 import time
 from datetime import datetime, timezone
+from enum import Enum
 from pathlib import Path
 
 import board
@@ -45,6 +46,34 @@ nats_fault = threading.Event()
 nats_disconnected_at = None
 
 
+class ControlState(Enum):
+    """High-level Control state used to gate actuator authority."""
+
+    INITIALISING = "initialising"
+    ACTIVE = "active"
+    NATS_DISCONNECTED = "nats-disconnected"
+    NATS_FAULT = "nats-fault"
+
+
+control_state = ControlState.INITIALISING
+control_state_lock = threading.Lock()
+
+
+def set_control_state(state: ControlState) -> None:
+    """Set the Control state in one place so future safety transitions stay explicit."""
+    global control_state
+    with control_state_lock:
+        if control_state != state:
+            logger.info("Control state: %s -> %s", control_state.value, state.value)
+        control_state = state
+
+
+def get_control_state() -> ControlState:
+    """Return the current Control state safely across the NATS and control threads."""
+    with control_state_lock:
+        return control_state
+
+
 def load_active_time_synchronisation_config() -> TimeSynchronisationConfig | None:
     """Load the optional browser-clock contract once as Control starts."""
     try:
@@ -73,7 +102,7 @@ servo_channels = {
     "Vertical Left Front": ServoChannelData(5, "output/servos/vertical_left_front/demand", 90, 90),
     "Vertical Right Front": ServoChannelData(6, "output/servos/vertical_right_front/demand", 90, 90),
     "Vertical Rear Left": ServoChannelData(7, "output/servos/vertical_rear_left/demand", 90, 90),
-    "Vertical Rear Right": ServoChannelData(8, "output/servos/vertical_right_rear/demand", 90, 90),
+    "Vertical Rear Right": ServoChannelData(8, "output/servos/vertical_rear_right/demand", 90, 90),
 }
 
 AnalogChannelData = namedtuple('AnalogChannelData', ['number', 'topic', 'previous_value', 'current_value', 'last_read_time', 'alpha', 'interval'])
@@ -173,6 +202,8 @@ async def on_nats_disconnected():
     global nats_disconnected_at
     nats_connected.clear()
     nats_disconnected_at = time.monotonic()
+    if not nats_fault.is_set():
+        set_control_state(ControlState.NATS_DISCONNECTED)
     logger.warning("NATS connection interrupted; monitoring for recovery within %.0f ms.", NATS_LOSS_TIMEOUT_MS)
 
 
@@ -184,8 +215,10 @@ async def on_nats_reconnected():
     nats_disconnected_at = None
     nats_connected.set()
     if nats_fault.is_set():
+        set_control_state(ControlState.NATS_FAULT)
         logger.warning("NATS connection restored after %.0f ms; operator re-arm required.", disconnected_for)
     else:
+        set_control_state(ControlState.ACTIVE)
         logger.warning("NATS connection recovered after %.0f ms; operation continues.", disconnected_for)
 
 
@@ -219,6 +252,7 @@ def enter_nats_safe_state() -> None:
     if nats_fault.is_set():
         return
     nats_fault.set()
+    set_control_state(ControlState.NATS_FAULT)
     logger.error("NATS connection has exceeded %.0f ms; forcing robot to safe state.", NATS_LOSS_TIMEOUT_MS)
     with nats_lock:
         nats_data.clear()
@@ -364,11 +398,9 @@ def set_angle(ID, angle):
     servo_angle.angle = angle
 
 
-def setup() -> None:
+def initialise_hardware() -> None:
+    """Put every actuator into its known home or off state after startup or re-arm."""
     global servo_channels
-    threading.Thread(target=nats_thread, name="nats-client", daemon=True).start()
-    if not nats_ready.wait(timeout=10):
-        raise RuntimeError("NATS server did not become ready")
 
     logger.debug("Sending home positions to NATS and setting servos to home position")
     for name, data in servo_channels.items():
@@ -379,6 +411,16 @@ def setup() -> None:
     logger.debug("Setting H-bridges to off")
     publish_nats("output/hbridge/left/demand", 0)
     publish_nats("output/hbridge/right/demand", 0)
+
+
+def setup() -> None:
+    set_control_state(ControlState.INITIALISING)
+    threading.Thread(target=nats_thread, name="nats-client", daemon=True).start()
+    if not nats_ready.wait(timeout=10):
+        raise RuntimeError("NATS server did not become ready")
+
+    initialise_hardware()
+    set_control_state(ControlState.ACTIVE)
     logger.debug("Setup complete.")
 
 
