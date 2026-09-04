@@ -48,6 +48,26 @@ Abbreviations and acronyms shall be defined at their first use by giving the ful
 
 Terminology defined by a referenced standard, specification, protocol, manufacturer, or other authoritative source shall be retained unless an explanatory alternative is necessary. Where an alternative term is introduced, the relationship between the terms shall be made explicit.
 
+#### Precise and Inclusive Technical Terminology
+
+Technical terminology shall describe the actual engineering relationship between components. Terms shall not be changed by mechanical word substitution merely to avoid legacy terminology; the replacement shall remain technically accurate.
+
+The terms `master` and `slave` shall be avoided in new CuttleOS documentation where they are not required by a governing external specification, protocol, API, manufacturer, or historical record. The appropriate relationship-specific terminology shall be used instead, for example:
+
+- `controller` / `node` where one component issues commands to, or coordinates, distributed nodes;
+- `leader` / `follower` where one participant leads a coordination or election relationship;
+- `primary` / `secondary` where instances have a primary/secondary service or operational relationship;
+- `active` / `standby` where one instance is active and another is prepared to take over;
+- `writer` / `reader` where the distinction concerns data-access roles;
+- `source` / `replica` where the relationship concerns replicated data; and
+- `coordinator` / `worker` where one component assigns work to others.
+
+For example, the CuttleOS relationship between the control system and distributed RS-485 hardware shall be described as `controller` / `node`, because the terminology reflects the actual command and coordination relationship.
+
+This approach is consistent with the IETF's work on terminology and inclusive language, including the Knodel and ten Oever Internet-Draft on terminology, power, and inclusive language. That document is guidance rather than an RFC and did not become a general-purpose RFC. Where an IETF protocol has formally changed its terminology, the applicable RFC shall be followed. For example, RFC 9454 updates OSPF terminology from `Master` / `Slave` to `Leader` / `Follower`.
+
+Legacy terminology may be retained when it is part of an external specification, protocol, API, source-code identifier, manufacturer documentation, historical evidence, or other authoritative record. Where practical, the first occurrence shall explain the legacy term and use the preferred terminology thereafter.
+
 Physical quantities shall have consistent names and, where applicable, consistent symbols throughout a document. A distinction shall be maintained between a quantity, its numerical value, its unit, and its unit symbol.
 
 ### SI Units and Numerical Conventions
