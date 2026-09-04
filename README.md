@@ -12,22 +12,17 @@
   <img src="cockpit/src/rov_cockpit/static/android-chrome-512x512.png" alt="CuttleOS project icon" width="220">
 </p>
 
-CuttleOS is the robot-side software stack for Raspberry Pi-based robots. It
-provides the shared Cockpit, Control and Datalogger services for the ROV, K9
-and future robot profiles.
+CuttleOS is the robot-side software stack for Raspberry Pi-based robots. It provides the shared Cockpit, Control and Datalogger services for the ROV, K9 and future robot profiles.
 
-CuttleOS is one part of a related set of projects:
+## Robots project
 
-- [SquidLink](https://github.com/PhilipMcGaw/robot-SquidLink) — the independent
-  ROV software-in-the-loop and hardware-in-the-loop environment using ROS 2,
-  Gazebo and the same application-facing NATS contracts.
-- [NautiPi](https://github.com/PhilipMcGaw/robot-NautiPi) — the physical hardware,
-  electronics and Arduino project work supporting the robots.
+CuttleOS is one part of a related set of projects. Cross-project architecture, engineering rationale, significant decisions, reusable guidance, and the overall roadmap are maintained in [Chartroom](https://chartroom.philipmcgaw.com/).
 
-The relationship is deliberately straightforward: CuttleOS runs the real
-robot software, SquidLink provides simulation and integration testing, and
-NautiPi contains the physical hardware and embedded-project material. They are
-separate projects with defined interfaces rather than one shared codebase.
+- [Chartroom](https://chartroom.philipmcgaw.com/) — central engineering knowledge base and cross-project documentation.
+- [SquidLink](https://github.com/PhilipMcGaw/robot-SquidLink) — independent ROV software-in-the-loop and hardware-in-the-loop environment using ROS 2, Gazebo, and the same application-facing NATS contracts.
+- [NautiPi](https://github.com/PhilipMcGaw/robot-NautiPi) — physical hardware, electronics, PCB designs, embedded projects, and associated hardware reference material.
+
+The relationship is deliberately straightforward: CuttleOS runs the real robot software, SquidLink provides simulation and integration testing, NautiPi contains the physical hardware and embedded-project material, and Chartroom records the cross-project engineering context. They are separate projects with defined interfaces rather than one shared codebase.
 
 ## Demo
 
@@ -78,9 +73,7 @@ FastAPI-based web application providing:
 
 ### Media architecture
 
-CuttleOS treats camera acquisition, recording, live transport, and presentation
-as separate concerns. Stereo video is a common capability for robots such as K9
-and ROV rather than a K9-specific implementation.
+CuttleOS treats camera acquisition, recording, live transport, and presentation as separate concerns. Stereo video is a common capability for robots such as K9 and ROV rather than a K9-specific implementation.
 
 ```text
 Camera / microphone
@@ -96,27 +89,14 @@ NATS telemetry + control logs ──► Datalogger
              └──► timestamp-aligned export / subtitles
 ```
 
-Local recording is independent of the operator connection. Live video is
-on-demand, so a robot with zero viewers does not need to send live video over
-its network link. WebRTC is the preferred live transport where low latency is
-important, particularly for K9 operation over a mobile network. Live quality
-must be adaptive and must not starve safety-critical control or telemetry.
+Local recording is independent of the operator connection. Live video is on-demand, so a robot with zero viewers does not need to send live video over its network link. WebRTC is the preferred live transport where low latency is important, particularly for K9 operation over a mobile network. Live quality must be adaptive and must not starve safety-critical control or telemetry.
 
-The master recording preserves native stereo where available. Telemetry and
-control remain authoritative in their raw NATS/logging forms; presentation
-formats such as WebVTT subtitles or rendered overlays are derived outputs.
-Video, audio, telemetry, and control events should share a common time
-reference.
+The master recording preserves native stereo where available. Telemetry and control remain authoritative in their raw NATS/logging forms; presentation formats such as WebVTT subtitles or rendered overlays are derived outputs. Video, audio, telemetry, and control events should share a common time reference.
 
-K9's planned media capability includes a USB microphone for live environmental
-awareness, microphone audio in saved recordings, and a low-latency audio return
-path to the robot speaker/soundboard. K9 also has planned dedicated high-capacity
-local storage, while ROV storage remains an optional discovered capability.
+K9's planned media capability includes a USB microphone for live environmental awareness, microphone audio in saved recordings, and a low-latency audio return path to the robot speaker/soundboard. K9 also has planned dedicated high-capacity local storage, while ROV storage remains an optional discovered capability.
 
 ### Frontend
-TypeScript frontend source is under `frontend/src/`, with the npm package and
-toolchain under `frontend/cockpit/`. The compiled browser modules are emitted
-to `cockpit/src/rov_cockpit/static/dist/`.
+TypeScript frontend source is under `frontend/src/`, with the npm package and toolchain under `frontend/cockpit/`. The compiled browser modules are emitted to `cockpit/src/rov_cockpit/static/dist/`.
 
 ### Configuration
 - Robot definitions in `configs/robots/`
@@ -127,8 +107,7 @@ to `cockpit/src/rov_cockpit/static/dist/`.
 
 ### Quick Start (One-Click Setup)
 
-For complete robot deployment on a Raspberry Pi, follow [the deployment guide](docs/deployment.md).
-The bootstrap script requires root privileges:
+For complete robot deployment on a Raspberry Pi, follow [the deployment guide](docs/deployment.md). The bootstrap script requires root privileges:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | sudo bash
@@ -203,6 +182,9 @@ Available profiles: `rov`, `k9`, `piwars`, `testbot`
 - **Live media**: WebRTC planned for low-latency video/audio
 
 ## Documentation
+
+This repository contains implementation-specific documentation for CuttleOS and its services. For cross-project architecture, engineering decisions, reusable guidance, and the overall roadmap, see [Chartroom](https://chartroom.philipmcgaw.com/).
+
 See `docs/` for detailed documentation on development, deployment, and testing.
 See `MASTER_CONTEXT.md` for architectural decisions and service boundaries.
 See `ROADMAP.md` for planned architectural improvements and feature development.
