@@ -73,7 +73,43 @@ The repository does not currently contain a comprehensive automated test suite. 
 
 ## Browser-assisted time synchronisation test
 
-Perform this only on a development RPi with propulsion disabled. Install the active profile and updated Control unit, then run `sudo systemctl daemon-reload` and restart Control. Sign in to Cockpit as a driver or administrator and open a page. Confirm a message on `<namespace>.cockpit.command.system.time-sync`, then inspect `<namespace>.control.status.system.time-sync` and `journalctl -u rov-control` (or the deployed Control unit name). Check `date --iso-8601=seconds` before and after only when it is safe to alter the development clock. Do not use a browser-supplied time source as production evidence of time accuracy; compare it with a trusted time source and record the result.
+Perform this only on a development Raspberry Pi with propulsion disabled.
+
+Install the active robot profile and updated Control unit, then reload the systemd configuration and restart Control:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart python
+```
+
+Sign in to Cockpit as a driver or administrator and open a page. Confirm that a message is published on:
+
+```text
+<namespace>.cockpit.command.system.time-sync
+```
+
+Then inspect the corresponding Control status message:
+
+```text
+<namespace>.control.status.system-time-sync
+```
+
+and the Control service log:
+
+```bash
+journalctl -u python
+```
+
+Check the system time with:
+
+```bash
+date --iso-8601=seconds
+```
+
+Record the time before and after the test only when it is safe to alter the development system clock.
+
+Do not use a browser-supplied time source as production evidence of time accuracy. Compare the result with a trusted time source and record the result as test evidence.
+
 
 ## Live diagnostics tray test
 
