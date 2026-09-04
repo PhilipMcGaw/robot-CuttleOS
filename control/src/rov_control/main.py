@@ -7,21 +7,16 @@ import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Final, TypedDict
+
+import board
 import busio
 import nats
-from adafruit_motor import servo
-from adafruit_pca9685 import PCA9685 # Import PCA9685 class (Servo controller)
-from board import SCL, SDA
-import time
-import board
-import busio
-from adafruit_bus_device.i2c_device import I2CDevice
-
-import time
-import board
-import adafruit_ads7830.ads7830
 from adafruit_ads7830.analog_in import AnalogIn
+import adafruit_ads7830.ads7830
+from adafruit_motor import servo
+from adafruit_pca9685 import PCA9685
+from board import SCL, SDA
+
 from .time_sync import (
     TimeSynchronisationConfig,
     load_time_synchronisation_config,
@@ -32,9 +27,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
 i2c = busio.I2C(SCL, SDA)
-pca = PCA9685(i2c, address=0x5F)  # PCA9685 address used by the ROV hardware.
-i2c = busio.I2C(board.SCL, board.SDA)
-i2c = board.I2C()
+pca = PCA9685(i2c, address=0x5F)  # ROV hardware uses PCA9685 address 0x5F.
 
 pca.frequency = 50
 
@@ -237,8 +230,8 @@ def read_analog_channels():
                     division_ratio = r17 / (r15 + r17)
                     # TODO: Verify the ADC-to-battery conversion against the fitted divider before
                     # relying on the published battery voltage and percentage values.
-                    actual_battery_voltage = (raw_analog_value/65535) * 5 # / division_ratio
-                    battery_percentage = (actual_battery_voltage / (battery_full - battery_empty)) * 100
+                    actual_battery_voltage = (raw_analog_value / 65535) * 5 / division_ratio
+                    battery_percentage = ((actual_battery_voltage - battery_empty) / (battery_full - battery_empty)) * 100
 
                     publish_nats("input/analog/battery/percentage", round(battery_percentage, 2))
                     publish_nats("input/analog/battery/voltage", round(actual_battery_voltage, 2))
