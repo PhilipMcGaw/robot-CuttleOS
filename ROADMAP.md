@@ -162,8 +162,7 @@ Work through these checks on the physical Testbot with the wheels raised or prop
 
 - [ ] Validate a K9 soundboard clip locally through the USB headset.
 - [ ] Validate the profile-selected sound command over NATS.
-- [ ] Validate `k9-say.sh` with its supported speech presets: 
-ormal`, `calm`, `alert`, and `alarm`.
+- [ ] Validate `k9-say.sh` with its supported speech presets: `normal`, `calm`, `alert`, and `alarm`.
 - [ ] Record playback failures, missing devices, and invalid sound or speech requests.
 - [ ] Confirm that soundboard validation does not require motor operation or video synchronisation.
 
@@ -231,8 +230,7 @@ Safety and control additions from ArduSub should be implemented in this order:
 ### K9 Soundboard and Generated Speech
 
 - [ ] Add a Control-side K9 generated-speech command backed by `assets/robots/k9/tools/k9-say.sh`
-- [ ] Define profile-controlled text validation and the supported 
-ormal`, `calm`, `alert`, and `alarm` presets
+- [ ] Define profile-controlled text validation and the supported `normal`, `calm`, `alert`, and `alarm` presets
 - [ ] Allow generated speech to fall back to, or replace, pre-recorded soundboard clips where appropriate
 - [ ] Add playback failure reporting and Raspberry Pi audio-device validation
 
@@ -355,14 +353,4 @@ Stereo video is a common CuttleOS capability for robots such as K9 and ROV, rath
 This roadmap depends on:
 - Completion of current status items (see `docs/status.md`)
 - Stable robot profile implementation
-- Hardware interface validation
-- Team consensus on architectural changes
-- Validation of the chosen camera and encoding hardware on target Raspberry Pi hardware
-- Sufficient network performance for the intended remote-driving use case
-
-## References
-
-- ChatGPT architectural recommendations (archived in "GPT output.pdf")
-- Current project status: `docs/status.md`
-- Development guidelines: `docs/development.md`
-- Configuration policy: `docs/robot-profile-requirements.md`
+- Hardware...
