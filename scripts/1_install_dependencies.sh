@@ -4,15 +4,33 @@ set -Eeuo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VENV="$PROJECT_ROOT/.venv"
 
+banner() {
+  echo
+  echo "======================================================================"
+  echo "  $*"
+  echo "======================================================================"
+  echo
+}
+
+section() {
+  echo
+  echo "----------------------------------------------------------------------"
+  echo "  $*"
+  echo "----------------------------------------------------------------------"
+  echo
+}
+
 info() { echo "[INFO] $*"; }
 pass() { echo "[PASS] $*"; }
+warn() { echo "[WARN] $*"; }
 fail() { echo "[FAIL] $*" >&2; exit 1; }
 
-echo "[INFO] ROV monorepo project dependency installation"
-echo "[INFO] Services: Cockpit (FastAPI web), Control (hardware), Datalogger (telemetry)"
-echo "[INFO] Project directory: $PROJECT_ROOT"
-echo "[INFO] Runtime: monorepo-level Python virtual environment"
-echo "[INFO] Operating mode: local dependency installation; no system services are changed"
+banner "CuttleOS — Install Dependencies"
+
+section "System Checks"
+info "Project directory: $PROJECT_ROOT"
+info "Runtime: monorepo-level Python virtual environment"
+info "Operating system: $(uname -s)"
 
 [[ "$(uname -s)" == "Linux" || "$(uname -s)" == "Darwin" ]] || fail "Unsupported operating system: $(uname -s). Use the Windows batch installer on Windows."
 [[ -f "$PROJECT_ROOT/pyproject.toml" ]] || fail "Project configuration is missing: $PROJECT_ROOT/pyproject.toml. Restore the repository before continuing."
@@ -22,6 +40,7 @@ if [[ "$(uname -s)" == "Linux" && "${EUID}" -eq 0 ]]; then
   fail "This project-local installer must not run as root. Run it as the normal runtime user; use 0_provision_raspberry_pi.sh for documented privileged setup."
 fi
 
+section "Node.js / npm"
 if [[ "$(uname -s)" == "Linux" ]]; then
   if command -v npm >/dev/null 2>&1; then
     pass "Linux Node.js/npm detected: $(node --version 2>/dev/null || echo 'node version unavailable') / $(npm --version)"
@@ -39,22 +58,25 @@ else
   info "macOS detected: Node.js/npm will not be installed automatically. An existing npm is optional; committed frontend output remains available."
 fi
 
+section "Python Environment"
 info "Creating or reusing the monorepo-level Python environment: $VENV"
 python3 -m venv "$VENV" || fail "Virtual environment creation failed. Check Python 3 installation and filesystem permissions."
 "$VENV/bin/python" -m pip install --upgrade pip || fail "Python packaging bootstrap failed in $VENV. Check network access and filesystem permissions."
+pass "Python virtual environment ready: $VENV"
 
-info "Installing all services and development dependencies from $PROJECT_ROOT/pyproject.toml"
+section "Python Dependencies"
 cd "$PROJECT_ROOT"
-# Install all dependencies from pyproject.toml optional dependencies
+info "Installing all services and development dependencies."
 "$VENV/bin/python" -m pip install fastapi uvicorn[standard] nats-py jinja2 pydantic python-dotenv pyopenssl adafruit-circuitpython-ads7830 adafruit-circuitpython-motor adafruit-circuitpython-pca9685 gpiozero ifaddr psutil pyserial serial pytest pytest-cov black ruff || fail "Dependency installation failed."
-# rpi-gpio is Linux-specific and will be skipped on macOS
+
 if [[ "$(uname -s)" == "Linux" ]]; then
-  info "Installing Linux-specific rpi-gpio dependency"
+  info "Installing Linux-specific rpi-gpio dependency."
   "$VENV/bin/python" -m pip install rpi-gpio || fail "rpi-gpio installation failed on Linux."
 else
-  info "rpi-gpio skipped (Linux-specific, not needed on $(uname -s))"
+  info "rpi-gpio skipped (Linux-specific, not needed on $(uname -s))."
 fi
+pass "All services and development dependencies installed."
 
-pass "All services and development dependencies installed in monorepo environment."
+banner "Installation Complete"
 pass "Virtual environment: $VENV"
-pass "No system packages or services were changed."
+pass "No system services were changed."
