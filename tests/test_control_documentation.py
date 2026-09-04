@@ -1,4 +1,4 @@
-"""ROV Control documentation currency checks."""
+"""CuttleOS documentation currency checks."""
 from pathlib import Path
 import re
 import sys

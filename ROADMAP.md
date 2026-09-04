@@ -162,7 +162,8 @@ Work through these checks on the physical Testbot with the wheels raised or prop
 
 - [ ] Validate a K9 soundboard clip locally through the USB headset.
 - [ ] Validate the profile-selected sound command over NATS.
-- [ ] Validate `k9-say.sh` with its supported speech presets: `normal`, `calm`, `alert`, and `alarm`.
+- [ ] Validate `k9-say.sh` with its supported speech presets: 
+ormal`, `calm`, `alert`, and `alarm`.
 - [ ] Record playback failures, missing devices, and invalid sound or speech requests.
 - [ ] Confirm that soundboard validation does not require motor operation or video synchronisation.
 
@@ -173,6 +174,48 @@ Work through these checks on the physical Testbot with the wheels raised or prop
 - [ ] Add and test digital switches.
 - [ ] Add and test the line-tracking module.
 - [ ] Add and test the light-tracing module.
+
+### BlueROV and BlueOS-inspired operational foundations
+
+These items are informed by the practical operation and documentation of
+BlueROV2 and BlueOS. They are CuttleOS work items, not a proposal to adopt
+BlueOS, MAVLink, or ArduPilot as runtime dependencies.
+
+Safety and control additions from ArduSub should be implemented in this order:
+
+- [ ] Define profile-driven vehicle states for initialising, not ready, ready,
+  armed, emergency stop, failsafe, and maintenance.
+- [ ] Implement pre-operation checks with clear failure reasons and controlled
+  bench-test bypasses.
+- [ ] Separate disarm, emergency motor stop, and failsafe recovery semantics.
+- [ ] Add deadman/command-freshness checks and require explicit recovery after
+  communication loss.
+- [ ] Add layered battery, leak, pressure, temperature, sensor-validity,
+  hardware-node, and watchdog responses.
+- [ ] Expose only modes supported by the active profile and required sensors.
+- [ ] Add versioned calibration, tuning, limits, and safety-event records.
+- [ ] Build the safety test matrix from disconnected software tests through dry
+  integration and shallow-water commissioning.
+
+- [ ] Add a clear headless-robot startup and network-health view to Cockpit,
+  including robot discovery, active interface, connection state, and useful
+  bandwidth indicators.
+- [ ] Define an explicit safe operating mode and a separate maintenance mode
+  for configuration, updates, and other actions that should not be available
+  while propulsion is armed.
+- [ ] Add profile-driven vehicle setup views for actuator identity, direction,
+  limits, trim, safe manual checks, and camera or gimbal configuration.
+- [ ] Add a searchable/downloadable operational log view for telemetry, control,
+  service health, and important vehicle events.
+- [ ] Complete configurable video-stream management with persistent settings,
+  multiple output paths where required, and a documented WebRTC boundary.
+- [ ] Define the equivalent audio-stream management boundary for microphones,
+  speakers, and recorded audio tracks.
+- [ ] Define a bounded extension boundary for optional payloads and services,
+  including permissions, resource limits, logs, restart, disable, update, and
+  rollback behaviour.
+- [ ] Define stable, beta, and development deployment channels for CuttleOS
+  releases and robot profiles.
 ## Feature Development
 
 ### Shared Adeept ADM133 Control driver
@@ -188,7 +231,8 @@ Work through these checks on the physical Testbot with the wheels raised or prop
 ### K9 Soundboard and Generated Speech
 
 - [ ] Add a Control-side K9 generated-speech command backed by `assets/robots/k9/tools/k9-say.sh`
-- [ ] Define profile-controlled text validation and the supported `normal`, `calm`, `alert`, and `alarm` presets
+- [ ] Define profile-controlled text validation and the supported 
+ormal`, `calm`, `alert`, and `alarm` presets
 - [ ] Allow generated speech to fall back to, or replace, pre-recorded soundboard clips where appropriate
 - [ ] Add playback failure reporting and Raspberry Pi audio-device validation
 

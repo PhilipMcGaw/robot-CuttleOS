@@ -5,6 +5,7 @@
 - [System architecture](system-architecture.md) — cross-repository system authority
 - [Control architecture](control-architecture.md) — command, safety, and actuator-control boundaries
 - [Hardware interface](hardware-interface.md) — software-to-hardware boundary, node identity, and RS-485 principles
+- [Safety and control behaviour](safety-and-control.md) — vehicle states, pre-operation checks, failsafes, limits, and safety evidence.
 - [Adeept ADM133 Control driver](adeept-adm133-control-driver.md) — shared ADM133 adapter contract, resource reservations, and validation plan
 - [NATS contract](nats-contract.md) — application messaging and interface principles
 - [Test provenance](test-provenance.md) — test-run identity, provenance, lifecycle markers, capability, and validation evidence

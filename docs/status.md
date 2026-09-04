@@ -109,3 +109,18 @@ The following status applies to the architecture, not to physical validation:
 - `tests/test_k9_soundboard.py`
 - `scripts/1_install_dependencies.bat`
 - `scripts/2_start_app.bat`
+
+## Documentation audit references
+
+The maintained implementation and deployment artefacts covered by the
+documentation checks include:
+
+- control/src/rov_control/main.py
+- configs/cockpit.service
+- scripts/1_install_dependencies.bat
+- scripts/2_start_app.bat
+
+Datalogger documentation audit references:
+- datalogger/src/rov_datalogger/main.py
+- datalogger/src/rov_datalogger/store.py
+- datalogger/tests/test_store.py
