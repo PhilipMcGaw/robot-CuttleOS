@@ -17,8 +17,6 @@ REPO_OWNER="${REPO_OWNER:-PhilipMcGaw}"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 CONFIG_SEED_DIR="${CONFIG_SEED_DIR:-/var/lib/cuttleos/first-boot-config}"
 PROJECT_ROOT="$ROBOTS_DIR/robot-CuttleOS"
-CONTROL_ROOT="$ROBOTS_DIR/control"
-DATALOGGER_ROOT="$ROBOTS_DIR/datalogger"
 MARKER="/var/lib/cuttleos/first-boot-complete"
 
 info() { echo "[INFO] $*"; }
@@ -40,21 +38,12 @@ apt-get install --yes ca-certificates git
 
 install -d -o "$ROBOT_USER" -g "$(id -gn "$ROBOT_USER")" -m 0755 "$ROBOTS_DIR"
 
-clone_or_update() {
-  local url="$1" target="$2"
-  if [[ -d "$target/.git" ]]; then
-    git -C "$target" fetch --depth=1 origin "$REPO_BRANCH"
-    git -C "$target" reset --hard "origin/$REPO_BRANCH"
-  else
-    git clone --depth=1 --branch "$REPO_BRANCH" "$url" "$target"
-  fi
-  chown -R "$ROBOT_USER:$(id -gn "$ROBOT_USER")" "$target"
-}
+if [[ -e "$PROJECT_ROOT" ]]; then
+  fail "CuttleOS checkout already exists: $PROJECT_ROOT. Remove it or correct ROBOTS_DIR before first-boot provisioning."
+fi
 
-info "Retrieving the CuttleOS repositories."
-clone_or_update "https://github.com/$REPO_OWNER/robot-CuttleOS.git" "$PROJECT_ROOT"
-clone_or_update "https://github.com/$REPO_OWNER/robot-Control.git" "$CONTROL_ROOT"
-clone_or_update "https://github.com/$REPO_OWNER/robot-Datalogger.git" "$DATALOGGER_ROOT"
+git clone --depth=1 --branch "$REPO_BRANCH" "https://github.com/$REPO_OWNER/robot-CuttleOS.git" "$PROJECT_ROOT"
+chown -R "$ROBOT_USER:$(id -gn "$ROBOT_USER")" "$PROJECT_ROOT"
 
 for config in nats.env network.env network.secrets.env; do
   [[ -r "$CONFIG_SEED_DIR/$config" ]] || fail "Missing first-boot deployment configuration: $CONFIG_SEED_DIR/$config"
@@ -63,7 +52,7 @@ done
 chmod 600 "$PROJECT_ROOT/configs/network.secrets.env"
 
 info "Running the CuttleOS provisioner for profile $ROBOT_PROFILE."
-export CONTROL_ROOT DATALOGGER_ROOT ROBOT_PROFILE
+export ROBOT_PROFILE
 export SUDO_USER="$ROBOT_USER"
 bash "$PROJECT_ROOT/scripts/0_provision_rpi.sh"
 
