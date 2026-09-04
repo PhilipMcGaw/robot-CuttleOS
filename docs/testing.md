@@ -91,7 +91,7 @@ Sign in to Cockpit as a driver or administrator and open a page. Confirm that a 
 Then inspect the corresponding Control status message:
 
 ```text
-<namespace>.control.status.system-time-sync
+<namespace>.control.status.system.time-sync
 ```
 
 and the Control service log:
