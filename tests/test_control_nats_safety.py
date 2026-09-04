@@ -123,14 +123,15 @@ def test_actuator_outputs_are_inhibited_while_nats_faulted(monkeypatch: pytest.M
     control = _load_control_module(monkeypatch)
     control.nats_fault.set()
     control.nats_connected.set()
+    control.nats_data["output/servos/camera/demand"] = "120"
+    control.nats_data["output/hbridge/left/demand"] = "1"
+    control.pca.channels = [types.SimpleNamespace(duty_cycle=0) for _ in range(16)]
 
-    servo_called = False
-    hbridge_called = False
-    monkeypatch.setattr(control, "set_angle", lambda *_args: globals().__setitem__("servo_called", True))
-    monkeypatch.setattr(control, "publish_nats", lambda *_args: globals().__setitem__("hbridge_called", True))
+    servo_calls: list[tuple[int, int]] = []
+    monkeypatch.setattr(control, "set_angle", lambda channel, angle: servo_calls.append((channel, angle)))
 
     control.write_servo_outputs()
     control.write_hbridge_outputs()
 
-    assert not servo_called
-    assert not hbridge_called
+    assert servo_calls == []
+    assert all(channel.duty_cycle == 0 for channel in control.pca.channels[12:16])
