@@ -31,25 +31,10 @@ from .time_sync import (
 logger = logging.getLogger(__name__)
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
-""" Logging levels:
-     * info
-     * warning
-     * error
-     * critical
-     * log
-     * exception
-"""
-
-
 i2c = busio.I2C(SCL, SDA)
-# Create a simple PCA9685 class instance.
-pca = PCA9685(i2c, address=0x5F)  # default 0x5f
-
+pca = PCA9685(i2c, address=0x5F)  # PCA9685 address used by the ROV hardware.
 i2c = busio.I2C(board.SCL, board.SDA)
-# ADS7830 adress 0x48
 i2c = board.I2C()
-
-
 
 pca.frequency = 50
 
@@ -82,7 +67,7 @@ TIME_SYNCHRONISATION_CONFIG = load_active_time_synchronisation_config()
 ServoChannelData = namedtuple('ServoChannelData', ['number', 'topic', 'home_angle', 'current_angle'])
 
 servo_channels = {
-    # name: (number, topic, home angle, current angle)
+    # PCA9685 channels 12–15 are reserved for the H-bridges.
     "Camera": ServoChannelData(0, "output/servos/camera/demand", 90, 90),
     "Front Left": ServoChannelData(1, "output/servos/front_left/demand", 90, 90),
     "Front Right": ServoChannelData(2, "output/servos/front_right/demand", 90, 90),
@@ -91,15 +76,14 @@ servo_channels = {
     "Vertical Left Front": ServoChannelData(5, "output/servos/vertical_left_front/demand", 90, 90),
     "Vertical Right Front": ServoChannelData(6, "output/servos/vertical_right_front/demand", 90, 90),
     "Vertical Rear Left": ServoChannelData(7, "output/servos/vertical_rear_left/demand", 90, 90),
-    "Vertical Rear Right": ServoChannelData(8, "output/servos/vertical_rear_right/demand", 90, 90),  # Add more servos if needed; however, H Bridge uses channels 12-15.
+    "Vertical Rear Right": ServoChannelData(8, "output/servos/vertical_rear_right/demand", 90, 90),
 }
 
 AnalogChannelData = namedtuple('AnalogChannelData', ['number', 'topic', 'previous_value', 'current_value', 'last_read_time', 'alpha', 'interval'])
 
 analog_channels = {
-    # name, (number, topic, previous value, current value, last read time (s), alpha, interval (s))
     "Battery Level": AnalogChannelData(0, "input/analog/battery/raw", 0, 0, 0, 0.1, 1),
-    "Analog Channel 1": AnalogChannelData(1, "input/analog/light_tracker/raw", 0, 0, 0, 0.1, 10),   
+    "Analog Channel 1": AnalogChannelData(1, "input/analog/light_tracker/raw", 0, 0, 0, 0.1, 10),
     "Analog Channel 2": AnalogChannelData(2, "input/analog/2/raw", 0, 0, 0, 0.1, 10),
     "Analog Channel 3": AnalogChannelData(3, "input/analog/3/raw", 0, 0, 0, 0.1, 10),
     "Analog Channel 4": AnalogChannelData(4, "input/analog/4/raw", 0, 0, 0, 0.1, 10),
@@ -224,6 +208,7 @@ def publish_camera_pitch(servo_angle: int, home_angle: int) -> None:
     """Publish camera inclination relative to the ROV body; zero is straight ahead."""
     publish_nats("sensor/camera/main/pitch", int(servo_angle) - int(home_angle))
 
+
 def read_analog_channels():
     global analog_channels
 
@@ -236,39 +221,28 @@ def read_analog_channels():
 
             last_read_time = data.last_read_time
             if time.monotonic() >= last_read_time:
-                logger.info(f"Read {name} to Value {raw_analog_value}")  # Log the raw analog value read (analog values are 0-65535 as per 16-bit ADC)
-                
+                logger.info(f"Read {name} to Value {raw_analog_value}")
+
                 publish_nats(data.topic, raw_analog_value)
                 last_read_time = time.monotonic() + data.interval
 
                 if name == "Battery Level":
-                    """ Battery level calculation:
-                        r15 and r17 are the resistors in the voltage divider, these are physiclly present on the board, and give a division ratio of 0.25
-
-                        The battery voltage range is from 6.0V (empty) to 8.28V (full) (it is made up of 2 Li-Ion 18650 cells in series)
-
-                        The ADC reads a voltage from 0V to 5V, so we first need to convert the raw ADC value to a voltage, then calculate the actual battery voltage using the division ratio.
-
-                        Finally, we calculate the battery percentage based on the actual battery voltage.
-                    """
-                    r15 = 3  # Resistor R15 value in kOhm
-                    r17 = 1  # Resistor R17 value in kOhm
-                    battery_empty = 6.0  # Minimum voltage of the battery
-                    battery_full = 8.28  # Maximum voltage of the battery
-                    division_ratio = r17 / (r15 + r17)  # Voltage divider ratio (0.25)
-                    actual_battery_voltage = (raw_analog_value/65535) * 5 # / division_ratio  # Calculate actual battery voltage
+                    # R15 and R17 form the on-board battery voltage divider.
+                    # R15 = 3 kΩ and R17 = 1 kΩ, giving a divider ratio of 0.25.
+                    # The battery limits are 6.00 V (empty) and 8.28 V (full).
+                    r15 = 3
+                    r17 = 1
+                    battery_empty = 6.0
+                    battery_full = 8.28
+                    division_ratio = r17 / (r15 + r17)
+                    # TODO: Verify the ADC-to-battery conversion against the fitted divider before
+                    # relying on the published battery voltage and percentage values.
+                    actual_battery_voltage = (raw_analog_value/65535) * 5 # / division_ratio
                     battery_percentage = (actual_battery_voltage / (battery_full - battery_empty)) * 100
 
                     publish_nats("input/analog/battery/percentage", round(battery_percentage, 2))
                     publish_nats("input/analog/battery/voltage", round(actual_battery_voltage, 2))
                     logger.info(f"Current battery level: {round(battery_percentage, 2)} %")
-
-                    # if actual_battery_voltage <= battery_empty + 0.2:
-                    #    logger.warning(f"Warning! The Pi battery level is too low. Please charge in time!")
-                    #    publish_nats("input/analog/battery/warning", True)
-                    # else:
-                    #    publish_nats("input/analog/battery/warning", False)
-
 
             analog_channels[name] = AnalogChannelData(
                 number=data.number,
@@ -279,6 +253,7 @@ def read_analog_channels():
                 interval=data.interval,
                 alpha=data.alpha,
             )
+
 
 def write_servo_outputs():
     global servo_channels
@@ -302,36 +277,38 @@ def write_servo_outputs():
                 else:
                     logger.warning(f"Demanded angle {demanded_angle} for {name} is out of range (0-180)")
 
+
 def write_hridge_outputs():
     with nats_lock:
         hbridge_left_demand = nats_data.get("output/hbridge/left/demand", None)
         hbridge_right_demand = nats_data.get("output/hbridge/right/demand", None)
 
         if hbridge_left_demand != 0:
-            # Assuming h-bridge control via PCA channels 12 and 13
+            # Positive and negative demands select opposite H-bridge input channels.
             if int(hbridge_left_demand) > 0:
-                pca.channels[12].duty_cycle = 0xFFFF  # Forward
+                pca.channels[12].duty_cycle = 0xFFFF
                 pca.channels[13].duty_cycle = 0x0000
             elif int(hbridge_left_demand) < 0:
                 pca.channels[12].duty_cycle = 0x0000
-                pca.channels[13].duty_cycle = 0xFFFF  # Reverse
+                pca.channels[13].duty_cycle = 0xFFFF
             else:
                 pca.channels[12].duty_cycle = 0x0000
-                pca.channels[13].duty_cycle = 0x0000  # Stop
+                pca.channels[13].duty_cycle = 0x0000
             logger.debug(f"Set H-Bridge Left to demand {hbridge_left_demand}")
 
         if hbridge_right_demand != 0:
-            # Assuming h-bridge control via PCA channels 14 and 15
+            # Positive and negative demands select opposite H-bridge input channels.
             if int(hbridge_right_demand) > 0:
-                pca.channels[14].duty_cycle = 0xFFFF  # Forward
+                pca.channels[14].duty_cycle = 0xFFFF
                 pca.channels[15].duty_cycle = 0x0000
             elif int(hbridge_right_demand) < 0:
                 pca.channels[14].duty_cycle = 0x0000
-                pca.channels[15].duty_cycle = 0xFFFF  # Reverse
+                pca.channels[15].duty_cycle = 0xFFFF
             else:
                 pca.channels[14].duty_cycle = 0x0000
-                pca.channels[15].duty_cycle = 0x0000  # Stop
+                pca.channels[15].duty_cycle = 0x0000
             logger.debug(f"Set H-Bridge Right to demand {hbridge_right_demand}")
+
 
 def set_angle(ID, angle):
     servo_angle = servo.Servo(
@@ -355,7 +332,7 @@ def setup() -> None:
     logger.debug("Setting H-bridges to off")
     publish_nats("output/hbridge/left/demand", 0)
     publish_nats("output/hbridge/right/demand", 0)
-    logger.debug(f"Setup complete.")
+    logger.debug("Setup complete.")
 
 
 if __name__ == "__main__":
@@ -367,7 +344,7 @@ if __name__ == "__main__":
             write_hridge_outputs()
 
     except KeyboardInterrupt:
-        logger.info(f"Ctrl + C detected. Setting servos to home position.")
+        logger.info("Ctrl + C detected. Setting servos to home position.")
         for data in servo_channels.values():
             set_angle(int(data.number), int(data.home_angle))
         pca.deinit()  # Release PCA9685 resources
