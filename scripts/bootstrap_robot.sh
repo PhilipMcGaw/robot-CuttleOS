@@ -28,7 +28,7 @@ pass() { echo "[PASS] $*"; }
 fail() { echo "[FAIL] $*" >&2; exit 1; }
 
 banner "CuttleOS — One-Click Robot Bootstrap"
-info "This script installs the robot software stack and provisions the target system."
+info "This script installs the CuttleOS monorepo and provisions the target system."
 
 section "System Checks"
 if [[ "${EUID}" -ne 0 ]]; then
@@ -51,12 +51,16 @@ else
   pass "Git is already installed: $(git --version)"
 fi
 
-section "Robot Software Repositories"
+section "CuttleOS Repository"
 mkdir -p "$ROBOTS_DIR"
 cd "$ROBOTS_DIR"
 
+if [[ -e "$ROBOTS_DIR/robot-CuttleOS" ]]; then
+  fail "Target directory already exists: $ROBOTS_DIR/robot-CuttleOS. Remove it or set ROBOTS_DIR to an empty deployment directory before bootstrapping."
+fi
+
 if [[ "$DEPLOYMENT_MODE" == "ssh" ]]; then
-  info "Cloning repositories via SSH (developer mode)."
+  info "Cloning CuttleOS via SSH (developer mode)."
   if [[ ! -f "$HOME/.ssh/id_ed25519" ]] && [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
     warn "No SSH key found. Creating one."
     ssh-keygen -t ed25519 -C "${ROBOT_USER}@robot" -f "$HOME/.ssh/id_ed25519" -N ""
@@ -64,16 +68,12 @@ if [[ "$DEPLOYMENT_MODE" == "ssh" ]]; then
     cat "$HOME/.ssh/id_ed25519.pub"
     read -p "Press Enter after adding the key to GitHub..."
   fi
-  git clone git@github.com:${GITHUB_USER}/robot-CuttleOS.git robot-CuttleOS || fail "Failed to clone robot-CuttleOS"
-  git clone git@github.com:${GITHUB_USER}/robot-Control.git control || fail "Failed to clone Control"
-  git clone git@github.com:${GITHUB_USER}/robot-Datalogger.git datalogger || fail "Failed to clone Datalogger"
+  git clone "git@github.com:${GITHUB_USER}/robot-CuttleOS.git" robot-CuttleOS || fail "Failed to clone robot-CuttleOS"
 else
-  info "Cloning repositories via HTTPS (read-only mode)."
-  git clone --depth=1 https://github.com/${GITHUB_USER}/robot-CuttleOS.git robot-CuttleOS || fail "Failed to clone robot-CuttleOS"
-  git clone --depth=1 https://github.com/${GITHUB_USER}/robot-Control.git control || fail "Failed to clone Control"
-  git clone --depth=1 https://github.com/${GITHUB_USER}/robot-Datalogger.git datalogger || fail "Failed to clone Datalogger"
+  info "Cloning CuttleOS via HTTPS (read-only mode)."
+  git clone --depth=1 "https://github.com/${GITHUB_USER}/robot-CuttleOS.git" robot-CuttleOS || fail "Failed to clone robot-CuttleOS"
 fi
-pass "Robot software repositories cloned successfully."
+pass "CuttleOS monorepo cloned successfully."
 
 section "Configuration"
 cd "$ROBOTS_DIR/robot-CuttleOS"
@@ -101,8 +101,6 @@ if grep -q "CHANGE_ME" configs/network.secrets.env; then
 fi
 
 section "Robot Provisioning"
-export CONTROL_ROOT="$ROBOTS_DIR/control"
-export DATALOGGER_ROOT="$ROBOTS_DIR/datalogger"
 export ROBOT_PROFILE="$ROBOT_PROFILE"
 info "Starting Raspberry Pi provisioning."
 info "This will take several minutes and requires internet access."
@@ -110,7 +108,8 @@ bash scripts/0_provision_rpi.sh
 pass "Raspberry Pi provisioning completed."
 
 banner "Bootstrap Complete"
-pass "Robot software stack installed."
+pass "CuttleOS monorepo installed and provisioned."
+info "Control and Datalogger are deployed from the CuttleOS monorepo."
 info "Next steps:"
 info "  1. Edit configuration files if needed."
 info "  2. Reboot the system: sudo reboot"
