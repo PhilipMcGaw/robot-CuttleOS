@@ -220,6 +220,8 @@ def enter_nats_safe_state() -> None:
         return
     nats_fault.set()
     logger.error("NATS connection has exceeded %.0f ms; forcing robot to safe state.", NATS_LOSS_TIMEOUT_MS)
+    with nats_lock:
+        nats_data.clear()
     for data in servo_channels.values():
         set_angle(int(data.number), int(data.home_angle))
     pca.channels[12].duty_cycle = 0x0000
@@ -300,6 +302,9 @@ def read_analog_channels():
 def write_servo_outputs():
     global servo_channels
 
+    if nats_fault.is_set() or not nats_connected.is_set():
+        return
+
     with nats_lock:
         for name, data in servo_channels.items():
             if data.topic in nats_data:
@@ -321,6 +326,9 @@ def write_servo_outputs():
 
 
 def write_hbridge_outputs():
+    if nats_fault.is_set() or not nats_connected.is_set():
+        return
+
     with nats_lock:
         hbridge_left_demand = int(nats_data.get("output/hbridge/left/demand", 0))
         hbridge_right_demand = int(nats_data.get("output/hbridge/right/demand", 0))
