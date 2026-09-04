@@ -1,6 +1,7 @@
 [Unit]
 Description=Main Python Code loop
-After=network.target
+Requires=nats-server.service
+After=network.target nats-server.service
 
 [Service]
 User=@ROBOT_USER@
