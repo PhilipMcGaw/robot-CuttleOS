@@ -40,6 +40,32 @@ Unnecessary words, repetition, verbosity, passive constructions, and unnecessari
 
 The Oxford comma (serial comma) shall be used in lists of three or more items, e.g. “voltage, current, and temperature”.
 
+### Audience-specific language
+
+Different parts of the system have different readers. Language shall be appropriate to the knowledge required to use, maintain, or understand the system.
+
+#### Operator-facing UI
+
+Text displayed in the user interface shall be understandable by someone with an education level broadly between GCSE and A level. UI text shall use plain, familiar language and be concise and action-oriented. Unnecessary technical terminology shall be avoided.
+
+Where a technical term is necessary because it accurately describes the system, it shall either be familiar to the intended operator or be explained in the relevant context. The UI shall tell the operator what they need to know or do rather than exposing implementation details.
+
+Simplifying UI language shall not mean hiding useful engineering information. Detailed status, diagnostic, and engineering information may be provided where appropriate, but should be presented separately from the primary operator instruction or status.
+
+#### Code and comments
+
+Code and comments shall be understandable by an engineer with limited programming experience. The code may use appropriate programming techniques and abstractions, but comments shall not assume that the reader already understands programming terminology, software architecture, or framework-specific behaviour.
+
+Comments shall explain the intent of the code, important engineering decisions, assumptions, interfaces, and consequences that are not obvious from the code itself. Comments shall not simply restate what the code does.
+
+Code should make the engineering purpose clear where practical. Non-obvious software behaviour should be explained in terms of what the system is trying to achieve and why the implementation matters. This is particularly important where software behaviour affects hardware, safety, timing, communications, testing, or physical measurements.
+
+#### Engineering documentation
+
+Engineering documentation shall be written for a competent engineer in the relevant technical field. It may use appropriate technical terminology, but should remain clear, direct, and practical. Documentation shall explain what the system does, why it does it, and where responsibility lies, rather than using unnecessarily abstract or promotional language.
+
+Claims shall be proportional to the available engineering evidence. Implemented behaviour shall not be described as validated unless the relevant validation evidence exists.
+
 ### Terminology and Abbreviations
 
 One term shall be used consistently for one concept. Synonyms shall not be introduced merely for stylistic variation where doing so could imply a distinction that does not exist. Where different terms have distinct technical meanings, those meanings shall be defined clearly.
