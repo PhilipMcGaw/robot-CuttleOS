@@ -46,7 +46,7 @@ if [[ "$(uname -s)" == "Linux" ]]; then
     pass "Linux Node.js/npm detected: $(node --version 2>/dev/null || echo 'node version unavailable') / $(npm --version)"
   elif command -v apt-get >/dev/null 2>&1; then
     info "Linux Node.js/npm is missing; installing the distribution packages nodejs and npm."
-    info "This is the documented Linux system-package exception and may request sudo; macOS is never modified by this step."
+    info "This is the documented Linux system-package exception and may request sudo."
     sudo apt-get update || fail "Linux package-index update failed. Node.js/npm are required to compile the TypeScript frontend."
     sudo apt-get install -y nodejs npm || fail "Linux Node.js/npm installation failed. Check sudo permissions and package-repository access."
     command -v npm >/dev/null 2>&1 || fail "npm is still unavailable after installation. The frontend cannot be compiled."
@@ -55,7 +55,8 @@ if [[ "$(uname -s)" == "Linux" ]]; then
     fail "npm is missing and apt-get is unavailable. Install Node.js/npm using the supported Linux package method, then rerun this script."
   fi
 else
-  info "macOS detected: Node.js/npm will not be installed automatically. An existing npm is optional; committed frontend output remains available."
+  info "macOS detected: Node.js/npm will not be installed automatically. An existing npm is required to compile the frontend."
+  command -v npm >/dev/null 2>&1 || warn "npm is unavailable; frontend compilation will not be possible on this machine."
 fi
 
 section "Python Environment"
@@ -66,17 +67,11 @@ pass "Python virtual environment ready: $VENV"
 
 section "Python Dependencies"
 cd "$PROJECT_ROOT"
-info "Installing all services and development dependencies."
-"$VENV/bin/python" -m pip install fastapi uvicorn[standard] nats-py jinja2 pydantic python-dotenv pyopenssl adafruit-circuitpython-ads7830 adafruit-circuitpython-motor adafruit-circuitpython-pca9685 gpiozero ifaddr psutil pyserial serial pytest pytest-cov black ruff || fail "Dependency installation failed."
-
-if [[ "$(uname -s)" == "Linux" ]]; then
-  info "Installing Linux-specific rpi-gpio dependency."
-  "$VENV/bin/python" -m pip install rpi-gpio || fail "rpi-gpio installation failed on Linux."
-else
-  info "rpi-gpio skipped (Linux-specific, not needed on $(uname -s))."
-fi
-pass "All services and development dependencies installed."
+info "Installing dependencies declared by pyproject.toml."
+"$VENV/bin/python" -m pip install ".[cockpit,control,datalogger,dev]" || fail "Dependency installation failed. Review the pyproject.toml dependency declarations and pip diagnostics above."
+pass "Cockpit, Control, Datalogger, and development dependencies installed from pyproject.toml."
 
 banner "Installation Complete"
 pass "Virtual environment: $VENV"
+pass "Dependency source: pyproject.toml"
 pass "No system services were changed."
