@@ -24,6 +24,10 @@ CuttleOS is one part of a related set of projects. Cross-project architecture, e
 
 The relationship is deliberately straightforward: CuttleOS runs the real robot software, SquidLink provides simulation and integration testing, NautiPi contains the physical hardware and embedded-project material, and Chartroom records the cross-project engineering context. They are separate projects with defined interfaces rather than one shared codebase.
 
+## Documentation standard
+
+Project-wide documentation conventions are defined by the [Robots Project Documentation Standard](https://chartroom.philipmcgaw.com/development/documentation-standard/), maintained in Chartroom. CuttleOS follows that standard; it does not maintain a separate copy of the project-wide documentation rules.
+
 ## Demo
 
 I have a demo of my Robot Cockpit 🙂 https://cuttleos.philipmcgaw.com/
@@ -146,6 +150,8 @@ sudo ./scripts/0_provision_rpi.sh
 ```
 
 This installs all system packages, Python environments, services, and configuration.
+
+For the project-level deployment workflow, including Raspberry Pi Imager, first-boot provisioning, cloud-init, and the deployment authority boundary, see the [Raspberry Pi deployment documentation in Chartroom](https://chartroom.philipmcgaw.com/development/raspberry-pi-deployment/).
 
 ### Robot Profile Switching
 
