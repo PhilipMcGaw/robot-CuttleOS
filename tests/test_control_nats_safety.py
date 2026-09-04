@@ -135,3 +135,70 @@ def test_actuator_outputs_are_inhibited_while_nats_faulted(monkeypatch: pytest.M
 
     assert servo_calls == []
     assert all(channel.duty_cycle == 0 for channel in control.pca.channels[12:16])
+
+
+def test_rearm_is_rejected_when_nats_is_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
+    control = _load_control_module(monkeypatch)
+    control.nats_fault.set()
+    control.set_control_state(control.ControlState.NATS_FAULT)
+    control.nats_ready.clear()
+    control.nats_connected.clear()
+
+    initialise_calls = 0
+
+    def fake_initialise() -> None:
+        nonlocal initialise_calls
+        initialise_calls += 1
+
+    monkeypatch.setattr(control, "initialise_hardware", fake_initialise)
+
+    assert control.rearm() is False
+    assert initialise_calls == 0
+    assert control.get_control_state() == control.ControlState.NATS_FAULT
+    assert control.nats_fault.is_set()
+
+
+def test_successful_rearm_freshly_initialises_hardware(monkeypatch: pytest.MonkeyPatch) -> None:
+    control = _load_control_module(monkeypatch)
+    control.nats_fault.set()
+    control.set_control_state(control.ControlState.NATS_FAULT)
+    control.nats_ready.set()
+    control.nats_connected.set()
+    control.nats_data["stale/topic"] = "old demand"
+
+    initialise_calls = 0
+
+    def fake_initialise() -> None:
+        nonlocal initialise_calls
+        initialise_calls += 1
+
+    monkeypatch.setattr(control, "initialise_hardware", fake_initialise)
+
+    assert control.rearm() is True
+    assert initialise_calls == 1
+    assert control.get_control_state() == control.ControlState.ACTIVE
+    assert not control.nats_fault.is_set()
+    assert control.nats_data == {}
+
+
+def test_failed_rearm_remains_latched_and_safe(monkeypatch: pytest.MonkeyPatch) -> None:
+    control = _load_control_module(monkeypatch)
+    control.nats_fault.set()
+    control.set_control_state(control.ControlState.NATS_FAULT)
+    control.nats_ready.set()
+    control.nats_connected.set()
+    control.pca.channels = [types.SimpleNamespace(duty_cycle=None) for _ in range(16)]
+
+    monkeypatch.setattr(control, "initialise_hardware", lambda: (_ for _ in ()).throw(RuntimeError("initialisation failed")))
+    home_positions: list[tuple[int, int]] = []
+    monkeypatch.setattr(
+        control,
+        "set_angle",
+        lambda channel, angle: home_positions.append((channel, angle)),
+    )
+
+    assert control.rearm() is False
+    assert control.get_control_state() == control.ControlState.NATS_FAULT
+    assert control.nats_fault.is_set()
+    assert len(home_positions) == len(control.servo_channels)
+    assert all(channel.duty_cycle == 0 for channel in control.pca.channels[12:16])
