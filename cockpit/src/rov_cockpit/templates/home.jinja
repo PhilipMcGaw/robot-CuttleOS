@@ -2,10 +2,6 @@
 {% block title %}home — {{ active_robot_profile.display_name }}{% endblock %}
 {% block body_class %}rov-live-page{% if active_robot_profile.profile_id != "rov" %} rov-live-page--profile-minimal{% endif %}{% endblock %}
 {% block content %}
-<!-- Main area -->
-
-    <!-- Main Camera feed! -->
-
     <div class="bg-image">
         <img id="mainCamera" src="/cam1" alt="Main ROV camera" />
     </div>
@@ -55,22 +51,6 @@
     </aside>
     {% endif %}
 
-    <!-- The TypeScript build emits ES modules; map Vue to the committed runtime vendor asset. -->
-    
-    
-    
-
-    
-
-    
-
-<!--
-    <div  class="bg-image vh-100"
-        style="margin-top: -60px;
-        background-image: url('/static/background.jpg');">
-    </div>
--->
-
     {% if active_robot_profile.profile_id == "rov" %}
     <rov-hud id="rov-hud" class="rov-hud" aria-label="ROV navigation HUD"></rov-hud>
     <rov-instrument-style-editor target="rov-hud" profile="rov"></rov-instrument-style-editor>
@@ -109,12 +89,6 @@
         </div>
     </section>
     {% endif %}
-
-    <!-- End your project here-->
-
-        <!-- Custom scripts -->
-
-        
 {% endblock %}
 {% block scripts %}
 <script type="module" src="/static/dist/components/instruments/rov-depth.js"></script>
@@ -242,19 +216,15 @@
         })();
     </script>
 <script type="text/javascript">
-            const uptimeElement = document.getElementById("upTime");        // Uptime
-            const tempElement = document.getElementById("temperature");     // Water Temperature
-            const depthElement = document.getElementById("depth");          // Depth (this is a positive number…)
+            const uptimeElement = document.getElementById("upTime");
+            const tempElement = document.getElementById("temperature");
+            const depthElement = document.getElementById("depth");
 
             function router(topic, message) {
                 if (topic === "system/uptime") {
                     if (uptimeElement) {
                         uptimeElement.innerHTML = "<i class=\"fa-solid fa-hourglass-half\"></i> " + message.toString();
                     }
-                }
-
-                if (topic === "sensor/ahrs/imu/roll") {
-                    // Roll and pitch are rendered by the combined ROV HUD.
                 }
 
                 if (topic === "sensor/water/temperature") {
