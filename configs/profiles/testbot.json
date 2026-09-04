@@ -1,0 +1,373 @@
+{
+  "schema_version": 1,
+  "profile_id": "testbot",
+  "display_name": "Testbot",
+  "identity_icon": "fa-robot",
+  "profile_status": "test-profile",
+  "namespace": "testbot",
+  "transport": {
+    "nats_subject_prefix": "testbot."
+  },
+  "time_synchronisation": {
+    "enabled": true,
+    "command_subject": "testbot.cockpit.command.system.time-sync",
+    "status_subject": "testbot.control.status.system.time-sync",
+    "interval_seconds": 60,
+    "minimum_adjustment_seconds": 0.5
+  },
+  "capabilities": {
+    "battery": true,
+    "video": true,
+    "camera_pitch": true,
+    "heading": false,
+    "attitude": false,
+    "depth": false,
+    "distance_sensors": false,
+    "line_sensors": false,
+    "light_tracking": false,
+    "soundboard": false,
+    "horn": true,
+    "status_indicators": true,
+    "drive_control": true,
+    "test_mode": true
+  },
+  "instruments": [
+    {
+      "id": "battery",
+      "enabled": true,
+      "position": "top-bar"
+    },
+    {
+      "id": "network-status",
+      "enabled": true,
+      "position": "top-bar"
+    },
+    {
+      "id": "status-indicators",
+      "enabled": true,
+      "position": "top-bar"
+    },
+    {
+      "id": "horn",
+      "enabled": true,
+      "position": "command-dock"
+    }
+  ],
+  "telemetry": {
+    "battery_percentage": {
+      "subject": "testbot.telemetry.power.battery.percentage",
+      "unit": "%",
+      "scale": 1,
+      "precision": 0
+    },
+    "battery_voltage": {
+      "subject": "testbot.telemetry.power.battery.voltage",
+      "unit": "V",
+      "scale": 1,
+      "precision": 2
+    },
+    "network_status": {
+      "subject": "testbot.telemetry.system.network.status",
+      "unit": "",
+      "scale": 1,
+      "precision": 0
+    }
+  },
+  "commands": {
+    "drive.throttle": {
+      "subject": "testbot.command.drive.throttle",
+      "unit": "%",
+      "minimum": -100,
+      "maximum": 100
+    },
+    "drive.steering": {
+      "subject": "testbot.command.drive.steering",
+      "unit": "%",
+      "minimum": -100,
+      "maximum": 100
+    },
+    "camera.pitch": {
+      "subject": "testbot.command.camera.main.pitch",
+      "unit": "°",
+      "minimum": -45,
+      "maximum": 45
+    },
+    "indicator.status.set": {
+      "subject": "testbot.command.indicator.status.set",
+      "unit": ""
+    },
+    "notification.buzzer.pattern": {
+      "subject": "testbot.command.notification.buzzer.pattern",
+      "unit": ""
+    }
+  },
+  "hardware": {
+    "adapters": [
+      {
+        "id": "main-hat",
+        "driver": "adeept-robot-hat-adm133",
+        "model": "ADM133",
+        "validation_status": "planned-unverified",
+        "bindings": {
+          "dc-motor-drive": {
+            "commands": [
+              "drive.throttle",
+              "drive.steering"
+            ]
+          },
+          "pca9685-camera-servo": {
+            "commands": [
+              "camera.pitch"
+            ]
+          },
+          "adc-battery": {
+            "telemetry": [
+              "battery_percentage",
+              "battery_voltage"
+            ]
+          },
+          "ws2812-status": {
+            "commands": [
+              "indicator.status.set"
+            ]
+          },
+          "buzzer": {
+            "commands": [
+              "notification.buzzer.pattern"
+            ]
+          }
+        },
+        "actuators": {
+          "camera-tilt": {
+            "port_alias": "servo-00",
+            "pca9685_channel": 0,
+            "command": "camera.pitch"
+          }
+        },
+        "channel_reservations": {
+          "M1": {
+            "pca9685_channels": [
+              15,
+              14
+            ],
+            "function": "H-bridge motor drive"
+          },
+          "M2": {
+            "pca9685_channels": [
+              12,
+              13
+            ],
+            "function": "H-bridge motor drive"
+          },
+          "M3": {
+            "pca9685_channels": [
+              11,
+              10
+            ],
+            "function": "H-bridge motor drive; not fitted"
+          },
+          "M4": {
+            "pca9685_channels": [
+              8,
+              9
+            ],
+            "function": "H-bridge motor drive; not fitted"
+          },
+          "servos_available": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      }
+    ]
+  },
+  "cameras": {
+    "default": "main",
+    "devices": [
+      {
+        "id": "main",
+        "label": "Pi Camera",
+        "enabled": true,
+        "stream_path": "/cam1",
+        "source": "raspberry-pi-csi"
+      }
+    ]
+  },
+  "status_indicators": {
+    "device": "onboard-ws2812",
+    "led_count": 2,
+    "shared_semantics": true,
+    "colours": {
+      "red": "alarm or unsafe state",
+      "amber": "attention or degraded state",
+      "green": "ready and healthy",
+      "blue": "connected or active information state"
+    },
+    "cockpit_reflection": "The Cockpit shall display the same semantic state and colour as the robot LEDs."
+  },
+  "buzzer": {
+    "command": "notification.buzzer.pattern",
+    "horn": {
+      "label": "Horn",
+      "icon": "fa-bullhorn",
+      "pattern": "horn",
+      "duration_ms": 250
+    }
+  },
+  "input_mappings": {
+    "throttle": {
+      "source": "gamepad.axis.1",
+      "command": "drive.throttle",
+      "dead_zone": 0.12,
+      "invert": true
+    },
+    "steering": {
+      "source": "gamepad.axis.0",
+      "command": "drive.steering",
+      "dead_zone": 0.12
+    },
+    "camera_pitch": {
+      "source": "gamepad.axis.3",
+      "command": "camera.pitch",
+      "dead_zone": 0.12
+    },
+    "horn": {
+      "source": "gamepad.button.2",
+      "command": "notification.buzzer.pattern",
+      "value": "horn"
+    }
+  },
+  "optional_hardware": {
+    "mpu6050": {
+      "enabled": false,
+      "validation_status": "planned-unverified",
+      "telemetry": [
+        "attitude.roll",
+        "attitude.pitch"
+      ]
+    },
+    "ultrasonic": {
+      "enabled": false,
+      "validation_status": "planned-unverified",
+      "telemetry": [
+        "distance_front"
+      ]
+    },
+    "digital_switches": {
+      "enabled": false,
+      "validation_status": "planned-unverified"
+    },
+    "line_tracking": {
+      "enabled": false,
+      "validation_status": "planned-unverified",
+      "telemetry": [
+        "line_left",
+        "line_centre",
+        "line_right"
+      ]
+    },
+    "light_tracking": {
+      "enabled": false,
+      "validation_status": "planned-unverified",
+      "telemetry": [
+        "light_tracking_level"
+      ]
+    }
+  },
+  "hardware_inventory": {
+    "computer": "Raspberry Pi",
+    "camera": "Pi Camera",
+    "controller": "Adeept Robot HAT for Raspberry Pi",
+    "drive": {
+      "motors": "2 x yellow DC motors, 3-12 VDC",
+      "ports": [
+        "M1",
+        "M2"
+      ],
+      "arrangement": "differential steering"
+    },
+    "battery": {
+      "description": "2 x 18650 LiPo batteries",
+      "arrangement": "2S1P",
+      "nominal_voltage": "7.4 V",
+      "charging": "Onboard Type-C charger"
+    },
+    "camera_servo": {
+      "description": "9g servo",
+      "function": "camera tilt",
+      "pca9685_channel": 0,
+      "validation_status": "bench-tested"
+    },
+    "onboard_io": [
+      "2 x WS2812 LEDs",
+      "buzzer"
+    ],
+    "hat_revision": "Adeept Robot HAT V3.1",
+    "hat_capabilities": {
+      "dc_motor_ports": 4,
+      "servo_channels": 16,
+      "adc_inputs": 6,
+      "ws2812_onboard_leds": 2,
+      "ws2812_extension": true,
+      "rgb_led_ports": 2,
+      "mpu6050_port": true,
+      "uart_port": true,
+      "i2c_port": true,
+      "ultrasonic_port": true,
+      "line_tracking_port": true,
+      "light_tracking_port": true,
+      "ir_receiver": true,
+      "passive_buzzer": true
+    },
+    "chassis_reference": {
+      "type": "provisional mechanical reference",
+      "model": "Dual Drive Robot Base",
+      "url": "https://www.printables.com/model/187907-dual-drive-robot-base",
+      "use": "overall dual-drive layout inspiration",
+      "status": "reference-only",
+      "mounting_points": "TBD from Testbot CAD"
+    }
+  },
+  "validation": {
+    "source": "https://philipmcgaw.com/adeept-robot-hat-for-raspberry-pi/",
+    "overall_status": "planned-unverified",
+    "functions": {
+      "camera_servo": {
+        "status": "bench-tested",
+        "evidence": "9g servo operated on PCA9685 channel 0; channel 0 is outside the M1-M4 H-bridge reservations",
+        "source": "PhilipMcGaw.com article, 30 November 2025"
+      },
+      "dc_motor_drive": {
+        "status": "planned-unverified",
+        "channel_mapping": {
+          "M1": [
+            15,
+            14
+          ],
+          "M2": [
+            12,
+            13
+          ]
+        }
+      },
+      "battery_monitor": {
+        "status": "planned-unverified"
+      },
+      "ws2812_status": {
+        "status": "planned-unverified"
+      },
+      "buzzer": {
+        "status": "planned-unverified"
+      },
+      "optional_modules": {
+        "status": "planned-unverified"
+      }
+    }
+  }
+}

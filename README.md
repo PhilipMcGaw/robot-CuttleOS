@@ -170,7 +170,7 @@ This installs all system packages, Python environments, services, and configurat
 
 ### Robot Profile Switching
 
-Switch between different robot configurations (ROV, K9, PiWars):
+Switch between different robot configurations (ROV, K9, PiWars, Testbot):
 
 ```bash
 # Switch to ROV profile
@@ -181,15 +181,19 @@ sudo ./scripts/switch_robot_profile.sh k9
 
 # Switch to PiWars profile
 sudo ./scripts/switch_robot_profile.sh piwars
+
+# Switch to the small-robot bench-test profile
+sudo ./scripts/switch_robot_profile.sh testbot
 ```
 
 Switching to K9 automatically checks and installs `espeak-ng` and `sox`; shared `alsa-utils` support is installed for all robot profiles.
 
-Available profiles: `rov`, `k9`, `piwars`
+Available profiles: `rov`, `k9`, `piwars`, `testbot`
 
 ### Robot Types
 - **ROV**: Underwater robot with depth, heading, drive, camera, lights, and planned stereo/media capabilities
 - **K9**: Ground robot with drive, camera, head, lights, and planned stereo/audio/media capabilities
+- **Testbot**: Small-robot profile for safe RPi bench testing, with drive and basic power/network telemetry
 
 ## Technology Stack
 - **Backend**: Python, FastAPI, NATS

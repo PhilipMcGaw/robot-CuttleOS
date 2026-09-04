@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # Robot Profile Switcher
-# Switch between ROV, K9, and PiWars robot configurations
+# Switch between ROV, K9, PiWars, and Testbot robot configurations
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROFILES_DIR="$PROJECT_ROOT/configs/profiles"
@@ -46,6 +46,7 @@ if [[ $# -eq 0 ]]; then
   echo "Example: $0 rov"
   echo "         $0 k9"
   echo "         $0 piwars"
+  echo "         $0 testbot"
   exit 1
 fi
 
@@ -53,7 +54,7 @@ TARGET_PROFILE="$1"
 TARGET_PROFILE_FILE="$PROFILES_DIR/${TARGET_PROFILE}.json"
 
 # Check if target profile exists
-[[ -f "$TARGET_PROFILE_FILE" ]] || fail "Profile not found: $TARGET_PROFILE. Available profiles: rov, k9, piwars"
+[[ -f "$TARGET_PROFILE_FILE" ]] || fail "Profile not found: $TARGET_PROFILE. Available profiles: rov, k9, piwars, testbot"
 
 # Validate JSON
 python3 -m json.tool "$TARGET_PROFILE_FILE" >/dev/null || fail "Profile file is not valid JSON: $TARGET_PROFILE_FILE"

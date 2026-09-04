@@ -3,7 +3,7 @@
 ## Status and scope
 
 The Adeept Robot HAT ADM133 is planned as a shared Control hardware adapter
-for K9 and PiWars. This document defines the logical NATS contract before the
+for K9 and PiWars. The board inventory and annotated photographs are cross-checked against [Philip McGaw's ADM133 V3.1 reference](https://philipmcgaw.com/adeept-robot-hat-for-raspberry-pi/). That reference records the fitted board as providing 2S1P 18650 battery support, four DC motor ports, 16 PCA9685 servo channels, six ADC inputs, two onboard WS2812 LEDs, and the expansion interfaces listed below. This document defines the logical NATS contract before the
 driver is implemented. It is not evidence of a working board, wiring map, or
 safe motor operation.
 
@@ -67,13 +67,14 @@ validation and entered an explicitly safe enabled state.
 
 ## Logical topic map
 
-`<namespace>` is the active profile namespace, for example `k9` or `piwars`.
+`<namespace>` is the active profile namespace, for example `k9`, `piwars`, or `testbot`.
 The exact logical keys that are enabled for a robot are profile configuration;
 unneeded capabilities are not exposed merely because the HAT has a connector.
 
 | ADM133 function | Profile binding and resolved topic | Value contract and Control responsibility |
 | --- | --- | --- |
 | Up to four DC-motor drivers | `drive.throttle`, `drive.steering` → `<namespace>.command.drive.throttle`, `<namespace>.command.drive.steering` | `-100–100 %` logical demands. Control performs drive mixing, direction, ramping, channel assignment, neutral, timeout, and emergency-stop behaviour. |
+| PCA9685 channel allocation | The ADM133 V3.1 motor example reserves channels 15/14 for M1, 12/13 for M2, 11/10 for M3, and 8/9 for M4. These channels must not also be assigned to independent servos. When all four motor ports are used, channels 0-7 remain for other PCA9685 outputs, subject to board-level confirmation. | The channel map is taken from Adeept's V3 example code and must be treated as a profile resource reservation. |
 | PCA9685 servo outputs | Robot-specific actuator commands, such as K9 `head.pan`, `head.tilt` → `<namespace>.command.animatronics.head.pan`, `<namespace>.command.animatronics.head.tilt` | Degrees relative to the configured logical home. Each selected channel uses a stable physical alias, `servo-00` through `servo-15`, plus a robot-purpose alias such as `head-pan`. Control applies servo calibration and physical limits, and may publish an explicitly documented commanded-position telemetry value. |
 | ADC battery measurement | `battery_voltage`, `battery_percentage` → `<namespace>.telemetry.power.battery.voltage`, `<namespace>.telemetry.power.battery.percentage` | Voltage is `V`; state of charge is bounded `0–100 %`. The current V3 sample uses ADS7830 channel 0; Control owns ADC scaling, calibration, filtering, clamping, and battery safety thresholds. |
 | Other ADC inputs | A configured logical sensor, for example `analogue.<id>.voltage` → `<namespace>.telemetry.sensors.analogue.<id>.voltage` | `V` after Control calibration. Raw ADC counts are diagnostic-only and, if published, use `count` with a documented ADC resolution. |
@@ -93,6 +94,11 @@ identify the active profile and report safe initialisation, missing hardware,
 and communication/configuration faults without exposing a direct actuation
 path.
 
+## Related comparison reference
+
+Philip McGaw’s [Adeept versus Navigation Raspberry Pi HAT comparison](https://philipmcgaw.com/adeept-vs-navigation-raspberry-pi-hats/) is a useful secondary reference when considering Blue Robotics Navigation Hat or BlueOS compatibility. It compares the two boards across UART, I²C, NeoPixel and status LED outputs, RGB and line-tracking interfaces, leak and ultrasonic inputs, ADC devices, IMU and magnetometer options, and PWM/PCA9685 resources.
+
+The comparison is an integration-planning note, not a replacement for the ADM133 V3.1 schematic or a bench measurement. Its pin and device mappings must be checked against the fitted board revision before they are copied into a CuttleOS profile or a BlueOS configuration. In particular, shared GPIO, I²C, PWM, motor-driver, and status-indicator resources must be represented as explicit reservations so that two functions cannot be enabled accidentally at the same time.
 ## Initial profile bindings
 
 The current shared profiles validate only the functions selected for their
@@ -101,9 +107,13 @@ robots:
 - K9: DC drive, head pan/tilt servos, and battery measurement.
 - PiWars: DC drive, battery measurement, all three line-sensor channels, and
   front ultrasonic range.
+- Testbot: DC drive, battery measurement, a camera-tilt servo, onboard WS2812
+  status indication, and a buzzer horn. These bindings remain planned and
+  unbench-tested; the servo channel and board-level LED details still require
+  confirmation.
 
 These bindings are configuration contracts, not an ADM133 driver
-implementation. No channel allocations have been recorded and no electrical,
+implementation. Testbot's camera servo has been operated on PCA9685 channel 0, as recorded in the linked reference. Adeept's motor example reserves PCA9685 channels 15/14 for M1, 12/13 for M2, 11/10 for M3, and 8/9 for M4; Testbot therefore reserves channels 12-15 for its fitted M1/M2 H-bridges and keeps channel 0 for the camera servo. The remaining Testbot functions are not yet bench-tested. No other channel allocations have been recorded and no electrical,
 motor, servo, sensor, or power behaviour is bench-tested.
 
 ## Required bring-up evidence

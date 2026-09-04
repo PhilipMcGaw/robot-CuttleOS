@@ -128,8 +128,63 @@ robots/
 - [ ] Complete clean-image bench validation on a Raspberry Pi OS Trixie Lite
   target, including failure recovery and service startup.
 
+## Testbot weekend bench validation
+
+Work through these checks on the physical Testbot with the wheels raised or propulsion disconnected until motor behaviour is understood. Record the date, RPi model, OS image, profile revision, hardware connected, result, and any evidence in the Testbot build record.
+
+### Deployment and safe startup
+
+- [ ] Write the current RPi image and apply the macOS first-boot helper.
+- [ ] Confirm the `testbot` profile is installed and selected.
+- [ ] Confirm CuttleOS services start cleanly and record their status.
+- [ ] Confirm NATS connectivity and the `testbot` namespace.
+- [ ] Confirm the emergency-stop and command-timeout behaviour before enabling propulsion.
+
+### Basic hardware bring-up
+
+- [ ] Confirm the Pi Camera is detected and produces a stable image.
+- [ ] Confirm the camera servo operates on PCA9685 channel 0 and record safe tilt limits.
+- [ ] Confirm M1 and M2 motor identity, polarity, and differential steering with propulsion isolated.
+- [ ] Confirm battery voltage telemetry and record the battery-monitor calibration.
+- [ ] Confirm the two onboard WS2812 LEDs can be controlled and agree the red, amber, green, and blue status meanings.
+- [ ] Confirm the onboard buzzer produces a short, duration-limited horn pattern.
+
+### USB headset audio validation
+
+- [ ] Connect the USB headset and confirm its microphone and speakers appear in ALSA device listings.
+- [ ] Record a short local microphone sample and check its level and clarity.
+- [ ] Play a known audio file through the headset speakers and check its level and clarity.
+- [ ] Confirm audio device selection survives a service restart and RPi reboot.
+- [ ] Record headset disconnect and reconnect behaviour.
+- [ ] Keep the headset as a bench-test device; do not treat it as the final Testbot audio hardware.
+
+### K9 audio path validation without a moving platform
+
+- [ ] Validate a K9 soundboard clip locally through the USB headset.
+- [ ] Validate the profile-selected sound command over NATS.
+- [ ] Validate `k9-say.sh` with its supported speech presets: `normal`, `calm`, `alert`, and `alarm`.
+- [ ] Record playback failures, missing devices, and invalid sound or speech requests.
+- [ ] Confirm that soundboard validation does not require motor operation or video synchronisation.
+
+### Optional Testbot hardware
+
+- [ ] Fit and identify the MPU6050 before enabling its profile capability.
+- [ ] Add and test the ultrasonic sensor.
+- [ ] Add and test digital switches.
+- [ ] Add and test the line-tracking module.
+- [ ] Add and test the light-tracing module.
 ## Feature Development
 
+### Shared Adeept ADM133 Control driver
+
+- [ ] Define the hardware-independent Control adapter interface and mock behaviour
+- [ ] Implement ADM133 discovery, I²C health checks, and safe initialisation
+- [ ] Implement profile-driven buzzer and WS2812 status output
+- [ ] Implement battery ADC telemetry and calibration
+- [ ] Implement PCA9685 servo output while enforcing H-bridge channel reservations
+- [ ] Implement safe single-motor bring-up, command timeout, and M1/M2 differential drive
+- [ ] Add optional ADM133 sensor drivers one at a time with independent validation evidence
+- [ ] Reuse the validated adapter profile for K9, then assess ROV suitability separately
 ### K9 Soundboard and Generated Speech
 
 - [ ] Add a Control-side K9 generated-speech command backed by `assets/robots/k9/tools/k9-say.sh`
@@ -137,6 +192,14 @@ robots/
 - [ ] Allow generated speech to fall back to, or replace, pre-recorded soundboard clips where appropriate
 - [ ] Add playback failure reporting and Raspberry Pi audio-device validation
 
+### Testbot bring-up and operator controls
+
+- [ ] Bench-test the Testbot ADM133 motor, battery, camera-servo, WS2812, and buzzer bindings with propulsion safely supported
+- [ ] Confirm the camera-servo PCA9685 channel, motor polarity, battery calibration, WS2812 LED count, and buzzer behaviour
+- [ ] Produce and record Testbot CAD, including the RPi, ADM133, battery, motor, camera, and camera-servo mounting points
+- [ ] Add profile-driven Cockpit status-indicator rendering using the shared red/amber/green/blue semantic states
+- [ ] Add a profile-driven Horn control with a `fa-bullhorn` button and a duration-limited buzzer pattern
+- [ ] Add optional Testbot profiles for the MPU6050, ultrasonic sensor, digital switches, line tracking, and light tracing after each module is fitted and tested
 ### USB Microphone and Live Audio Streaming
 
 - [ ] Add profile capabilities such as `microphone` and `audio_stream`, initially for K9 and optionally for ROV

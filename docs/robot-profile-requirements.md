@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Cockpit and Controller shall use one common, versioned framework across the ROV, K9, PiWars, and future robot projects. Robot-specific behaviour shall be expressed through a validated profile and Controller configuration rather than duplicated application code.
+The Cockpit and Controller shall use one common, versioned framework across the ROV, K9, PiWars, Testbot, and future robot projects. Robot-specific behaviour shall be expressed through a validated profile and Controller configuration rather than duplicated application code.
 
 ## Deployment model
 
@@ -80,7 +80,7 @@ Camera sources shall pass through an extensible processing pipeline before reach
 
 ## Namespace and control boundary
 
-Every robot shall have a distinct namespace, such as `rov`, `k9`, or `piwars`. Command and telemetry subjects shall be distinct and shall be defined by the profile. Profile validation shall reject duplicate or ambiguous mappings.
+Every robot shall have a distinct namespace, such as `rov`, `k9`, `piwars`, or `testbot`. Command and telemetry subjects shall be distinct and shall be defined by the profile. Profile validation shall reject duplicate or ambiguous mappings.
 
 The framework's profile-defined NATS subjects are dot-separated `<robot-namespace>.command.<function>` and `<robot-namespace>.telemetry.<function>`. Service-owned status subjects use `<robot-namespace>.<service>.status.<function>`. Structured commands and telemetry use JSON payloads; NATS transport payloads remain arbitrary bytes for explicitly documented binary subjects.
 
@@ -114,7 +114,7 @@ During development, reproducible test credentials may be committed to Git to mak
 
 ## Example profiles
 
-The framework shall provide functional ROV, K9, and PiWars profiles. K9 shall include its optional soundboard capability, a `sound.play` command on `<namespace>.command.sound.play`, and a soundboard list of stable IDs, operator labels, and Control-resolved file names. Cockpit shall expose this list only through a K9/profile-enabled drawer and shall publish an authenticated selected ID; it shall not control speaker hardware or serve the sound files. K9 and PiWars shall declare their shared ADM133 adapter and bind its currently selected board functions to profile topic keys. PiWars shall support configurable competition-oriented controls and sensors. Where physical hardware is not yet available, the examples shall run against mock or simulated Controller behaviour and shall label unverified or planned capabilities explicitly.
+The framework shall provide functional ROV, K9, and PiWars profiles, plus a conservative Testbot profile for small-robot bench testing. K9 shall include its optional soundboard capability, a `sound.play` command on `<namespace>.command.sound.play`, and a soundboard list of stable IDs, operator labels, and Control-resolved file names. Cockpit shall expose this list only through a K9/profile-enabled drawer and shall publish an authenticated selected ID; it shall not control speaker hardware or serve the sound files. K9 and PiWars shall declare their shared ADM133 adapter and bind its currently selected board functions to profile topic keys. PiWars shall support configurable competition-oriented controls and sensors. Where physical hardware is not yet available, the examples shall run against mock or simulated Controller behaviour and shall label unverified or planned capabilities explicitly.
 
 ## Media recording and provenance
 

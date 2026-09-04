@@ -99,6 +99,7 @@ The initial robot profiles are:
 - ROV;
 - K9;
 - PiWars.
+- Testbot, a conservative small-robot bench-test profile.
 
 Cockpit is intended to emulate many of the useful operator-interface and
 customisation capabilities demonstrated by Blue Robotics Cockpit, while using
@@ -282,7 +283,7 @@ Database crash ≠ control loss.
 
 Robot-specific behavior is defined through validated JSON profiles:
 
-- Location: `configs/profiles/{rov|k9|piwars}.json`
+- Location: `configs/profiles/{rov|k9|piwars|testbot}.json`
 - Defines NATS namespace, telemetry mappings, command mappings, gamepad config, camera streams, enabled features
 - Allows same Cockpit/Control/Datalogger code to run on different robot types without changes
 - Changes require corresponding documentation and test updates
