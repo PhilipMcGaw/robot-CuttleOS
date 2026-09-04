@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-ROBOTS_DIR="${ROBOTS_DIR:-$HOME/robots}"
-ROBOT_USER="${ROBOT_USER:-$(whoami)}"
 GITHUB_USER="${GITHUB_USER:-PhilipMcGaw}"
 DEPLOYMENT_MODE="${DEPLOYMENT_MODE:-https}"
 
@@ -37,6 +35,13 @@ fi
 if [[ "$(uname -s)" != "Linux" ]]; then
   fail "This script is for Linux/Raspberry Pi only. Detected: $(uname -s)"
 fi
+
+ROBOT_USER="${ROBOT_USER:-${SUDO_USER:-}}"
+[[ -n "$ROBOT_USER" && "$ROBOT_USER" != "root" ]] || fail "A normal runtime user is required. Run this script through sudo from the intended robot user account."
+id "$ROBOT_USER" >/dev/null 2>&1 || fail "Runtime user does not exist: $ROBOT_USER"
+ROBOT_GROUP="$(id -gn "$ROBOT_USER")"
+ROBOTS_DIR="${ROBOTS_DIR:-/home/$ROBOT_USER/robots}"
+
 info "System: $(uname -m) $(cat /etc/os-release | grep PRETTY_NAME | cut -d'"' -f2)"
 info "Target directory: $ROBOTS_DIR"
 info "Runtime user: $ROBOT_USER"
@@ -53,6 +58,7 @@ fi
 
 section "CuttleOS Repository"
 mkdir -p "$ROBOTS_DIR"
+chown "$ROBOT_USER:$ROBOT_GROUP" "$ROBOTS_DIR"
 cd "$ROBOTS_DIR"
 
 if [[ -e "$ROBOTS_DIR/robot-CuttleOS" ]]; then
@@ -61,17 +67,18 @@ fi
 
 if [[ "$DEPLOYMENT_MODE" == "ssh" ]]; then
   info "Cloning CuttleOS via SSH (developer mode)."
-  if [[ ! -f "$HOME/.ssh/id_ed25519" ]] && [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
+  if [[ ! -f "/home/$ROBOT_USER/.ssh/id_ed25519" ]] && [[ ! -f "/home/$ROBOT_USER/.ssh/id_rsa" ]]; then
     warn "No SSH key found. Creating one."
-    ssh-keygen -t ed25519 -C "${ROBOT_USER}@robot" -f "$HOME/.ssh/id_ed25519" -N ""
+    install -d -o "$ROBOT_USER" -g "$ROBOT_GROUP" -m 0700 "/home/$ROBOT_USER/.ssh"
+    runuser -u "$ROBOT_USER" -- ssh-keygen -t ed25519 -C "${ROBOT_USER}@robot" -f "/home/$ROBOT_USER/.ssh/id_ed25519" -N ""
     info "SSH key created. Add the public key to GitHub:"
-    cat "$HOME/.ssh/id_ed25519.pub"
+    cat "/home/$ROBOT_USER/.ssh/id_ed25519.pub"
     read -p "Press Enter after adding the key to GitHub..."
   fi
-  git clone "git@github.com:${GITHUB_USER}/robot-CuttleOS.git" robot-CuttleOS || fail "Failed to clone robot-CuttleOS"
+  runuser -u "$ROBOT_USER" -- git clone "git@github.com:${GITHUB_USER}/robot-CuttleOS.git" "$ROBOTS_DIR/robot-CuttleOS" || fail "Failed to clone robot-CuttleOS"
 else
   info "Cloning CuttleOS via HTTPS (read-only mode)."
-  git clone --depth=1 "https://github.com/${GITHUB_USER}/robot-CuttleOS.git" robot-CuttleOS || fail "Failed to clone robot-CuttleOS"
+  runuser -u "$ROBOT_USER" -- git clone --depth=1 "https://github.com/${GITHUB_USER}/robot-CuttleOS.git" "$ROBOTS_DIR/robot-CuttleOS" || fail "Failed to clone robot-CuttleOS"
 fi
 pass "CuttleOS monorepo cloned successfully."
 
@@ -88,6 +95,7 @@ fi
 if [[ ! -f "configs/network.secrets.env" ]]; then
   cp configs/network.secrets.example configs/network.secrets.env
   chmod 600 configs/network.secrets.env
+  chown "$ROBOT_USER:$ROBOT_GROUP" configs/network.secrets.env
   warn "Created configs/network.secrets.env — edit this file with your credentials."
 fi
 
@@ -102,6 +110,7 @@ fi
 
 section "Robot Provisioning"
 export ROBOT_PROFILE="$ROBOT_PROFILE"
+export SUDO_USER="$ROBOT_USER"
 info "Starting Raspberry Pi provisioning."
 info "This will take several minutes and requires internet access."
 bash scripts/0_provision_rpi.sh
