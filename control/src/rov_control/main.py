@@ -228,8 +228,8 @@ def read_analog_channels():
                     battery_empty = 6.0
                     battery_full = 8.28
                     division_ratio = r17 / (r15 + r17)
-                    # TODO: Verify the ADC-to-battery conversion against the fitted divider before
-                    # relying on the published battery voltage and percentage values.
+                    # TODO: Verify the ADC reference voltage and fitted divider before
+                    # treating the calculated battery voltage as validated telemetry.
                     actual_battery_voltage = (raw_analog_value / 65535) * 5 / division_ratio
                     battery_percentage = ((actual_battery_voltage - battery_empty) / (battery_full - battery_empty)) * 100
 
@@ -271,36 +271,33 @@ def write_servo_outputs():
                     logger.warning(f"Demanded angle {demanded_angle} for {name} is out of range (0-180)")
 
 
-def write_hridge_outputs():
+def write_hbridge_outputs():
     with nats_lock:
-        hbridge_left_demand = nats_data.get("output/hbridge/left/demand", None)
-        hbridge_right_demand = nats_data.get("output/hbridge/right/demand", None)
+        hbridge_left_demand = int(nats_data.get("output/hbridge/left/demand", 0))
+        hbridge_right_demand = int(nats_data.get("output/hbridge/right/demand", 0))
 
-        if hbridge_left_demand != 0:
-            # Positive and negative demands select opposite H-bridge input channels.
-            if int(hbridge_left_demand) > 0:
-                pca.channels[12].duty_cycle = 0xFFFF
-                pca.channels[13].duty_cycle = 0x0000
-            elif int(hbridge_left_demand) < 0:
-                pca.channels[12].duty_cycle = 0x0000
-                pca.channels[13].duty_cycle = 0xFFFF
-            else:
-                pca.channels[12].duty_cycle = 0x0000
-                pca.channels[13].duty_cycle = 0x0000
-            logger.debug(f"Set H-Bridge Left to demand {hbridge_left_demand}")
+        # Each H-bridge uses complementary inputs to select direction; zero disables both inputs.
+        if hbridge_left_demand > 0:
+            pca.channels[12].duty_cycle = 0xFFFF
+            pca.channels[13].duty_cycle = 0x0000
+        elif hbridge_left_demand < 0:
+            pca.channels[12].duty_cycle = 0x0000
+            pca.channels[13].duty_cycle = 0xFFFF
+        else:
+            pca.channels[12].duty_cycle = 0x0000
+            pca.channels[13].duty_cycle = 0x0000
+        logger.debug(f"Set H-Bridge Left to demand {hbridge_left_demand}")
 
-        if hbridge_right_demand != 0:
-            # Positive and negative demands select opposite H-bridge input channels.
-            if int(hbridge_right_demand) > 0:
-                pca.channels[14].duty_cycle = 0xFFFF
-                pca.channels[15].duty_cycle = 0x0000
-            elif int(hbridge_right_demand) < 0:
-                pca.channels[14].duty_cycle = 0x0000
-                pca.channels[15].duty_cycle = 0xFFFF
-            else:
-                pca.channels[14].duty_cycle = 0x0000
-                pca.channels[15].duty_cycle = 0x0000
-            logger.debug(f"Set H-Bridge Right to demand {hbridge_right_demand}")
+        if hbridge_right_demand > 0:
+            pca.channels[14].duty_cycle = 0xFFFF
+            pca.channels[15].duty_cycle = 0x0000
+        elif hbridge_right_demand < 0:
+            pca.channels[14].duty_cycle = 0x0000
+            pca.channels[15].duty_cycle = 0xFFFF
+        else:
+            pca.channels[14].duty_cycle = 0x0000
+            pca.channels[15].duty_cycle = 0x0000
+        logger.debug(f"Set H-Bridge Right to demand {hbridge_right_demand}")
 
 
 def set_angle(ID, angle):
@@ -334,7 +331,7 @@ if __name__ == "__main__":
         while True:
             write_servo_outputs()
             read_analog_channels()
-            write_hridge_outputs()
+            write_hbridge_outputs()
 
     except KeyboardInterrupt:
         logger.info("Ctrl + C detected. Setting servos to home position.")
