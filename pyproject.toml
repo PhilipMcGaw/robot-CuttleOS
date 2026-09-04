@@ -2,7 +2,7 @@
 name = "robot-cuttleos"
 version = "0.1.0"
 description = "Robot control system with monorepo architecture for ROV and K9 robots"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = []
 
 [project.optional-dependencies]
