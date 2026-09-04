@@ -16,13 +16,13 @@ CuttleOS is the robot-side software stack for Raspberry Pi-based robots. It prov
 
 ## Robots project
 
-CuttleOS is one part of a related set of projects. Cross-project architecture, engineering rationale, significant decisions, reusable guidance, and the overall roadmap are maintained in [Chartroom](https://chartroom.philipmcgaw.com/).
+CuttleOS is one part of a related set of projects. Cross-project architecture, engineering rationale, significant decisions, reusable guidance, deployment and commissioning procedures, hardware documentation references, operational knowledge, and the overall roadmap are maintained in [Chartroom](https://chartroom.philipmcgaw.com/).
 
 - [Chartroom](https://chartroom.philipmcgaw.com/) — central engineering knowledge base and cross-project documentation.
 - [SquidLink](https://github.com/PhilipMcGaw/robot-SquidLink) — independent ROV software-in-the-loop and hardware-in-the-loop environment using ROS 2, Gazebo, and the same application-facing NATS contracts.
 - [NautiPi](https://github.com/PhilipMcGaw/robot-NautiPi) — physical hardware, electronics, PCB designs, embedded projects, and associated hardware reference material.
 
-The relationship is deliberately straightforward: CuttleOS runs the real robot software, SquidLink provides simulation and integration testing, NautiPi contains the physical hardware and embedded-project material, and Chartroom records the cross-project engineering context. They are separate projects with defined interfaces rather than one shared codebase.
+The relationship is deliberately straightforward: CuttleOS runs the real robot software, SquidLink provides simulation and integration testing, NautiPi contains the physical hardware and embedded-project material, and Chartroom records the cross-project engineering context and operational knowledge. They are separate projects with defined interfaces rather than one shared codebase.
 
 ## Documentation standard
 
@@ -55,7 +55,7 @@ robot-CuttleOS/
 │   └── profiles/      # Cockpit profiles
 ├── tests/             # Test suites
 ├── scripts/           # Build and deployment scripts
-├── docs/              # Documentation
+├── docs/              # Implementation-specific documentation
 ├── data/              # Runtime data (CSV logs, etc.)
 └── media/             # Media files (stills, videos)
 ```
@@ -109,9 +109,15 @@ TypeScript frontend source is under `frontend/src/`, with the npm package and to
 
 ## Getting Started
 
-### Quick Start (One-Click Setup)
+### Robot deployment
 
-For complete robot deployment on a Raspberry Pi, follow [the deployment guide](docs/deployment.md). The bootstrap script requires root privileges:
+For the complete project-level procedure for deploying and commissioning a robot, including Raspberry Pi Imager, first-boot provisioning, deployment readiness, and bench validation, follow the [Raspberry Pi deployment procedure in Chartroom](https://chartroom.philipmcgaw.com/development/raspberry-pi-deployment/).
+
+CuttleOS contains the implementation used by that procedure. Its provisioning scripts are the source of truth for CuttleOS-specific package installation, configuration, service units, and first-boot behaviour.
+
+### CuttleOS implementation provisioning
+
+For implementation-level provisioning details, see [`docs/deployment.md`](docs/deployment.md). The bootstrap script can also retrieve and provision CuttleOS on an existing Linux system:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/PhilipMcGaw/robot-CuttleOS/main/scripts/bootstrap_robot.sh | sudo bash
@@ -123,7 +129,7 @@ Set options in the environment before invoking the script, for example:
 sudo ROBOT_PROFILE=k9 ROBOTS_DIR=/home/philip/robots bash scripts/bootstrap_robot.sh
 ```
 
-See `ONE-LINE-SETUP.txt` for complete one-liner reference and `QUICKSTART.txt` for detailed setup instructions.
+The commands in this section describe the CuttleOS implementation. They are not the complete robot deployment procedure.
 
 ### Manual Setup
 
@@ -140,18 +146,16 @@ For local development or manual deployment:
 ./scripts/2_start_app.sh
 ```
 
-### Raspberry Pi Deployment
+### Raspberry Pi Provisioning
 
-For manual Raspberry Pi provisioning:
+For implementation-level Raspberry Pi provisioning:
 
 ```bash
 # Run the provisioning script (requires sudo)
 sudo ./scripts/0_provision_rpi.sh
 ```
 
-This installs all system packages, Python environments, services, and configuration.
-
-For the project-level deployment workflow, including Raspberry Pi Imager, first-boot provisioning, cloud-init, and the deployment authority boundary, see the [Raspberry Pi deployment documentation in Chartroom](https://chartroom.philipmcgaw.com/development/raspberry-pi-deployment/).
+This installs the CuttleOS system packages, Python environments, services, and configuration. Use the [Chartroom deployment procedure](https://chartroom.philipmcgaw.com/development/raspberry-pi-deployment/) for the complete deployment and commissioning sequence.
 
 ### Robot Profile Switching
 
@@ -189,9 +193,9 @@ Available profiles: `rov`, `k9`, `piwars`, `testbot`
 
 ## Documentation
 
-This repository contains implementation-specific documentation for CuttleOS and its services. For cross-project architecture, engineering decisions, reusable guidance, and the overall roadmap, see [Chartroom](https://chartroom.philipmcgaw.com/).
+This repository contains implementation-specific documentation for CuttleOS and its services. For cross-project architecture, engineering decisions, deployment and commissioning procedures, hardware documentation references, reusable guidance, operational knowledge, and the overall roadmap, see [Chartroom](https://chartroom.philipmcgaw.com/).
 
-See `docs/` for detailed documentation on development, deployment, and testing.
+See `docs/` for detailed implementation documentation.
 See `MASTER_CONTEXT.md` for architectural decisions and service boundaries.
 See `ROADMAP.md` for planned architectural improvements and feature development.
 See `docs/status.md` for implementation and validation status.
