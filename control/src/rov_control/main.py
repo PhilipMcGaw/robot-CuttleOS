@@ -248,6 +248,14 @@ def nats_thread():
         nats_loop.close()
 
 
+def set_safe_outputs() -> None:
+    """Force all actuators to their safe physical state."""
+    for data in servo_channels.values():
+        set_angle(int(data.number), int(data.home_angle))
+    for channel in range(12, 16):
+        pca.channels[channel].duty_cycle = 0x0000
+
+
 def enter_nats_safe_state() -> None:
     if nats_fault.is_set():
         return
@@ -256,12 +264,7 @@ def enter_nats_safe_state() -> None:
     logger.error("NATS connection has exceeded %.0f ms; forcing robot to safe state.", NATS_LOSS_TIMEOUT_MS)
     with nats_lock:
         nats_data.clear()
-    for data in servo_channels.values():
-        set_angle(int(data.number), int(data.home_angle))
-    pca.channels[12].duty_cycle = 0x0000
-    pca.channels[13].duty_cycle = 0x0000
-    pca.channels[14].duty_cycle = 0x0000
-    pca.channels[15].duty_cycle = 0x0000
+    set_safe_outputs()
 
 
 def check_nats_safety() -> None:
@@ -413,6 +416,40 @@ def initialise_hardware() -> None:
     publish_nats("output/hbridge/right/demand", 0)
 
 
+def rearm() -> bool:
+    """Re-arm Control after a latched NATS fault using fresh hardware initialisation."""
+    if get_control_state() != ControlState.NATS_FAULT or not nats_fault.is_set():
+        logger.warning("Re-arm rejected: Control is not in the latched NATS fault state.")
+        return False
+
+    if not nats_ready.is_set() or not nats_connected.is_set():
+        logger.warning("Re-arm rejected: NATS is not available.")
+        return False
+
+    set_control_state(ControlState.INITIALISING)
+    with nats_lock:
+        nats_data.clear()
+
+    try:
+        initialise_hardware()
+    except Exception:
+        logger.exception("Re-arm failed during hardware initialisation; remaining in NATS fault state.")
+        set_safe_outputs()
+        set_control_state(ControlState.NATS_FAULT)
+        return False
+
+    if not nats_ready.is_set() or not nats_connected.is_set():
+        logger.error("Re-arm failed: NATS connection was lost during hardware initialisation.")
+        set_safe_outputs()
+        set_control_state(ControlState.NATS_FAULT)
+        return False
+
+    nats_fault.clear()
+    set_control_state(ControlState.ACTIVE)
+    logger.info("Control re-arm completed successfully; fresh hardware initialisation is complete.")
+    return True
+
+
 def setup() -> None:
     set_control_state(ControlState.INITIALISING)
     threading.Thread(target=nats_thread, name="nats-client", daemon=True).start()
@@ -429,16 +466,13 @@ if __name__ == "__main__":
         setup()
         while True:
             check_nats_safety()
-            write_servo_outputs()
             read_analog_channels()
+            write_servo_outputs()
             write_hbridge_outputs()
-
+            time.sleep(0.01)
     except KeyboardInterrupt:
-        logger.info("Ctrl + C detected. Setting servos to home position.")
-        for data in servo_channels.values():
-            set_angle(int(data.number), int(data.home_angle))
-        pca.deinit()  # Release PCA9685 resources
-        if nats_client is not None and nats_loop is not None:
-            future = asyncio.run_coroutine_threadsafe(nats_client.drain(), nats_loop)
-            future.result(timeout=2)
-            nats_loop.call_soon_threadsafe(nats_loop.stop)
+        logger.info("Stopping Control")
+        set_safe_outputs()
+        pca.deinit()
+        if nats_loop is not None and nats_client is not None:
+            asyncio.run_coroutine_threadsafe(nats_client.drain(), nats_loop).result(timeout=2)
