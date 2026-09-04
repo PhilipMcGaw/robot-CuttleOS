@@ -215,6 +215,7 @@ Safety and control additions from ArduSub should be implemented in this order:
   rollback behaviour.
 - [ ] Define stable, beta, and development deployment channels for CuttleOS
   releases and robot profiles.
+
 ## Feature Development
 
 ### Shared Adeept ADM133 Control driver
@@ -227,6 +228,7 @@ Safety and control additions from ArduSub should be implemented in this order:
 - [ ] Implement safe single-motor bring-up, command timeout, and M1/M2 differential drive
 - [ ] Add optional ADM133 sensor drivers one at a time with independent validation evidence
 - [ ] Reuse the validated adapter profile for K9, then assess ROV suitability separately
+
 ### K9 Soundboard and Generated Speech
 
 - [ ] Add a Control-side K9 generated-speech command backed by `assets/robots/k9/tools/k9-say.sh`
@@ -242,6 +244,7 @@ Safety and control additions from ArduSub should be implemented in this order:
 - [ ] Add profile-driven Cockpit status-indicator rendering using the shared red/amber/green/blue semantic states
 - [ ] Add a profile-driven Horn control with a `fa-bullhorn` button and a duration-limited buzzer pattern
 - [ ] Add optional Testbot profiles for the MPU6050, ultrasonic sensor, digital switches, line tracking, and light tracing after each module is fitted and tested
+
 ### USB Microphone and Live Audio Streaming
 
 - [ ] Add profile capabilities such as `microphone` and `audio_stream`, initially for K9 and optionally for ROV
@@ -353,4 +356,14 @@ Stereo video is a common CuttleOS capability for robots such as K9 and ROV, rath
 This roadmap depends on:
 - Completion of current status items (see `docs/status.md`)
 - Stable robot profile implementation
-- Hardware...
+- Hardware interface validation
+- Team consensus on architectural changes
+- Validation of the chosen camera and encoding hardware on target Raspberry Pi hardware
+- Sufficient network performance for the intended remote-driving use case
+
+## References
+
+- ChatGPT architectural recommendations (archived in "GPT output.pdf")
+- Current project status: `docs/status.md`
+- Development guidelines: `docs/development.md`
+- Configuration policy: `docs/robot-profile-requirements.md`
