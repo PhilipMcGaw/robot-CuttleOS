@@ -51,7 +51,7 @@ datalogger/                 # Datalogger service (telemetry)
 The following files were updated to reference the new path structure:
 
 #### Scripts
-- `scripts/0_provision_raspberry_pi.sh` — updated CONTROL_ROOT and DATALOGGER_ROOT defaults
+- `scripts/0_provision_rpi.sh` — updated CONTROL_ROOT and DATALOGGER_ROOT defaults
 - `scripts/1_install_dependencies.sh` — updated COCKPIT_REQUIREMENTS path
 - `scripts/2_start_app.sh` — updated COCKPIT_DIR path
 - `scripts/2_start_app.bat` — updated COCKPIT_DIR path (Windows)
@@ -119,13 +119,13 @@ The provisioning script automatically finds and deploys all three services:
 
 ```bash
 cd ~/robots/robot-CuttleOS
-sudo bash scripts/0_provision_raspberry_pi.sh
+sudo bash scripts/0_provision_rpi.sh
 ```
 
 Environment variables can override service locations if needed:
 ```bash
 CONTROL_ROOT=/path/to/control DATALOGGER_ROOT=/path/to/datalogger \
-  sudo bash scripts/0_provision_raspberry_pi.sh
+  sudo bash scripts/0_provision_rpi.sh
 ```
 
 ### Systemd Units

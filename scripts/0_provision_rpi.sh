@@ -11,10 +11,28 @@ NETWORK_CONFIG_FILE="${NETWORK_CONFIG:-$PROJECT_ROOT/configs/network.env}"
 NETWORK_SECRETS_FILE="${NETWORK_SECRETS:-$PROJECT_ROOT/configs/network.secrets.env}"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 
-info() { echo "[INFO] $*"; }
-pass() { echo "[PASS] $*"; }
-warn() { echo "[WARN] $*"; }
-fail() { echo "[FAIL] $*" >&2; exit 1; }
+info() { printf '[INFO] %s\n' "$*"; }
+pass() { printf '[PASS] %s\n' "$*"; }
+warn() { printf '[WARN] %s\n' "$*"; }
+fail() { printf '[FAIL] %s\n' "$*" >&2; exit 1; }
+readonly FULL_WIDTH_LINE='======================================================================'
+readonly SECTION_LINE='----------------------------------------------------------------------'
+
+banner() {
+  printf '\n%s\n  %s\n%s\n\n' "$FULL_WIDTH_LINE" "$*" "$FULL_WIDTH_LINE"
+}
+
+section() {
+  printf '\n%s\n  %s\n%s\n\n' "$SECTION_LINE" "$*" "$SECTION_LINE"
+}
+
+on_unexpected_error() {
+  local exit_code=$?
+  printf '[FAIL] Unexpected command failure at line %s: %s (exit %s).\n' "$1" "$BASH_COMMAND" "$exit_code" >&2
+  exit "$exit_code"
+}
+
+trap 'on_unexpected_error "$LINENO"' ERR
 escape_sed_replacement() { printf '%s' "$1" | sed 's/[\\&|]/\\&/g'; }
 
 render_template() {
@@ -239,16 +257,18 @@ install_nats_configuration() {
   pass "NATS is configured with authentication; remote client access=$NATS_REMOTE_ACCESS."
 }
 
-echo "[INFO] ROV Cockpit Raspberry Pi provisioning"
-echo "[INFO] Project version: unversioned; see MASTER_CONTEXT.md"
-echo "[INFO] Project directory: $PROJECT_ROOT"
-echo "[INFO] Runtime: Debian system packages plus project-local Python environments"
-echo "[INFO] Operating mode: initial Raspberry Pi platform and Cockpit deployment"
-echo "[INFO] Components: Python, Node.js/npm, Nginx, Motion, NATS Server, Cockpit, Control, Datalogger, shared profile and networking"
-echo "[INFO] Privileged actions: apt package installation, systemd service installation and service enablement"
+banner 'CuttleOS RPi Provisioning'
+section 'Provisioning overview'
+info 'CuttleOS RPi provisioning for the selected robot profile'
+info "Project version: unversioned; see MASTER_CONTEXT.md"
+info "Project directory: $PROJECT_ROOT"
+info "Runtime: Debian system packages plus project-local Python environments"
+info "Operating mode: profile-driven robot deployment"
+info "Components: Python, Node.js/npm, Nginx, Motion, NATS Server, Cockpit, Control, Datalogger, shared profile and networking"
+info "Privileged actions: apt package installation, systemd service installation and service enablement"
 
-[[ "$(uname -s)" == "Linux" ]] || fail "Unsupported operating system: $(uname -s). This script is for Raspberry Pi/Linux only."
-[[ "${EUID}" -eq 0 ]] || fail "This provisioning script must run with sudo/root because it changes system packages and services. Run: sudo bash scripts/0_provision_raspberry_pi.sh"
+[[ "$(uname -s)" == "Linux" ]] || fail "Unsupported operating system: $(uname -s). This script is for RPi/Linux only."
+[[ "${EUID}" -eq 0 ]] || fail "This provisioning script must run with sudo/root because it changes system packages and services. Run: sudo bash scripts/0_provision_rpi.sh"
 [[ -f "$PROJECT_ROOT/cockpit/requirements.txt" ]] || fail "Cockpit requirements file is missing: $PROJECT_ROOT/cockpit/requirements.txt. Restore the Cockpit component before continuing."
 [[ -f "$PROJECT_ROOT/configs/cockpit.service" ]] || fail "Cockpit service file is missing: $PROJECT_ROOT/configs/cockpit.service. Restore the deployment files before continuing."
 [[ -f "$DATALOGGER_ROOT/configs/datalogger.service" ]] || fail "Datalogger service file is missing: $DATALOGGER_ROOT/configs/datalogger.service. Clone Datalogger beside Cockpit or set DATALOGGER_ROOT."
@@ -260,8 +280,9 @@ echo "[INFO] Privileged actions: apt package installation, systemd service insta
 [[ -r "$NETWORK_SECRETS_FILE" ]] || fail "Network/NATS secrets are missing: $NETWORK_SECRETS_FILE. Copy configs/network.secrets.example to configs/network.secrets.env, set values, and use mode 600."
 NETWORK_SECRETS_MODE="$(stat -c '%a' "$NETWORK_SECRETS_FILE")"
 [[ "$NETWORK_SECRETS_MODE" == 600 || "$NETWORK_SECRETS_MODE" == 400 ]] || fail "Network/NATS secrets must have mode 600 or 400 before provisioning (found $NETWORK_SECRETS_MODE)."
-command -v apt-get >/dev/null 2>&1 || fail "apt-get is unavailable. This script supports Debian-based Raspberry Pi operating systems only."
+command -v apt-get >/dev/null 2>&1 || fail "apt-get is unavailable. This script supports Debian-based RPi operating systems only."
 
+section 'Platform pre-flight and packages'
 info "Refreshing Debian package metadata."
 apt-get update || fail "apt-get update failed. Check network access, repository configuration, and system time."
 
@@ -289,6 +310,7 @@ else
   info "Ghostty terminfo already configured or ncurses-term not available."
 fi
 
+section 'Cockpit Python environment'
 info "Creating the project-local Python environment and installing Cockpit requirements."
 if [[ "${SUDO_USER:-}" != "" && "${SUDO_USER}" != "root" ]]; then
   PROJECT_USER="$SUDO_USER"
@@ -306,6 +328,7 @@ runuser -u "$PROJECT_USER" -- "$PROJECT_ROOT/.venv/bin/python" -m pip install -r
 chown -R "$PROJECT_USER:$PROJECT_GROUP" "$PROJECT_ROOT/.venv"
 pass "Cockpit Python environment installed for $PROJECT_USER."
 
+section 'Datalogger environment and shared data'
 info "Installing Datalogger dependencies and shared Cockpit media directories."
 if [[ ! -d "$DATALOGGER_ROOT/.venv" ]]; then
   runuser -u "$PROJECT_USER" -- python3 -m venv "$DATALOGGER_ROOT/.venv" || fail "Could not create $DATALOGGER_ROOT/.venv for $PROJECT_USER."
@@ -316,6 +339,7 @@ install -d -o "$PROJECT_USER" -g "$PROJECT_GROUP" -m 0750 "$DATALOGGER_ROOT/data
 chown -R "$PROJECT_USER:$PROJECT_GROUP" "$DATALOGGER_ROOT/.venv" "$DATALOGGER_ROOT/data" "$PROJECT_ROOT/media" "$PROJECT_ROOT/data"
 pass "Datalogger Python environment and shared CSV directory configured."
 
+section 'Control environment'
 info "Installing Control dependencies and hardware service environment."
 if [[ ! -d "$CONTROL_ROOT/.venv" ]]; then
   runuser -u "$PROJECT_USER" -- python3 -m venv "$CONTROL_ROOT/.venv" || fail "Could not create $CONTROL_ROOT/.venv for $PROJECT_USER."
@@ -325,6 +349,7 @@ runuser -u "$PROJECT_USER" -- "$CONTROL_ROOT/.venv/bin/python" -m pip install -r
 chown -R "$PROJECT_USER:$PROJECT_GROUP" "$CONTROL_ROOT/.venv"
 pass "Control Python environment installed for $PROJECT_USER."
 
+section 'Motion camera configuration'
 info "Installing the selected Motion camera configuration."
 for motion_config in motion.conf motion1.conf motion2.conf; do
   [[ -f "$PROJECT_ROOT/configs/$motion_config" ]] || fail "Motion configuration is missing: $PROJECT_ROOT/configs/$motion_config"
@@ -332,9 +357,11 @@ for motion_config in motion.conf motion1.conf motion2.conf; do
 done
 pass "Motion configuration is installed with the deployed Cockpit media path."
 
+section 'Authenticated NATS Core'
 info "Configuring authenticated NATS Core."
 install_nats_configuration
 
+section 'Systemd services'
 info "Installing portable systemd units for Cockpit."
 render_template "$PROJECT_ROOT/configs/cockpit.service" /etc/systemd/system/cockpit.service 0644 root root
 # TODO: Enable these units after Control and Datalogger deployment is ready and validated.
@@ -344,6 +371,7 @@ systemctl daemon-reload || fail "systemd daemon reload failed after installing s
 systemctl enable nats-server nginx motion cockpit || fail "Could not enable one or more services: nats-server, nginx, motion, cockpit."
 pass "Cockpit, NATS Server, Nginx, and Motion are enabled for startup."
 
+section 'Robot profile'
 info "Installing the shared robot profile."
 PROFILE_SOURCE="$PROJECT_ROOT/configs/profiles/${ROBOT_PROFILE}.json"
 [[ -f "$PROFILE_SOURCE" ]] || fail "Robot profile is missing: $PROFILE_SOURCE. Set ROBOT_PROFILE to a valid profile name."
@@ -352,6 +380,7 @@ install -o root -g root -m 0644 "$PROFILE_SOURCE" /etc/robot/profile.json
 python3 -m json.tool /etc/robot/profile.json >/dev/null || fail "The selected robot profile is not valid JSON: $PROFILE_SOURCE"
 pass "Robot profile installed at /etc/robot/profile.json: $ROBOT_PROFILE"
 
+section 'Control-owned network deployment'
 if [[ -x "$CONTROL_ROOT/scripts/0_deploy_network.sh" ]]; then
   info "Invoking Control-owned networking, SMB and Avahi deployment."
   PROJECT_ROOT="$PROJECT_ROOT" \
@@ -365,13 +394,16 @@ else
   warn "Control networking script not found at $CONTROL_ROOT/scripts/0_deploy_network.sh; networking, SMB and Avahi were not deployed. Set CONTROL_ROOT or deploy Control separately."
 fi
 
+section 'NATS and reverse-proxy validation'
 info "Testing NATS Server availability before configuring the reverse proxy."
 systemctl is-active --quiet nats-server || systemctl start nats-server || fail "NATS Server did not start. Inspect: journalctl -u nats-server -n 50 --no-pager"
 curl --fail --silent --show-error http://127.0.0.1:8222/varz >/dev/null 2>&1 || warn "NATS monitoring endpoint is not available at port 8222; service status is active but connectivity is not fully verified."
 
+section 'Nginx configuration'
 info "Applying the Nginx site and map-tile cache configuration."
 bash "$PROJECT_ROOT/scripts/3_configure_nginx.sh" || fail "Nginx configuration helper failed. Review its diagnostics; the previous site backup remains available."
 
+section 'Service startup and validation'
 info "Starting Cockpit and checking service state."
 systemctl restart cockpit || fail "Cockpit failed to start. Inspect: journalctl -u cockpit -n 50 --no-pager"
 systemctl restart datalogger || fail "Datalogger failed to start. Inspect: journalctl -u datalogger -n 50 --no-pager"
@@ -384,10 +416,13 @@ systemctl is-active --quiet nats-server || fail "NATS Server is not active after
 pass "Control, Cockpit, Datalogger, Nginx and NATS Server are active."
 
 info "Configuring the runtime user's Zsh environment and administrator policy."
+section 'Runtime shell and administrator policy'
 configure_interactive_shell
 configure_passwordless_sudo
 
-echo "[INFO] Environment summary:"
-echo "[INFO] Python=installed and configured; Nginx=installed, configured and active; Motion=installed and enabled; NATS Server=authenticated, enabled and active; Cockpit=installed, enabled and active; Datalogger=installed, enabled and active; CSV export=shared with Cockpit data directory; runtime shell=Zsh with Oh My Zsh Powerlevel10k theme, enhanced plugins, and HyFetch greeting."
-echo "[WARN] Hardware cameras, motor controllers, sensors, network links and ROV operation are not physically validated by this script."
-echo "[INFO] Provisioning completed at $TIMESTAMP."
+section 'Provisioning summary'
+info "Environment summary:"
+info "Python=installed and configured; Nginx=installed, configured and active; Motion=installed and enabled; NATS Server=authenticated, enabled and active; Cockpit=installed, enabled and active; Datalogger=installed, enabled and active; CSV export=shared with Cockpit data directory; runtime shell=Zsh with Oh My Zsh Powerlevel10k theme, enhanced plugins, and HyFetch greeting."
+warn "Hardware cameras, motor controllers, sensors, network links and robot operation are not physically validated by this script."
+pass "Provisioning completed at $TIMESTAMP."
+banner 'CuttleOS Provisioning Complete'

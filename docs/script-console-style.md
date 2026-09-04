@@ -67,6 +67,8 @@ Terminal output and source-code comments serve different purposes. Output should
 
 Scripts should avoid mixing several unrelated output styles. Bare `echo` statements, ad-hoc separators, and unlabelled progress messages should be replaced with the standard status and banner functions where practical.
 
+Informal platform references in console output may use **RPi**; use **Raspberry Pi** when the script is defining or documenting the formal platform requirement.
+
 ## Platform consistency
 
 The same conceptual output structure should be used by Bash, PowerShell, and Windows batch scripts. Platform-specific implementation may differ, but an operator should recognise the same stages and status meanings on each platform.

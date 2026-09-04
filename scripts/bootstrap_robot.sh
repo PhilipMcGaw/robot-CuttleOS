@@ -106,7 +106,7 @@ export DATALOGGER_ROOT="$ROBOTS_DIR/datalogger"
 export ROBOT_PROFILE="$ROBOT_PROFILE"
 info "Starting Raspberry Pi provisioning."
 info "This will take several minutes and requires internet access."
-bash scripts/0_provision_raspberry_pi.sh
+bash scripts/0_provision_rpi.sh
 pass "Raspberry Pi provisioning completed."
 
 banner "Bootstrap Complete"

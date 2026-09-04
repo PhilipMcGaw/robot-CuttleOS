@@ -104,7 +104,7 @@ The following status applies to the architecture, not to physical validation:
 - `cockpit/src/rov_cockpit/static/dist/main.js`
 - `cockpit/src/rov_cockpit/static/dist/components/instruments/rov-depth.js`
 - `configs/nats.env.example`
-- `scripts/0_provision_raspberry_pi.sh`
+- `scripts/0_provision_rpi.sh`
 - `tests/test_raspberry_pi_provisioning.py`
 - `tests/test_k9_soundboard.py`
 - `scripts/1_install_dependencies.bat`

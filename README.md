@@ -163,7 +163,7 @@ For manual Raspberry Pi provisioning:
 
 ```bash
 # Run the provisioning script (requires sudo)
-sudo ./scripts/0_provision_raspberry_pi.sh
+sudo ./scripts/0_provision_rpi.sh
 ```
 
 This installs all system packages, Python environments, services, and configuration.

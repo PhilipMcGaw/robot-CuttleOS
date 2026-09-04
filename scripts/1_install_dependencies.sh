@@ -37,7 +37,7 @@ info "Operating system: $(uname -s)"
 command -v python3 >/dev/null 2>&1 || fail "Python 3 is unavailable. Install Python 3 using the supported operating-system method, then rerun this script."
 
 if [[ "$(uname -s)" == "Linux" && "${EUID}" -eq 0 ]]; then
-  fail "This project-local installer must not run as root. Run it as the normal runtime user; use 0_provision_raspberry_pi.sh for documented privileged setup."
+  fail "This project-local installer must not run as root. Run it as the normal runtime user; use 0_provision_rpi.sh for documented privileged setup."
 fi
 
 section "Node.js / npm"

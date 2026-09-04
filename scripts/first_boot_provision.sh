@@ -65,7 +65,7 @@ chmod 600 "$PROJECT_ROOT/configs/network.secrets.env"
 info "Running the CuttleOS provisioner for profile $ROBOT_PROFILE."
 export CONTROL_ROOT DATALOGGER_ROOT ROBOT_PROFILE
 export SUDO_USER="$ROBOT_USER"
-bash "$PROJECT_ROOT/scripts/0_provision_raspberry_pi.sh"
+bash "$PROJECT_ROOT/scripts/0_provision_rpi.sh"
 
 install -d -m 0755 "$(dirname "$MARKER")"
 touch "$MARKER"

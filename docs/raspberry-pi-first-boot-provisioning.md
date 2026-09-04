@@ -133,7 +133,7 @@ configs/cuttleos-first-boot.service
 ```
 
 The wrapper performs the first-boot-specific work and then calls the
-existing `scripts/0_provision_raspberry_pi.sh`. The existing provisioner remains
+existing `scripts/0_provision_rpi.sh`. The existing provisioner remains
 remain the single source of truth for packages, Python environments, systemd
 units, Nginx, NATS, Motion and robot-profile dependencies.
 

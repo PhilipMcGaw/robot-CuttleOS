@@ -305,7 +305,7 @@ Robot-specific behavior is defined through validated JSON profiles:
 
 ### Provisioning
 
-The canonical Raspberry Pi provisioner is Cockpit's `scripts/0_provision_raspberry_pi.sh`.
+The canonical Raspberry Pi provisioner is Cockpit's `scripts/0_provision_rpi.sh`.
 It:
 
 - Installs Python, Node.js, Nginx, Motion, NATS, NetworkManager, Avahi, Samba

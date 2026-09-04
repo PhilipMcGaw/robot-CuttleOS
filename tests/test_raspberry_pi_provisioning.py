@@ -16,7 +16,7 @@ def read(path: Path) -> str:
 
 
 def test_provisioner_installs_the_required_platform_contract() -> None:
-    provisioner = read(COCKPIT_ROOT / "scripts" / "0_provision_raspberry_pi.sh")
+    provisioner = read(COCKPIT_ROOT / "scripts" / "0_provision_rpi.sh")
 
     for required in (
         "network-manager",
@@ -38,7 +38,7 @@ def test_provisioner_installs_the_required_platform_contract() -> None:
 
 
 def test_provisioner_configures_runtime_shell_and_sudo() -> None:
-    provisioner = read(COCKPIT_ROOT / "scripts" / "0_provision_raspberry_pi.sh")
+    provisioner = read(COCKPIT_ROOT / "scripts" / "0_provision_rpi.sh")
 
     for required in (
         "git zsh hyfetch",
@@ -55,7 +55,7 @@ def test_provisioner_configures_runtime_shell_and_sudo() -> None:
 
     bash = shutil.which("bash")
     if bash:
-        result = subprocess.run([bash, "-n", str(COCKPIT_ROOT / "scripts" / "0_provision_raspberry_pi.sh")], text=True, capture_output=True, check=False)
+        result = subprocess.run([bash, "-n", str(COCKPIT_ROOT / "scripts" / "0_provision_rpi.sh")], text=True, capture_output=True, check=False)
         assert result.returncode == 0, result.stderr
 
 
@@ -118,7 +118,7 @@ def test_first_boot_files_and_macos_helper_are_noninteractive() -> None:
     for required in (
         "apt-get update",
         "git clone",
-        "0_provision_raspberry_pi.sh",
+        "0_provision_rpi.sh",
         "first-boot-complete",
         "ROBOT_PROFILE",
     ):

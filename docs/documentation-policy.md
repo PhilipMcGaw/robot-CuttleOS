@@ -74,6 +74,10 @@ Abbreviations and acronyms shall be defined at their first use by giving the ful
 
 Terminology defined by a referenced standard, specification, protocol, manufacturer, or other authoritative source shall be retained unless an explanatory alternative is necessary. Where an alternative term is introduced, the relationship between the terms shall be made explicit.
 
+#### Raspberry Pi abbreviation
+
+Use **Raspberry Pi** in formal prose, headings, first mentions, and documentation intended for external or general readers. Use **RPi** in informal prose, console output, technical identifiers, and new file or directory names where the meaning remains clear. Established public file names, commands, and links shall not be renamed solely to introduce the abbreviation; retain them for compatibility and use the abbreviated form in surrounding text where appropriate.
+
 #### Precise and Inclusive Technical Terminology
 
 Technical terminology shall describe the actual engineering relationship between components. Terms shall not be changed by mechanical word substitution merely to avoid legacy terminology; the replacement shall remain technically accurate.
