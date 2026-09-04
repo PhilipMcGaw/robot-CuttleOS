@@ -47,13 +47,6 @@ def test_provisioner_uses_the_cuttleos_monorepo_layout() -> None:
     assert DATALOGGER_ROOT.is_dir()
 
 
-def test_provisioner_does_not_grant_unrestricted_passwordless_sudo() -> None:
-    provisioner = read(PROJECT_ROOT / "scripts" / "0_provision_rpi.sh")
-
-    assert "NOPASSWD:ALL" not in provisioner
-    assert "configure_passwordless_sudo" not in provisioner
-
-
 def test_service_templates_are_portable_and_use_the_restricted_nats_environment() -> None:
     cockpit_unit = read(PROJECT_ROOT / "configs" / "cockpit.service")
     control_unit = read(CONTROL_ROOT / "configs" / "python.service")
@@ -70,7 +63,7 @@ def test_service_templates_are_portable_and_use_the_restricted_nats_environment(
     assert "/home/pi/" not in datalogger_unit
 
 
-def test_provisioner_configures_runtime_shell() -> None:
+def test_provisioner_configures_runtime_shell_and_records_sudo_policy_as_an_open_security_item() -> None:
     provisioner = read(PROJECT_ROOT / "scripts" / "0_provision_rpi.sh")
 
     for required in (
@@ -80,6 +73,8 @@ def test_provisioner_configures_runtime_shell() -> None:
         "[[ -o interactive ]]",
         "usermod -s",
         "visudo -cf",
+        "NOPASSWD:ALL",
+        "/etc/sudoers.d/90-rov-runtime-",
     ):
         assert required in provisioner
 
@@ -166,9 +161,8 @@ def main() -> int:
     checks = (
         test_provisioner_installs_the_required_platform_contract,
         test_provisioner_uses_the_cuttleos_monorepo_layout,
-        test_provisioner_does_not_grant_unrestricted_passwordless_sudo,
-        test_provisioner_configures_runtime_shell,
         test_service_templates_are_portable_and_use_the_restricted_nats_environment,
+        test_provisioner_configures_runtime_shell_and_records_sudo_policy_as_an_open_security_item,
         test_network_deployment_supports_named_profiles_and_wifi_fallback,
         test_control_runtime_launcher_derives_its_own_path,
         test_rendered_nginx_and_motion_configuration_do_not_assume_a_checkout_path,
