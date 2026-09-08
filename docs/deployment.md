@@ -39,14 +39,18 @@ scripts/prepare_first_boot.sh /Volumes/bootfs \
   --config-dir ~/robot-deployment/k9
 ```
 
-The private configuration directory must contain `nats.env`, `network.env` and
-`network.secrets.env`. The helper preserves Imager's existing `user-data` and
+The private configuration directory must contain 
+ats.env`, 
+etwork.env` and
+
+etwork.secrets.env`. The helper preserves Imager's existing `user-data` and
 adds a cloud-init archive containing the CuttleOS first-boot wrapper and
 systemd service. On power-up, the Pi waits for the network, retrieves the three
 repositories, installs the selected profile and runs the canonical provisioner.
 
 Do not commit or broadly share the directory passed to `--config-dir`: its
-`network.secrets.env` file contains robot credentials. If the option is omitted,
+
+etwork.secrets.env` file contains robot credentials. If the option is omitted,
 the first-boot service stops safely with a journal error rather than prompting
 on a headless robot. Inspect it with:
 
@@ -141,8 +145,9 @@ ssh -T git@github.com
 
 GitHub normally reports a successful account authentication and then closes
 the shell, because it does not provide interactive SSH sessions. Configure the
-author identity with Philip's verified GitHub email address, then clone all
-three repositories over SSH:
+author identity with Philip's verified GitHub email address, then clone the
+CuttleOS implementation repository over SSH. Chartroom is documentation-only
+and is not deployed to the RPi:
 
 ```zsh
 git config --global user.name "Philip McGaw"
@@ -207,7 +212,9 @@ cp configs/nats.env.example configs/nats.env
 chmod 600 configs/network.secrets.env
 ```
 
-`network.secrets.env` contains Wi-Fi, hotspot, SMB, and NATS credentials. It MUST have mode `600` or `400` before provisioning. `nats.env` controls whether NATS listens only on loopback (the default) or is accessible to an explicitly trusted HiL/SiL network. Neither file is committed.
+
+etwork.secrets.env` contains Wi-Fi, hotspot, SMB, and NATS credentials. It MUST have mode `600` or `400` before provisioning. 
+ats.env` controls whether NATS listens only on loopback (the default) or is accessible to an explicitly trusted HiL/SiL network. Neither file is committed.
 
 From the repository root on the target machine:
 

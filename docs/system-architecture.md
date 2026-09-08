@@ -1,26 +1,28 @@
 # CuttleOS System Architecture
 
-> **Status:** Architectural authority
+> **Status:** CuttleOS implementation authority
 >
-> This document defines the system-level architecture shared by robot-CuttleOS,
+> This document defines the CuttleOS implementation of the system architecture shared by Chartroom,
 > robot-SquidLink, and robot-NautiPi. Repository-specific implementation details
 > remain authoritative in their respective repositories.
 
 ## 1. Scope and authority
 
 CuttleOS is the software system for the robot runtime. The wider project is
-split across three repositories with deliberately separate responsibilities:
+four related repositories with deliberately separate responsibilities:
 
 | Repository | Authority |
 |---|---|
+| **robot-ChartRoom** | Cross-project architecture, engineering rationale, reusable guidance, deployment and commissioning procedures, hardware references, and the overall roadmap |
 | **robot-CuttleOS** | Robot software, runtime architecture, application interfaces, NATS contracts, robot profiles, media architecture, deployment, and software validation |
 | **robot-SquidLink** | ROS 2/Gazebo simulation, SiL/HiL implementation, simulation scenarios, and the NATS/ROS 2 bridge |
 | **robot-NautiPi** | Physical hardware designs, PCB/CAD archives, embedded hardware, and hardware-specific evidence |
 
-CuttleOS is the **single source of truth for cross-repository system
-architecture and application-level interfaces**. SquidLink and NautiPi must not
-redefine those interfaces; they implement or exercise them within their own
-boundaries.
+Chartroom is the **single source of truth for cross-project architecture,
+engineering rationale, and shared documentation guidance**. CuttleOS remains the
+authority for its application contracts and software implementation. SquidLink and
+NautiPi must not redefine those interfaces; they implement or exercise them within
+their own boundaries.
 
 The authority hierarchy is:
 
@@ -33,6 +35,14 @@ Designed, simulated, or software-tested behaviour must never be described as
 physically or production validated without evidence.
 
 ## 2. Repository boundaries
+
+### robot-ChartRoom
+
+Chartroom owns the cross-project engineering record. It documents shared
+architecture, decisions, reusable guidance, deployment and commissioning
+procedures, hardware documentation references, operational knowledge, and the
+overall roadmap. It does not contain or deploy the robot runtime.
+
 
 ### robot-CuttleOS
 
@@ -285,7 +295,7 @@ claims should reference the relevant evidence explicitly.
 
 | Subject | Authoritative repository |
 |---|---|
-| Overall robot system architecture | robot-CuttleOS |
+| Overall robot system architecture | robot-ChartRoom |
 | CuttleOS runtime behaviour | robot-CuttleOS |
 | Application/NATS contracts | robot-CuttleOS |
 | Robot profiles | robot-CuttleOS |
@@ -304,8 +314,8 @@ to that repository's authoritative document rather than copying the definition.
 
 ## 15. Architectural change control
 
-A change that crosses repository boundaries must update the CuttleOS system
-architecture and the affected repository-specific documentation and tests.
+A change that crosses repository boundaries must update Chartroom's shared
+architecture record and the affected repository-specific documentation and tests.
 
 In particular, changes to application interfaces, NATS subjects or schemas,
 robot-profile capabilities, media contracts, or safety boundaries must be
@@ -320,5 +330,6 @@ contract should remain within that repository.
 - [`docs/robot-profile-requirements.md`](robot-profile-requirements.md) — profile requirements
 - [`docs/media-architecture.md`](media-architecture.md) — media architecture
 - [`ROADMAP.md`](../ROADMAP.md) — planned work
+- **robot-ChartRoom** — cross-project architecture and engineering guidance
 - **robot-SquidLink** — simulation and SiL/HiL implementation
 - **robot-NautiPi** — physical hardware designs and evidence

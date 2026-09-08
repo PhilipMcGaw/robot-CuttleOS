@@ -7,9 +7,9 @@
 > roadmap > this file and the authoritative system architecture > older
 > documentation and chat recollection.
 >
-> **Cross-repository authority:** `docs/system-architecture.md` is the
-> authoritative system-level architecture for robot-CuttleOS, robot-SquidLink,
-> and robot-NautiPi. This file remains authoritative for CuttleOS-specific
+> **Cross-repository authority:** Chartroom is the authoritative home for
+> cross-project architecture and shared engineering guidance. This file and
+> `docs/system-architecture.md` remain authoritative for CuttleOS-specific
 > engineering context, service boundaries, deployment, and development policy.
 >
 > **Maintenance:** Update this file whenever a significant CuttleOS-specific
@@ -25,13 +25,14 @@
 
 ## System-level architecture
 
-The wider robot system spans three repositories:
+The wider robot system spans four related repositories:
 
-- **robot-CuttleOS** — production robot software and cross-repository application architecture;
+- **robot-ChartRoom** — cross-project architecture, engineering rationale, reusable guidance, and the overall roadmap;
+- **robot-CuttleOS** — production robot software and application-facing contracts;
 - **robot-SquidLink** — ROS 2/Gazebo simulation and SiL/HiL integration testing;
 - **robot-NautiPi** — physical hardware designs and hardware evidence.
 
-The authoritative system-level architecture is [`docs/system-architecture.md`](docs/system-architecture.md).
+The cross-project architecture is maintained in [Chartroom](https://chartroom.philipmcgaw.com/). CuttleOS implementation details are maintained in [`docs/system-architecture.md`](docs/system-architecture.md).
 
 Repository-specific documentation must implement or exercise that architecture
 without redefining another repository's responsibilities or shared interfaces.
@@ -274,7 +275,8 @@ Database crash ≠ control loss.
 - Selected internal messaging middleware
 - Subject naming: `<namespace>.<category>.<type>.<field>`
   - Example: `rov.telemetry.power.battery.voltage`
-- Default dev: `nats://127.0.0.1:4222`
+- Default dev: 
+ats://127.0.0.1:4222`
 - Production: authenticated loopback from `/etc/robot/nats.env`
 - **JetStream explicitly out of scope**
 - **Browser never talks NATS directly** (Cockpit WebSocket relays only)
