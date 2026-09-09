@@ -178,3 +178,8 @@ A communications failure MUST NOT leave an actuator in an uncontrolled state.
 
 Changes that cross these boundaries MUST be reflected in the appropriate
 repositories and their validation evidence.
+
+## Modular transducer principle
+
+Distributed sensing should remain modular where practical. A logical transducer may combine closely related measurements, such as the CTD conductivity, temperature, and pressure set, but unrelated functions should use separate RS-485/Modbus nodes. This supports independent calibration, fault isolation, reuse across robots, and clearer NATS telemetry contracts.
+
