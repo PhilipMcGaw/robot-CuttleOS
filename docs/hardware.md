@@ -14,7 +14,7 @@ The ROV electronics, mechanical and BOM archive is maintained in the sibling `ro
 
 Control owns communication with RS485-attached microcontrollers. Cockpit must not open serial devices or implement RS485 framing. Control shall translate validated NATS commands into the microcontroller protocol and publish validated microcontroller telemetry back to namespaced NATS subjects.
 
-The implementation must document the selected electrical interface and transceiver, UART device, baud rate, parity, stop bits, bus termination and biasing, node addressing, frame format, payload encoding, CRC or checksum, half-duplex direction control, response timeout, retry policy, startup discovery, and behaviour when a node becomes unavailable. Until these details are confirmed against the hardware, the RS485 interface is planned and must not be described as bench-tested or production-ready.
+The implementation must document the selected electrical interface and transceiver, UART device, baud rate, parity, stop bits, bus termination and biasing, node addressing, frame format, payload encoding, CRC or checksum, automatic half-duplex direction control, response timeout, retry policy, startup discovery, and behaviour when a node becomes unavailable. Until these details are confirmed against the hardware, the RS485 interface is planned and must not be described as bench-tested or production-ready.
 
 The bus design should avoid multiple transmitters speaking at once. Control remains the bus coordinator unless the selected protocol explicitly provides another arbitration method. A lost or malformed RS485 response must not bypass Control safety limits or prevent the hardware loop from entering its safe state.
 
@@ -63,3 +63,4 @@ The complete logical NATS topic map is maintained in
 [Adeept Robot HAT ADM133](adeept-robot-hat-adm133.md). It maps board functions
 to profile-owned logical command and telemetry identifiers, not to raw pins or
 physical motor channels.
+
