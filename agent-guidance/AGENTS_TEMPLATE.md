@@ -25,6 +25,8 @@ Summarise the completed supplement’s relevant rules, or point agents to its ap
 - Architecture and interfaces: [supplement section or document]
 - Safety and consequential operations: [supplement section or document]
 - Documentation and status: [supplement section or document]
+- File formatting and line endings: [supplement section or document]
+- Formatting configuration generation: [whether `.gitattributes`, `.editorconfig`, and optional editor settings were created]
 - Development and verification: [supplement section or document]
 - Generated files and assets: [supplement section or document]
 - Version control and release: [supplement section or document]

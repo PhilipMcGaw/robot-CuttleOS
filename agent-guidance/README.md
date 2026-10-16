@@ -16,4 +16,6 @@ This folder contains reusable agent guidance for use in other project repositori
 4. Keep the generic baseline unchanged. Have the root `AGENTS.md` point to both `agent-guidance/PROJECT_WORKING_RULES.md` and `PROJECT_WORKING_RULES_SUPPLEMENT.md` using paths that work in the target repository.
 5. Add more-specific `AGENTS.md` files only where a subdirectory needs rules beyond or narrower than the root instructions.
 
+During adoption, agree file-formatting policies with the project owner. For line endings, propose LF for text files and CRLF for `*.bat` files when the Windows toolchain requires it. Ask about other exceptions and whether the project wants configuration files generated. After agreement, create or update `.gitattributes` and `.editorconfig`, and add `.vscode/settings.json` only when VS Code is a supported editor. Record the selected policy and configuration sources in the project supplement.
+
 The root `AGENTS.md` is the entry point agents discover automatically. It should explicitly direct agents to read the baseline and supplement; storing either file in a folder does not make it active by itself.

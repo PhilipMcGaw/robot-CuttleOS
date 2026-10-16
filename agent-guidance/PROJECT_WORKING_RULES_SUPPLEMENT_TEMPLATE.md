@@ -37,6 +37,17 @@ Exceptions MUST be narrow, explain their reason, and identify their scope. An ex
 
 Add only requirements that are not already stated in the baseline. Use clear, direct wording. Use `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT`, and `MAY` only with their intended normative meaning.
 
+### File formatting and line endings
+
+Agree the project's line-ending policy with the project owner before generating configuration. Use LF (`\n`) as the proposed default for text files. Treat Windows batch files (`*.bat`) as a CRLF (`\r\n`) exception when required by the Windows toolchain. Ask whether other file types need exceptions and record the answers. Do not assume VS Code is required.
+
+After the owner confirms the policy, offer to create or update `.gitattributes` and `.editorconfig`, plus `.vscode/settings.json` only if the project uses VS Code. Mark the default and each exception by file type. Identify which file is authoritative for Git checkout normalisation and which files provide editor defaults. Do not name a configuration file as the source of truth unless it exists and has that role in the project.
+
+- **Text-file default:** LF (`\n`), unless the owner confirms another policy
+- **Exceptions:** `*.bat` may use CRLF (`\r\n`) where required; [other confirmed file types]
+- **Policy sources:** [`.gitattributes` for Git normalisation; `.editorconfig` and supported editor settings for editor defaults]
+- **Editing rule:** Preserve the policy and avoid mixed or line-ending-only changes
+
 ### Architecture and interfaces
 
 - [Project-specific boundaries and contracts]
