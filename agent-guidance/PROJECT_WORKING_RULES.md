@@ -65,6 +65,9 @@ This is the stable, project-agnostic baseline for agent work across software, en
 ## Version control
 
 - Inspect repository status and the complete relevant diff before staging or committing. Stage only task-related files.
-- Use the project’s normal version-control interface and authentication. Do not expose credentials.
+- Use the project’s normal version-control interface and authentication. If a command-line Git operation is needed, locate the executable before assuming Git is unavailable: check the shell command lookup, then a repository-provided helper, then the version-control application’s documented bundled executable or official installation. On Windows, `Get-Command git` and `where.exe git` can check `PATH`. Do not guess a versioned installation path; verify the executable exists and run its version command. Record machine-specific paths only in project-specific instructions and recheck them after application upgrades.
+- Do not expose credentials.
 - Do not rewrite history, force-push, or discard unrelated work.
-- Commit, push, or publish only when requested or when an applicable project instruction clearly authorizes it; report blockers rather than bypassing them.
+- Follow the project supplement and the user’s instructions for whether and when to commit, push, or publish. The generic baseline does not require automatic commits or pushes for every project.
+- When a push is required or authorized, follow the project’s branch-integration procedure. Fetch and integrate the latest target branch before pushing when the project workflow requires it. Do not assume the target branch is `main`.
+- Report concrete blockers. Do not bypass permissions, rewrite history, force-push, or include unrelated changes.

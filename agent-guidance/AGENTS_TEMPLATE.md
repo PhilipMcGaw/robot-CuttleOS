@@ -4,15 +4,15 @@ These instructions apply to the whole [project name] repository. Read this file 
 
 ## Shared working rules
 
-Read the project-agnostic baseline at [`agent-guidance/PROJECT_WORKING_RULES.md`](agent-guidance/PROJECT_WORKING_RULES.md) and this project’s completed supplement at [`PROJECT_WORKING_RULES_SUPPLEMENT.md`](PROJECT_WORKING_RULES_SUPPLEMENT.md). Keep the baseline intact; record applicability, narrow exceptions, and local requirements in the supplement.
+Read the project-agnostic baseline at `agent-guidance/PROJECT_WORKING_RULES.md` and this project’s completed supplement at `PROJECT_WORKING_RULES_SUPPLEMENT.md`. Keep the baseline intact; record applicability, narrow exceptions, and local requirements in the supplement.
 
 ## Project context
 
 Read the documents needed for the task:
 
-- [`[context file]`](path) — [purpose and when to read it].
-- [`[architecture file]`](path) — [purpose and when to read it].
-- [`[status or roadmap file]`](path) — [purpose and when to read it].
+- `[context file path]` — [purpose and when to read it].
+- `[architecture file path]` — [purpose and when to read it].
+- `[status or roadmap file path]` — [purpose and when to read it].
 
 ## Project authority
 
@@ -32,3 +32,5 @@ Summarise the completed supplement’s relevant rules, or point agents to its ap
 ## Maintenance
 
 Keep this file focused on project navigation and local operating rules. Keep reusable rules in the baseline and project-specific applicability or exceptions in the supplement. Update paths when the repository structure changes.
+
+Define this project’s version-control workflow in its supplement. State whether agents should commit and push completed changes by default, which branch to use, and how to fetch and integrate remote changes. Do not assume one project’s workflow applies to another.

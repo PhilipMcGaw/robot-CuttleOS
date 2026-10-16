@@ -1,6 +1,6 @@
 # Project working rules supplement
 
-This file supplements the project-agnostic baseline at [`agent-guidance/PROJECT_WORKING_RULES.md`](agent-guidance/PROJECT_WORKING_RULES.md). Keep the generic baseline intact. Use this supplement to explain how it applies to this project, record justified exceptions, and add project-specific instructions.
+This file supplements the project-agnostic baseline at `agent-guidance/PROJECT_WORKING_RULES.md`. Keep the generic baseline intact. Use this supplement to explain how it applies to this project, record justified exceptions, and add project-specific instructions.
 
 ## Project identity
 
