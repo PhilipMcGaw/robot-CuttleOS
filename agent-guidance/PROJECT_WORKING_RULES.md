@@ -65,6 +65,7 @@ This is the stable, project-agnostic baseline for agent work across software, en
 ## Version control
 
 - Inspect repository status and the complete relevant diff before staging or committing. Stage only task-related files.
+- If you find uncommitted changes that are unrelated to your task, leave them unstaged and ask the user whether they want those changes included. If the user says yes, inspect the changes, infer a sensible focused commit message from their context, and commit and push them according to the project’s workflow. If the user says no or does not answer, leave them untouched.
 - Use the project’s normal version-control interface and authentication. If a command-line Git operation is needed, locate the executable before assuming Git is unavailable: check the shell command lookup, then a repository-provided helper, then the version-control application’s documented bundled executable or official installation. On Windows, `Get-Command git` and `where.exe git` can check `PATH`. Do not guess a versioned installation path; verify the executable exists and run its version command. Record machine-specific paths only in project-specific instructions and recheck them after application upgrades.
 - Do not expose credentials.
 - Do not rewrite history, force-push, or discard unrelated work.
